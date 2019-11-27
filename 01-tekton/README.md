@@ -140,9 +140,9 @@ You are targeting region 'us-south', the registry is 'us.icr.io'.
 ```
 $ ibmcloud cr login
 $ ibmcloud cr namespace-add tektonlab
-Adding namespace 'tektonlab'...
+Adding namespace 'yournamespace'...
 
-Successfully added namespace 'tektonlab'
+Successfully added namespace 'yournamespace'
 
 OK
 ```
