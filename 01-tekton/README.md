@@ -103,9 +103,9 @@ $ kubectl apply -f tekton/pipeline/build-and-deploy-pipeline.yaml
 pipeline.tekton.dev/build-and-deploy-pipeline created
 ```
 
-4. 修改Pipelinerun，指向正确的<REGISTRY>/<NAMESPACE>   
+4. 修改Pipelinerun，指向正确的`<REGISTRY>/<NAMESPACE>`   
 - 修改tekton/run/picalc-pipeline-run.yaml   
-将文件中的<REGISTRY>和<NAMESPACE>用您个人account下的private container registry信息替代
+将文件中的`<REGISTRY>`和`<NAMESPACE>`用您个人account下的private container registry信息替代
 ```
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineRun
@@ -129,13 +129,13 @@ spec:
     type: manual
   serviceAccount: pipeline-account
 ```   
-执行以下命令获得<REGISTRY>，在以下例子中<REGISTRY>为us.icr.io
+执行以下命令获得REGISTRY，在以下例子中REGISTRY为us.icr.io
 ```
 $ ibmcloud cr region
 You are targeting region 'us-south', the registry is 'us.icr.io'.
 ```
 
-在您个人账户下的IBM Container Registry中创建一个<NAMESPACE>。<NAMESPACE>为tektonlab
+在您个人账户下的IBM Container Registry中创建一个NAMESPACE。NAMESPACE为tektonlab
 
 ```
 $ ibmcloud cr login
@@ -149,14 +149,14 @@ OK
 
 5. 创建secret  
 
-替换<APIKEY>为实验准备->2 中使用的apikey，执行以下命令创建一个secret
+替换`<APIKEY>`为实验准备->2 中使用的apikey，执行以下命令创建一个secret
 ```
 kubectl create secret generic ibm-cr-push-secret --type="kubernetes.io/basic-auth" --from-literal=username=iamapikey --from-literal=password=<APIKEY>
 ```
 *输出示例:*
 `kubectl annotate secret ibm-cr-push-secret tekton.dev/docker-0=secret/ibm-cr-push-secret created`
 
-替换<REGISTRY>为实验步骤->4 中获得的<REGISTRY>
+替换`<REGISTRY>`为实验步骤->4 中获得的REGISTRY
 ```
 kubectl annotate secret ibm-cr-push-secret tekton.dev/docker-0=<REGISTRY>
 
