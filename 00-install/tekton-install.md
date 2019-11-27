@@ -78,6 +78,7 @@ knative-sources      Active   5d13h
 kube-node-lease      Active   60d
 kube-public          Active   60d
 kube-system          Active   60d
+tekton-pipelines     Active   5d13h
 ```
 
 检查istio-system和knative-*** namespaces已经安装完毕。
