@@ -24,9 +24,9 @@ passcode: ikslab
 ~~apikey怎么拿到~~   
 `ibmcloud login --apikey xxxxxx`   
 
-3. 确保您已完成[准备 Kubecluster 和安装 knative](https://github.com/QiuJieLi/devopslab/tree/master/00-install)的步骤
-验证knative和isto的pods都是Running状态   
-*示例:*
+3. 确保您已完成[准备 Kubecluster 和安装 knative](https://github.com/QiuJieLi/devopslab/tree/master/00-install)的步骤   
+验证knative和isto的pods都是Running状态      
+*示例:*   
 ```
 $ kubectl get pods --namespace istio-system
 NAME                                      READY   STATUS    RESTARTS   AGE
@@ -54,9 +54,9 @@ webhook-76c4d8d998-5sg4p            1/1     Running   0          5h12m
 ```
 
 4. 安装 Tekton pipeline
-`kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml`
+`kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml`   
 使用以下命令查看Tekton Pipelines components 直到 STATUS 都显示 `Running`:   
-*示例:*
+*示例:*   
 ```
 $ kubectl get pods --namespace tekton-pipelines
 NAME                                           READY   STATUS    RESTARTS   AGE
@@ -65,8 +65,8 @@ tekton-pipelines-webhook-7849d4f75f-vd49j      1/1     Running   0          4h47
 ```
 
 5. 安装 Kn Client   
-安装步骤参考https://github.com/knative/client/blob/master/docs/README.md
-例如，在linux上   
+安装步骤参考https://github.com/knative/client/blob/master/docs/README.md   
+例如，在linux上    
 ```
 $ wget https://storage.googleapis.com/knative-nightly/client/latest/kn-linux-amd64
 $ chmod +x kn-linux-amd64
@@ -84,14 +84,14 @@ Manage your Knative building blocks:
 ~~安装ibmcloud cli~~
 `ibmcloud plugin install container-registry`
 
-7. 创建您自己的container registry和namespace
-使用**您自己的**ibm account登录
-`$ ibmcloud login`
-登录container registry
-`$ ibmcloud cr login`
-列出您的`namespace`
-`$ ibmcloud cr namespaces`
-如果您还没有一个`namespace`,创建一个
+7. 创建您自己的container registry和namespace   
+使用**您自己的**ibm account登录   
+`$ ibmcloud login`   
+登录container registry   
+`$ ibmcloud cr login`   
+列出您的`namespace`   
+`$ ibmcloud cr namespaces`   
+如果您还没有一个`namespace`,创建一个   
 ```
 $ ibmcloud cr namespace-add tektonlab
 Adding namespace 'yournamespace'...
@@ -100,7 +100,7 @@ Successfully added namespace 'yournamespace'
 
 OK
 ```
-执行以下命令获得`registry`，在以下例子中`registry`为us.icr.io
+执行以下命令获得`registry`，在以下例子中`registry`为us.icr.io   
 ```
 $ ibmcloud cr region
 You are targeting region 'us-south', the registry is 'us.icr.io'.
@@ -111,15 +111,15 @@ You are targeting region 'us-south', the registry is 'us.icr.io'.
 `git clone https://github.com/IBM/tekton-tutorial`
 
 2. 创建一个Task来build一个image并push到container registry。    
-这个Task的文件在[tekton/tasks/source-to-image.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/tasks/source-to-image.yaml)。这个Taskbuild一个docker image并把它push到一个registry。
+这个Task的文件在[tekton/tasks/source-to-image.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/tasks/source-to-image.yaml)。这个Taskbuild一个docker image并把它push到一个registry。   
 
 一个Task可以包含一个或多个`Steps`。每个step定义了一个image用来执行这个step. 这个Task的步骤中使用了[kaniko](https://github.com/GoogleContainerTools/kaniko)项目来build source为一个docker image并把它push到一个registry。      
 
 这个Task需要一个git类型的input resource,来定义souce的位置。这个git souce将被clone到本地的/workspace/git-source目录下。在Task中这个resource只是一个引用。后面我们将创建一个PipelineResources来定义真正的resouce资源。Task还使用了input parameters。这样做的好处是可以重用Task。   
 
-后面我们会看到task是如何获得认证来puhs image到repository的。
+后面我们会看到task是如何获得认证来puhs image到repository的。   
 
-下面创建这个Task。
+下面创建这个Task。   
 `kubectl apply -f tekton/tasks/source-to-image.yaml`
 
 3. 创建另一个Task来将image部署到Kubernetes cluster。   
@@ -129,24 +129,24 @@ You are targeting region 'us-south', the registry is 'us.icr.io'.
 第一，在container里通过执行sed命令更新yaml文件来部署第1步时通过source-to-image Task创建出来image。   
 第二，使用Lachlan Evenson的k8s-kubectl container image执行kubectl命令来apply上一步的yaml文件。   
 
-后面我们会看到这个task是如何获得认证来apply这个yaml文件中的resouce的。
+后面我们会看到这个task是如何获得认证来apply这个yaml文件中的resouce的。   
 
-下面创建这个Task。
+下面创建这个Task。   
 `kubectl apply -f tekton/tasks/deploy-using-kubectl.yaml`
 
-4. 创建一个Pipeline来组合以上两个Task。
-这个Pipeline文件在[tekton/pipeline/build-and-deploy-pipeline.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/pipeline/build-and-deploy-pipeline.yaml)   
+4. 创建一个Pipeline来组合以上两个Task。   
+这个Pipeline文件在[tekton/pipeline/build-and-deploy-pipeline.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/pipeline/build-and-deploy-pipeline.yaml)    
 
 Pipeline列出了需要执行的task，以及input output resources。所有的resources都必须定义为inputs或outputs。Pipeline 无法绑定一个PipelineResource。      
-Pipeline还定义了每个task需要的input parameters。Task的input可以以多种方式进行定义，通过pipeline里的input parameter定义，或者直接设置，也可以使用task中的default值。在这个pipeline里，source-to-image task中的pathToContext parameter被暴露成为一个parameter pathToContext，而source-to-image task中pathToDockerFile则使用task中的default值。   
-Task之间的顺序用runAfter关键字来定义。在这个例子中，deploy-using-kubectl task需要在source-to-image task之后执行。   
+Pipeline还定义了每个task需要的input parameters。Task的input可以以多种方式进行定义，通过pipeline里的input parameter定义，或者直接设置，也可以使用task中的default值。在这个pipeline里，source-to-image task中的pathToContext parameter被暴露成为一个parameter pathToContext，而source-to-image task中pathToDockerFile则使用task中的default值。      
+Task之间的顺序用runAfter关键字来定义。在这个例子中，deploy-using-kubectl task需要在source-to-image task之后执行。    
 
-下面创建这个Pipeline。   
+下面创建这个Pipeline。    
 `kubectl apply -f tekton/pipeline/build-and-deploy-pipeline.yaml`
 
-5. 创建PipelineRun和PipelineResources
-以上我们定义了可以重用的Pipeline和Task，下面我们来看看如何为它指定input resource和parameters并执行这个pipeline。   
-下面是一个PipelineRun用来执行我们上面创建的Pipeline[tekton/run/picalc-pipeline-run.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/run/picalc-pipeline-run.yaml)   
+5. 创建PipelineRun和PipelineResources   
+以上我们定义了可以重用的Pipeline和Task，下面我们来看看如何为它指定input resource和parameters并执行这个pipeline。     
+下面是一个PipelineRun用来执行我们上面创建的Pipeline[tekton/run/picalc-pipeline-run.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/run/picalc-pipeline-run.yaml)      
 ```
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineRun
@@ -186,22 +186,17 @@ You must edit this file to substitute the values of <REGISTRY> and <NAMESPACE> w
     To find the value for <REGISTRY>, enter the command ibmcloud cr region.
     To find the value of <NAMESPACE>, enter the command ibmcloud cr namespace-list.
 
-修改Pipelinerun，指向正确的`<REGISTRY>/<NAMESPACE>`   
-- 修改tekton/run/picalc-pipeline-run.yaml   
-将文件中的`<REGISTRY>`和`<NAMESPACE>`用您个人account下的private container registry信息替代
-`<REGISTRY>`和`<NAMESPACE>`为实验准备->7 中获得的`registry`和`namespace`
-
-
-
+修改Pipelinerun，指向正确的`<REGISTRY>/<NAMESPACE>`    
+- 修改tekton/run/picalc-pipeline-run.yaml    
+将文件中的`<REGISTRY>`和`<NAMESPACE>`用您个人account下的private container registry信息替代   
+`<REGISTRY>`和`<NAMESPACE>`为实验准备->7 中获得的`registry`和`namespace`   
 
 这是一个Tekton PipelineResource，它定义了picalc-git，指向一个git source。这是一个计算圆周率的go程序。包含了一个Dockerfile来测试，编译代码，build image。[tekton/resources/picalc-git.yaml]（https://github.com/IBM/tekton-tutorial/blob/master/tekton/resources/picalc-git.yaml）
 
 创建pipelineresource。   
 `kubectl apply -f tekton/resources/picalc-git.yaml`   
 
-先不要创建PipelineRun，我们接下来还要为它定义service account。
-
-
+先不要创建PipelineRun，我们接下来还要为它定义service account。   
 
 ```
 *输出示例:*
