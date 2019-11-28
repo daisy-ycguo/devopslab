@@ -218,14 +218,14 @@ Pipeline暴露出来的parameters被指定了具体的值。
 `kubectl get taskruns`   
 `kubectl describe taskrun <failed-task-run-name>`   
 
-7. （可选）访问service   
-获得 istio ingressgateway的ip。   
-`kubectl get svc istio-ingressgateway --namespace istio-system --output jsonpath="{.status.loadBalancer.ingress[*].ip}"`
-获得picalc service的domain URL。   
-`kubectl get route picalc --output jsonpath="{.status.url}"| awk -F/ '{print $3}'`
-curl service。   
-`curl -H "Host: <service-domain-url>" http://<istio-ingressgateway-ip>?iterations=20000000`
-你将得到返回结果：       
-`a`
-如果curl命令没有返回正确的结果，添加-vvv获得详细的信息。   
-`curl -H "Host: <service-domain-url>" http://<istio-ingressgateway-ip>?iterations=20000000 -vvv`
+7. （可选）访问service    
+获得 istio ingressgateway的ip。    
+`kubectl get svc istio-ingressgateway --namespace istio-system --output jsonpath="{.status.loadBalancer.ingress[*].ip}"`   
+获得picalc service的domain URL。    
+`kubectl get route picalc --output jsonpath="{.status.url}"| awk -F/ '{print $3}'`   
+curl service。    
+`curl -H "Host: <service-domain-url>" http://<istio-ingressgateway-ip>?iterations=20000000`   
+你将得到返回结果：        
+`c`
+如果curl命令没有返回正确的结果，添加-vvv获得详细的信息。      
+`curl -H "Host: <service-domain-url>" http://<istio-ingressgateway-ip>?iterations=20000000 -vvv`   
