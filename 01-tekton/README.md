@@ -6,7 +6,7 @@
 - 执行一个pipeline并查看状态，学习问题处理
 Tekton is an open source project to configure and run CI/CD pipelines within a Kubernetes cluster.
 
-图
+![alt text](Picture1.png)
 
 ## 基本概念
 
