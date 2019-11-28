@@ -26,7 +26,7 @@ passcode: ikslab
 
 3. 确保您已完成[准备 Kubecluster 和安装 knative](https://github.com/QiuJieLi/devopslab/tree/master/00-install)的步骤   
 验证knative和isto的pods都是Running状态      
-*示例:*   
+*示例:*         
 ```
 $ kubectl get pods --namespace istio-system
 NAME                                      READY   STATUS    RESTARTS   AGE
@@ -136,7 +136,6 @@ You are targeting region 'us-south', the registry is 'us.icr.io'.
 
 4. 创建一个Pipeline来组合以上两个Task。   
 这个Pipeline文件在[tekton/pipeline/build-and-deploy-pipeline.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/pipeline/build-and-deploy-pipeline.yaml)    
-
 Pipeline列出了需要执行的task，以及input output resources。所有的resources都必须定义为inputs或outputs。Pipeline 无法绑定一个PipelineResource。      
 Pipeline还定义了每个task需要的input parameters。Task的input可以以多种方式进行定义，通过pipeline里的input parameter定义，或者直接设置，也可以使用task中的default值。在这个pipeline里，source-to-image task中的pathToContext parameter被暴露成为一个parameter pathToContext，而source-to-image task中pathToDockerFile则使用task中的default值。      
 Task之间的顺序用runAfter关键字来定义。在这个例子中，deploy-using-kubectl task需要在source-to-image task之后执行。    
@@ -245,10 +244,8 @@ Apply the file to your cluster to create the service account and related resourc
 kubectl apply -f tekton/pipeline-account.yaml
 
 
-```
-kubectl apply -f tekton/pipeline-account.yaml
-```
+`kubectl apply -f tekton/pipeline-account.yaml`
 
 7. 执行Pipeline  
-现在万事俱备，我们来执行这个pipeline。    
-` kubectl create -f tekton/run/picalc-pipeline-run.yaml`
+现在万事俱备，我们来执行这个pipeline。       
+`kubectl create -f tekton/run/picalc-pipeline-run.yaml`
