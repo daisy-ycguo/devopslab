@@ -159,11 +159,9 @@ PipelineRun要执行的Pipeline由pipelineRef指定。
 Pipeline暴露出来的parameters被指定了具体的值。
 关于Pipeline需要的resources，我们之后会定义一个名为picalc-git的PipelineResources。   
 名为pipeline-account的service account用来提供pipeline执行时所需要的认证信息。我们后面将会创建这个service account。
-
 下面我们来创建Tekton PipelineResource。名为picalc-git的PipelineResource指向一个git source。这git source是一个计算圆周率的go程序。它包含了一个Dockerfile来测试，编译代码，build image。[tekton/resources/picalc-git.yaml]（https://github.com/IBM/tekton-tutorial/blob/master/tekton/resources/picalc-git.yaml)     
 下面我们创建这个Pipelineresource。   
 `kubectl apply -f tekton/resources/picalc-git.yaml`   
-
 下面我们来创建service account。Service account让pipeline可以访问被保护的资源-您私人的container registry。在创建service account之前，我们先要创建一个secret,它含了对您的container registry进行操作所需要的认证信息。   
 `kubectl create secret docker-registry ibm-cr-push-secret --docker-server=<REGISTRY> --docker-username=iamapikey --docker-password=<YOURAPIKEY> --docker-email=me@here.com`   
 其中`<YOURAPIKEY>`和`<REGISTRY>`的值，请参考实验步骤5。      
@@ -177,12 +175,10 @@ Pipeline暴露出来的parameters被指定了具体的值。
 6. 执行Pipeline  
 现在万事俱备，我们来执行这个pipeline。        
 `kubectl create -f tekton/run/picalc-pipeline-run.yaml`   
-就像前面说过的，PipelineRun没有一个固定的名字，每次执行的的时候会使用generateName的内容生成一个名字。kubectl会返回一个新生成的PipelineRun resource名字。
-      ```
-      pipelinerun.tekton.dev/picalc-pr-rqzgp created
-      ```
+就像前面说过的，PipelineRun没有一个固定的名字，每次执行的的时候会使用generateName的内容生成一个名字。kubectl会返回一个新生成的PipelineRun resource名字。   
+`pipelinerun.tekton.dev/picalc-pr-rqzgp created`   
 可以用一下命令检查pipeline的状态。   
-`kubectl describe pipelinerun picalc-pr-rqzgp`
+`kubectl describe pipelinerun picalc-pr-rqzgp`   
 多检查几次直到你看到类似下面的状态。   
       ```
             Status:
