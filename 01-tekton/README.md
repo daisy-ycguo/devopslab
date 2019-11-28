@@ -112,38 +112,7 @@ You are targeting region 'us-south', the registry is 'us.icr.io'.
 
 2. 创建一个Task来build一个image并push到container registry。    
 这个Task的文件在[tekton/tasks/source-to-image.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/tasks/source-to-image.yaml)。这个Taskbuild一个docker image并把它push到一个registry。
-```
-apiVersion: tekton.dev/v1alpha1
-kind: Task
-metadata:
-  name: source-to-image
-spec:
-  inputs:
-    resources:
-      - name: git-source
-        type: git
-    params:
-      - name: pathToContext
-        description: The path to the build context, used by Kaniko - within the workspace
-        default: .
-      - name: pathToDockerFile
-        description: The path to the dockerfile to build (relative to the context)
-        default: Dockerfile
-      - name: imageUrl
-        description: Url of image repository
-      - name: imageTag
-        description: Tag to apply to the built image
-        default: "latest"
-  steps:
-    - name: build-and-push
-      image: gcr.io/kaniko-project/executor
-      command:
-        - /kaniko/executor
-      args:
-        - --dockerfile=${inputs.params.pathToDockerFile}
-        - --destination=${inputs.params.imageUrl}:${inputs.params.imageTag}
-        - --context=/workspace/git-source/${inputs.params.pathToContext}
-```   
+
 一个Task可以包含一个或多个`Steps`。每个step定义了一个image用来执行这个step. 这个Task的步骤中使用了[kaniko](https://github.com/GoogleContainerTools/kaniko)项目来build source为一个docker image并把它push到一个registry。      
 
 这个Task需要一个git类型的input resource,来定义souce的位置。这个git souce将被clone到本地的/workspace/git-source目录下。在Task中这个resource只是一个引用。后面我们将创建一个PipelineResources来定义真正的resouce资源。Task还使用了input parameters。这样做的好处是可以重用Task。   
@@ -155,41 +124,7 @@ spec:
 
 3. 创建另一个Task来将image部署到Kubernetes cluster。   
 这个Task的文件在[tekton/tasks/deploy-using-kubectl.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/tasks/deploy-using-kubectl.yaml)    
-```
-apiVersion: tekton.dev/v1alpha1
-kind: Task
-metadata:
-  name: deploy-using-kubectl
-spec:
-  inputs:
-    resources:
-      - name: git-source
-        type: git
-    params:
-      - name: pathToYamlFile
-        description: The path to the yaml file to deploy within the git source
-      - name: imageUrl
-        description: Url of image repository
-      - name: imageTag
-        description: Tag of the images to be used.
-        default: "latest"
-  steps:
-    - name: update-yaml
-      image: alpine
-      command: ["sed"]
-      args:
-        - "-i"
-        - "-e"
-        - "s;__IMAGE__;${inputs.params.imageUrl}:${inputs.params.imageTag};g"
-        - "/workspace/git-source/${inputs.params.pathToYamlFile}"
-    - name: run-kubectl
-      image: lachlanevenson/k8s-kubectl
-      command: ["kubectl"]
-      args:
-        - "apply"
-        - "-f"
-        - "/workspace/git-source/${inputs.params.pathToYamlFile}"
-```
+
 这个Task有两个步骤。    
 第一，在container里通过执行sed命令更新yaml文件来部署第1步时通过source-to-image Task创建出来image。   
 第二，使用Lachlan Evenson的k8s-kubectl container image执行kubectl命令来apply上一步的yaml文件。   
@@ -201,57 +136,7 @@ spec:
 
 4. 创建一个Pipeline来组合以上两个Task。
 这个Pipeline文件在[tekton/pipeline/build-and-deploy-pipeline.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/pipeline/build-and-deploy-pipeline.yaml)   
-```
-apiVersion: tekton.dev/v1alpha1
-kind: Pipeline
-metadata:
-  name: build-and-deploy-pipeline
-spec:
-  resources:
-    - name: git-source
-      type: git
-  params:
-    - name: pathToContext
-      description: The path to the build context, used by Kaniko - within the workspace
-      default: src
-    - name: pathToYamlFile
-      description: The path to the yaml file to deploy within the git source
-    - name: imageUrl
-      description: Url of image repository
-    - name: imageTag
-      description: Tag to apply to the built image
-  tasks:
-  - name: source-to-image
-    taskRef:
-      name: source-to-image
-    params:
-      - name: pathToContext
-        value: "${params.pathToContext}"
-      - name: imageUrl
-        value: "${params.imageUrl}"
-      - name: imageTag
-        value: "${params.imageTag}"
-    resources:
-      inputs:
-        - name: git-source
-          resource: git-source
-  - name: deploy-to-cluster
-    taskRef:
-      name: deploy-using-kubectl
-    runAfter:
-      - source-to-image
-    params:
-      - name: pathToYamlFile
-        value:  "${params.pathToYamlFile}"
-      - name: imageUrl
-        value: "${params.imageUrl}"
-      - name: imageTag
-        value: "${params.imageTag}"
-    resources:
-      inputs:
-        - name: git-source
-          resource: git-source
-```
+
 Pipeline列出了需要执行的task，以及input output resources。所有的resources都必须定义为inputs或outputs。Pipeline 无法绑定一个PipelineResource。      
 Pipeline还定义了每个task需要的input parameters。Task的input可以以多种方式进行定义，通过pipeline里的input parameter定义，或者直接设置，也可以使用task中的default值。在这个pipeline里，source-to-image task中的pathToContext parameter被暴露成为一个parameter pathToContext，而source-to-image task中pathToDockerFile则使用task中的default值。   
 Task之间的顺序用runAfter关键字来定义。在这个例子中，deploy-using-kubectl task需要在source-to-image task之后执行。   
@@ -311,19 +196,6 @@ You must edit this file to substitute the values of <REGISTRY> and <NAMESPACE> w
 
 这是一个Tekton PipelineResource，它定义了picalc-git，指向一个git source。这是一个计算圆周率的go程序。包含了一个Dockerfile来测试，编译代码，build image。[tekton/resources/picalc-git.yaml]（https://github.com/IBM/tekton-tutorial/blob/master/tekton/resources/picalc-git.yaml）
 
-```
-apiVersion: tekton.dev/v1alpha1
-kind: PipelineResource
-metadata:
-  name: picalc-git
-spec:
-  type: git
-  params:
-    - name: revision
-      value: master
-    - name: url
-      value: https://github.com/IBM/tekton-tutorial
-```
 创建pipelineresource。   
 `kubectl apply -f tekton/resources/picalc-git.yaml`   
 
@@ -364,48 +236,6 @@ where
     <REGISTRY> is the URL of your container registry, such as us.icr.io or registry.ng.bluemix.net
 
 Now you can create the service account using the following yaml. You can find this yaml file at tekton/pipeline-account.yaml.
-
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: pipeline-account
-secrets:
-- name: ibm-cr-push-secret
-
----
-
-apiVersion: v1
-kind: Secret
-metadata:
-  name: kube-api-secret
-  annotations:
-    kubernetes.io/service-account.name: pipeline-account
-type: kubernetes.io/service-account-token
-
----
-
-kind: Role
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: pipeline-role
-rules:
-- apiGroups: ["serving.knative.dev"]
-  resources: ["services"]
-  verbs: ["get", "create", "update", "patch"]
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: pipeline-role-binding
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: pipeline-role
-subjects:
-- kind: ServiceAccount
-  name: pipeline-account
 
 This yaml creates the following Kubernetes resources:
 
