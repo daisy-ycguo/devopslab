@@ -27,58 +27,58 @@ passcode: ikslab
 3. 确保您已完成[准备 Kubecluster 和安装 knative](https://github.com/QiuJieLi/devopslab/tree/master/00-install)的步骤   
 验证knative和isto的pods都是Running状态      
 *示例:*         
-```
-$ kubectl get pods --namespace istio-system
-NAME                                      READY   STATUS    RESTARTS   AGE
-cluster-local-gateway-5d8ccd46db-kt4vk    1/1     Running   0          6h14m
-istio-citadel-654897999b-pbxjs            1/1     Running   0          6h15m
-istio-egressgateway-77cfcd4f8d-8cbw2      1/1     Running   0          6h15m
-istio-egressgateway-77cfcd4f8d-xgdfr      1/1     Running   0          6h14m
-istio-galley-67987bf6cd-xwhlj             1/1     Running   0          6h15m
-istio-ingressgateway-55b8654b85-8k9lh     1/1     Running   0          6h14m
-istio-ingressgateway-55b8654b85-gph7k     1/1     Running   0          6h15m
-istio-pilot-796cfc6987-b7qmg              2/2     Running   0          6h15m
-istio-policy-68f46ddd67-sn7x2             2/2     Running   4          6h15m
-istio-sidecar-injector-75479d8b85-vnwk8   1/1     Running   0          6h15m
-istio-telemetry-b8dbc5985-wmj48           2/2     Running   4          6h15m
-prometheus-7b87f6d744-rpgnq               1/1     Running   0          6h15m
+      ```
+      $ kubectl get pods --namespace istio-system
+      NAME                                      READY   STATUS    RESTARTS   AGE
+      cluster-local-gateway-5d8ccd46db-kt4vk    1/1     Running   0          6h14m
+      istio-citadel-654897999b-pbxjs            1/1     Running   0          6h15m
+      istio-egressgateway-77cfcd4f8d-8cbw2      1/1     Running   0          6h15m
+      istio-egressgateway-77cfcd4f8d-xgdfr      1/1     Running   0          6h14m
+      istio-galley-67987bf6cd-xwhlj             1/1     Running   0          6h15m
+      istio-ingressgateway-55b8654b85-8k9lh     1/1     Running   0          6h14m
+      istio-ingressgateway-55b8654b85-gph7k     1/1     Running   0          6h15m
+      istio-pilot-796cfc6987-b7qmg              2/2     Running   0          6h15m
+      istio-policy-68f46ddd67-sn7x2             2/2     Running   4          6h15m
+      istio-sidecar-injector-75479d8b85-vnwk8   1/1     Running   0          6h15m
+      istio-telemetry-b8dbc5985-wmj48           2/2     Running   4          6h15m
+      prometheus-7b87f6d744-rpgnq               1/1     Running   0          6h15m
 
-$ kubectl get pods --namespace knative-serving
-NAME                                READY   STATUS    RESTARTS   AGE
-activator-7654759547-vc45g          2/2     Running   2          6h13m
-autoscaler-74878dccf9-7b8gc         2/2     Running   2          6h13m
-autoscaler-hpa-6fc598cdb-njhnf      1/1     Running   0          6h13m
-controller-dc64bc644-s5f24          1/1     Running   0          6h13m
-networking-istio-65f5b87479-nxftw   1/1     Running   0          6h13m
-webhook-76c4d8d998-5sg4p            1/1     Running   0          5h12m
-```
+      $ kubectl get pods --namespace knative-serving
+      NAME                                READY   STATUS    RESTARTS   AGE
+      activator-7654759547-vc45g          2/2     Running   2          6h13m
+      autoscaler-74878dccf9-7b8gc         2/2     Running   2          6h13m
+      autoscaler-hpa-6fc598cdb-njhnf      1/1     Running   0          6h13m
+      controller-dc64bc644-s5f24          1/1     Running   0          6h13m
+      networking-istio-65f5b87479-nxftw   1/1     Running   0          6h13m
+      webhook-76c4d8d998-5sg4p            1/1     Running   0          5h12m
+      ```
 
 4. 安装 Tekton pipeline   
 `kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml`     
 使用以下命令查看Tekton Pipelines components 直到 STATUS 都显示 `Running`:     
 *示例:*    
-```
-$ kubectl get pods --namespace tekton-pipelines
-NAME                                           READY   STATUS    RESTARTS   AGE
-tekton-pipelines-controller-7769bc5b76-tzsq9   1/1     Running   0          5h49m
-tekton-pipelines-webhook-7849d4f75f-vd49j      1/1     Running   0          4h47m
-```
+      ```
+      $ kubectl get pods --namespace tekton-pipelines
+      NAME                                           READY   STATUS    RESTARTS   AGE
+      tekton-pipelines-controller-7769bc5b76-tzsq9   1/1     Running   0          5h49m
+      tekton-pipelines-webhook-7849d4f75f-vd49j      1/1     Running   0          4h47m
+      ```
 
 5. 安装 Kn Client   
 安装步骤参考https://github.com/knative/client/blob/master/docs/README.md   
 例如，在linux上    
-```
-$ wget https://storage.googleapis.com/knative-nightly/client/latest/kn-linux-amd64
-$ chmod +x kn-linux-amd64
-$ export PATH=$PATH:$PWD
-```   
+      ```
+      $ wget https://storage.googleapis.com/knative-nightly/client/latest/kn-linux-amd64
+      $ chmod +x kn-linux-amd64
+      $ export PATH=$PATH:$PWD
+      ```   
 
 验证kn安装成功   
-```
-$ kn
-Manage your Knative building blocks:
-...
-```
+      ```
+      $ kn
+      Manage your Knative building blocks:
+      ...
+      ```
 
 6. 安装container-registry CLI plug-in
 ~~安装ibmcloud cli~~
@@ -92,19 +92,19 @@ Manage your Knative building blocks:
 列出您的`namespace`   
 `$ ibmcloud cr namespaces`   
 如果您还没有一个`namespace`,创建一个   
-```
-$ ibmcloud cr namespace-add tektonlab
-Adding namespace 'yournamespace'...
+      ```
+      $ ibmcloud cr namespace-add tektonlab
+      Adding namespace 'yournamespace'...
 
-Successfully added namespace 'yournamespace'
+      Successfully added namespace 'yournamespace'
 
-OK
-```
+      OK
+      ```
 执行以下命令获得`registry`，在以下例子中`registry`为us.icr.io   
-```
-$ ibmcloud cr region
-You are targeting region 'us-south', the registry is 'us.icr.io'.
-```
+      ```
+      $ ibmcloud cr region
+      You are targeting region 'us-south', the registry is 'us.icr.io'.
+      ```
 
 ## 实验步骤
 1. Clone tekton-tutorial项目到本地目录。   
@@ -132,36 +132,35 @@ You are targeting region 'us-south', the registry is 'us.icr.io'.
 Pipeline列出了需要执行的task，以及input output resources。所有的resources都必须定义为inputs或outputs。Pipeline 无法绑定一个PipelineResource。      
 Pipeline还定义了每个task需要的input parameters。Task的input可以以多种方式进行定义，通过pipeline里的input parameter定义，或者直接设置，也可以使用task中的default值。在这个pipeline里，source-to-image task中的pathToContext parameter被暴露成为一个parameter pathToContext，而source-to-image task中pathToDockerFile则使用task中的default值。      
 Task之间的顺序用runAfter关键字来定义。在这个例子中，deploy-using-kubectl task需要在source-to-image task之后执行。    
-
 下面创建这个Pipeline。    
 `kubectl apply -f tekton/pipeline/build-and-deploy-pipeline.yaml`
 
 5. 创建PipelineRun和PipelineResources   
 以上我们定义了可以重用的Pipeline和Task，下面我们来看看如何为它指定input resource和parameters并执行这个pipeline。     
 下面是一个PipelineRun用来执行我们上面创建的Pipeline[tekton/run/picalc-pipeline-run.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/run/picalc-pipeline-run.yaml)      
-```
-apiVersion: tekton.dev/v1alpha1
-kind: PipelineRun
-metadata:
-  generateName: picalc-pr-
-spec:
-  pipelineRef:
-    name: build-and-deploy-pipeline
-  resources:
-    - name: git-source
-      resourceRef:
-        name: picalc-git
-  params:
-    - name: pathToYamlFile
-      value: "knative/picalc.yaml"
-    - name: imageUrl
-      value: <REGISTRY>/<NAMESPACE>/picalc
-    - name: imageTag
-      value: "1.0"
-  trigger:
-    type: manual
-  serviceAccount: pipeline-account
-```
+      ```
+      apiVersion: tekton.dev/v1alpha1
+      kind: PipelineRun
+      metadata:
+        generateName: picalc-pr-
+      spec:
+        pipelineRef:
+          name: build-and-deploy-pipeline
+        resources:
+          - name: git-source
+            resourceRef:
+              name: picalc-git
+        params:
+          - name: pathToYamlFile
+            value: "knative/picalc.yaml"
+          - name: imageUrl
+            value: <REGISTRY>/<NAMESPACE>/picalc
+          - name: imageTag
+            value: "1.0"
+        trigger:
+          type: manual
+        serviceAccount: pipeline-account
+      ```
 
     The PipelineRun does not have a fixed name. It uses generateName to generate a name each time it is created. This is because a particular PipelineRun resource executes the pipeline only once. If you want to run the pipeline again, you cannot modify an existing PipelineRun resource to request it to re-run -- you must create a new PipelineRun resource. While you could use name to assign a unique name to your PipelineRun each time you create one, it is much easier to use generateName.
 
