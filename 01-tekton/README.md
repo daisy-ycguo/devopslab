@@ -72,8 +72,7 @@ passcode: ikslab
       $ chmod +x kn-linux-amd64
       $ export PATH=$PATH:$PWD
       ```   
-
-验证kn安装成功   
+      验证kn安装成功   
       ```
       $ kn
       Manage your Knative building blocks:
@@ -125,12 +124,12 @@ PipelineRun文件：[tekton/run/picalc-pipeline-run.yaml](https://github.com/IBM
 `ibmcloud cr namespaces`   
 如果您还没有一个namespace,创建一个。   
 `ibmcloud cr namespace-add <yourspacename>`
-执行以下命令获得registry，在以下例子中registry为us.icr.io。   
+执行以下命令获得registry，在以下例子中registry为us.icr.io。      
       ```
       $ ibmcloud cr region
       You are targeting region 'us-south', the registry is 'us.icr.io'.
-      ```
-将文件中的`<REGISTRY>`和`<NAMESPACE>`用以上的值代替。
+      ```   
+      将文件中的`<REGISTRY>`和`<NAMESPACE>`用以上的值代替。
       ```
       apiVersion: tekton.dev/v1alpha1
       kind: PipelineRun
@@ -154,9 +153,9 @@ PipelineRun文件：[tekton/run/picalc-pipeline-run.yaml](https://github.com/IBM
           type: manual
         serviceAccount: pipeline-account
       ```
-PipelineRun没有一个固定的名字，每次执行的的时候会使用generateName的内容生成一个名字，例如‘picalc-pr-4jrtd’。这样做的好处是可以多次执行PipelineRun。   
-PipelineRun要执行的Pipeline由pipelineRef指定。
-Pipeline暴露出来的parameters被指定了具体的值。
+      PipelineRun没有一个固定的名字，每次执行的的时候会使用generateName的内容生成一个名字，例如‘picalc-pr-4jrtd’。这样做的好处是可以多次执行PipelineRun。   
+PipelineRun要执行的Pipeline由pipelineRef指定。   
+Pipeline暴露出来的parameters被指定了具体的值。   
 关于Pipeline需要的resources，我们之后会定义一个名为picalc-git的PipelineResources。   
 名为pipeline-account的service account用来提供pipeline执行时所需要的认证信息。我们后面将会创建这个service account。
 下面我们来创建Tekton PipelineResource。名为picalc-git的PipelineResource指向一个git source。这git source是一个计算圆周率的go程序。它包含了一个Dockerfile来测试，编译代码，build image。[tekton/resources/picalc-git.yaml]（https://github.com/IBM/tekton-tutorial/blob/master/tekton/resources/picalc-git.yaml)     
@@ -181,24 +180,24 @@ Pipeline暴露出来的parameters被指定了具体的值。
 `kubectl describe pipelinerun picalc-pr-rqzgp`   
 多检查几次直到你看到类似下面的状态。   
       ```
-            Status:
-              Completion Time:  2019-11-28T09:21:09Z
-              Conditions:
-                Last Transition Time:  2019-11-28T09:21:09Z
-                Message:               All Steps have completed executing
-                Reason:                Succeeded
-                Status:                True
-                Type:                  Succeeded
-              Pod Name:                picalc-pr-rqzgp-source-to-image-dng6x-pod-97cd19
-              Start Time:              2019-11-28T09:20:11Z
-      ```
-如果看到以上结果，我们就可以查看部署好的Knative service了。READY状态应该为True。    
+      Status:
+        Completion Time:  2019-11-28T09:21:09Z
+        Conditions:
+          Last Transition Time:  2019-11-28T09:21:09Z
+          Message:               All Steps have completed executing
+          Reason:                Succeeded
+          Status:                True
+          Type:                  Succeeded
+        Pod Name:                picalc-pr-rqzgp-source-to-image-dng6x-pod-97cd19
+        Start Time:              2019-11-28T09:20:11Z
+      ```   
+      如果看到以上结果，我们就可以查看部署好的Knative service了。READY状态应该为True。    
       ```
       $ kubectl get ksvc picalc
       NAME     URL                                                             LATESTCREATED   LATESTREADY    READY   REASON
       picalc   http://picalc-default.cdl-performance-3c3cell.us-south.containers.appdomain.cloud   picalc-zgqkq    picalc-zgqkq   True
-      ```
-如果Pipeline没有执行成功，状态可能是这样：   
+      ```   
+      如果Pipeline没有执行成功，状态可能是这样：   
       ```
       Status:
         Conditions:
@@ -208,8 +207,8 @@ Pipeline暴露出来的parameters被指定了具体的值。
           Status:                False
           Type:                  Succeeded
         Start Time:              2019-04-15T14:29:23Z
-      ```
-在task run的状态下面，会有一条信息告诉您如何去查看失败的task的log。请根据log提示查看问题。      
+      ```   
+      在task run的状态下面，会有一条信息告诉您如何去查看失败的task的log。请根据log提示查看问题。      
 你也可以通过下面的命令查看taskrun的状态，和失败的task的描述信息。   
 `kubectl get taskruns`   
 `kubectl describe taskrun <failed-task-run-name>`   
@@ -222,6 +221,6 @@ Pipeline暴露出来的parameters被指定了具体的值。
 curl service。    
 `curl -H "Host: <service-domain-url>" http://<istio-ingressgateway-ip>?iterations=20000000`   
 你将得到返回结果：        
-`c`
+`c`   
 如果curl命令没有返回正确的结果，添加-vvv获得详细的信息。      
 `curl -H "Host: <service-domain-url>" http://<istio-ingressgateway-ip>?iterations=20000000 -vvv`   
