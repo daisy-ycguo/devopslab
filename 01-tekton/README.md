@@ -53,10 +53,10 @@ networking-istio-65f5b87479-nxftw   1/1     Running   0          6h13m
 webhook-76c4d8d998-5sg4p            1/1     Running   0          5h12m
 ```
 
-4. 安装 Tekton pipeline
-`kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml`   
-使用以下命令查看Tekton Pipelines components 直到 STATUS 都显示 `Running`:   
-*示例:*   
+4. 安装 Tekton pipeline   
+`kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml`     
+使用以下命令查看Tekton Pipelines components 直到 STATUS 都显示 `Running`:     
+*示例:*    
 ```
 $ kubectl get pods --namespace tekton-pipelines
 NAME                                           READY   STATUS    RESTARTS   AGE
@@ -112,25 +112,18 @@ You are targeting region 'us-south', the registry is 'us.icr.io'.
 
 2. 创建一个Task来build一个image并push到container registry。    
 这个Task的文件在[tekton/tasks/source-to-image.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/tasks/source-to-image.yaml)。这个Taskbuild一个docker image并把它push到一个registry。   
-
 一个Task可以包含一个或多个`Steps`。每个step定义了一个image用来执行这个step. 这个Task的步骤中使用了[kaniko](https://github.com/GoogleContainerTools/kaniko)项目来build source为一个docker image并把它push到一个registry。      
-
 这个Task需要一个git类型的input resource,来定义souce的位置。这个git souce将被clone到本地的/workspace/git-source目录下。在Task中这个resource只是一个引用。后面我们将创建一个PipelineResources来定义真正的resouce资源。Task还使用了input parameters。这样做的好处是可以重用Task。   
-
 后面我们会看到task是如何获得认证来puhs image到repository的。   
-
 下面创建这个Task。   
 `kubectl apply -f tekton/tasks/source-to-image.yaml`
 
 3. 创建另一个Task来将image部署到Kubernetes cluster。   
 这个Task的文件在[tekton/tasks/deploy-using-kubectl.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/tasks/deploy-using-kubectl.yaml)    
-
 这个Task有两个步骤。    
 第一，在container里通过执行sed命令更新yaml文件来部署第1步时通过source-to-image Task创建出来image。   
 第二，使用Lachlan Evenson的k8s-kubectl container image执行kubectl命令来apply上一步的yaml文件。   
-
 后面我们会看到这个task是如何获得认证来apply这个yaml文件中的resouce的。   
-
 下面创建这个Task。   
 `kubectl apply -f tekton/tasks/deploy-using-kubectl.yaml`
 
