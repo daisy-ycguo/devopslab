@@ -84,28 +84,6 @@ passcode: ikslab
 ~~安装ibmcloud cli~~
 `ibmcloud plugin install container-registry`
 
-7. 创建您自己的container registry和namespace   
-使用**您自己的**ibm account登录   
-`$ ibmcloud login`   
-登录container registry   
-`$ ibmcloud cr login`   
-列出您的`namespace`   
-`$ ibmcloud cr namespaces`   
-如果您还没有一个`namespace`,创建一个   
-      ```
-      $ ibmcloud cr namespace-add tektonlab
-      Adding namespace 'yournamespace'...
-
-      Successfully added namespace 'yournamespace'
-
-      OK
-      ```
-执行以下命令获得`registry`，在以下例子中`registry`为us.icr.io   
-      ```
-      $ ibmcloud cr region
-      You are targeting region 'us-south', the registry is 'us.icr.io'.
-      ```
-
 ## 实验步骤
 1. Clone tekton-tutorial项目到本地目录。   
 `git clone https://github.com/IBM/tekton-tutorial`
@@ -136,8 +114,23 @@ Task之间的顺序用runAfter关键字来定义。在这个例子中，deploy-u
 `kubectl apply -f tekton/pipeline/build-and-deploy-pipeline.yaml`
 
 5. 创建PipelineRun和PipelineResources   
-以上我们定义了可以重用的Pipeline和Task，下面我们来看看如何为它指定input resource和parameters并执行这个pipeline。     
-下面是一个PipelineRun用来执行我们上面创建的Pipeline[tekton/run/picalc-pipeline-run.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/run/picalc-pipeline-run.yaml)      
+以上我们定义了可以重用的Pipeline和Task，下面我们创建一个PipelineRun来为它指定input resource和parameters，并执行这个pipeline。     
+PipelineRun文件：[tekton/run/picalc-pipeline-run.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/run/picalc-pipeline-run.yaml)    
+我们需要修改PipelineRun文件，替换`<REGISTRY>/<NAMESPACE>`为具体的值。   
+使用**您自己的**ibm account登录   
+`ibmcloud login --apikey <YOURAPIKEY>`   
+登录您的私人container registry   
+`ibmcloud cr login`   
+列出您的`namespace`   
+`ibmcloud cr namespaces`   
+如果您还没有一个namespace,创建一个。   
+`ibmcloud cr namespace-add <yourspacename>`
+执行以下命令获得registry，在以下例子中registry为us.icr.io。   
+      ```
+      $ ibmcloud cr region
+      You are targeting region 'us-south', the registry is 'us.icr.io'.
+      ```
+将文件中的`<REGISTRY>`和`<NAMESPACE>`用以上的值代替。
       ```
       apiVersion: tekton.dev/v1alpha1
       kind: PipelineRun
@@ -161,83 +154,78 @@ Task之间的顺序用runAfter关键字来定义。在这个例子中，deploy-u
           type: manual
         serviceAccount: pipeline-account
       ```
+PipelineRun没有一个固定的名字，每次执行的的时候会使用generateName的内容生成一个名字，例如‘picalc-pr-4jrtd’。这样做的好处是可以多次执行PipelineRun。   
+PipelineRun要执行的Pipeline由pipelineRef指定。
+Pipeline暴露出来的parameters被指定了具体的值。
+关于Pipeline需要的resources，我们之后会定义一个名为picalc-git的PipelineResources。   
+名为pipeline-account的service account用来提供pipeline执行时所需要的认证信息。我们后面将会创建这个service account。
 
-    The PipelineRun does not have a fixed name. It uses generateName to generate a name each time it is created. This is because a particular PipelineRun resource executes the pipeline only once. If you want to run the pipeline again, you cannot modify an existing PipelineRun resource to request it to re-run -- you must create a new PipelineRun resource. While you could use name to assign a unique name to your PipelineRun each time you create one, it is much easier to use generateName.
-
-    The Pipeline resource is identified under the pipelineRef key.
-
-    The git resource required by the pipeline is bound to specific PipelineResources named picalc-git. We will define it in a moment.
-
-    Parameters exposed by the pipeline are set to specific values.
-
-    A service account named pipeline-account is specified to provide the credentials needed for the pipeline to run successfully. We will define this service account in the next part of the tutorial.
-    
-You must edit this file to substitute the values of <REGISTRY> and <NAMESPACE> with the information for your private container registry.
-
-    To find the value for <REGISTRY>, enter the command ibmcloud cr region.
-    To find the value of <NAMESPACE>, enter the command ibmcloud cr namespace-list.
-
-修改Pipelinerun，指向正确的`<REGISTRY>/<NAMESPACE>`    
-- 修改tekton/run/picalc-pipeline-run.yaml    
-将文件中的`<REGISTRY>`和`<NAMESPACE>`用您个人account下的private container registry信息替代   
-`<REGISTRY>`和`<NAMESPACE>`为实验准备->7 中获得的`registry`和`namespace`   
-
-这是一个Tekton PipelineResource，它定义了picalc-git，指向一个git source。这是一个计算圆周率的go程序。包含了一个Dockerfile来测试，编译代码，build image。[tekton/resources/picalc-git.yaml]（https://github.com/IBM/tekton-tutorial/blob/master/tekton/resources/picalc-git.yaml）
-
-创建pipelineresource。   
+下面我们来创建Tekton PipelineResource。名为picalc-git的PipelineResource指向一个git source。这git source是一个计算圆周率的go程序。它包含了一个Dockerfile来测试，编译代码，build image。[tekton/resources/picalc-git.yaml]（https://github.com/IBM/tekton-tutorial/blob/master/tekton/resources/picalc-git.yaml)     
+下面我们创建这个Pipelineresource。   
 `kubectl apply -f tekton/resources/picalc-git.yaml`   
 
-先不要创建PipelineRun，我们接下来还要为它定义service account。   
+下面我们来创建service account。Service account让pipeline可以访问被保护的资源-您私人的container registry。在创建service account之前，我们先要创建一个secret,它含了对您的container registry进行操作所需要的认证信息。   
+`kubectl create secret docker-registry ibm-cr-push-secret --docker-server=<REGISTRY> --docker-username=iamapikey --docker-password=<YOURAPIKEY> --docker-email=me@here.com`   
+其中`<YOURAPIKEY>`和`<REGISTRY>`的值，请参考实验步骤5。      
+现在可以创建service account了。Service account的文件在这里[tekton/pipeline-account.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/pipeline-account.yaml)。   
+`kubectl apply -f tekton/pipeline-account.yaml`   
+这个yaml创建了一下资源：   
+一个名为pipeline-account的ServiceAccount。在之前PipelineRun的定义中我们引用了这个serviceAccount。这个serviceAccount引用了我们之前创建的名为ibm-cr-push-secret的secret。这样就让pipeline获得了向你私人的container registry push image的认证。   
+一个名为kube-api-secret的Secret,包含了用来访问Kubernetes API的认证信息信息，使得pipeline可以适用kubectl去操作您的kube cluster。   
+一个名为pipeline-role的Role和一个名为pipeline-role-binding的RoleBinding，提供给pipeline基于resource的访问控制权限来创建和修改Knative services。   
 
-```
-*输出示例:*
-`secret/ibm-cr-push-secret annotated`
+6. 执行Pipeline  
+现在万事俱备，我们来执行这个pipeline。        
+`kubectl create -f tekton/run/picalc-pipeline-run.yaml`   
+就像前面说过的，PipelineRun没有一个固定的名字，每次执行的的时候会使用generateName的内容生成一个名字。kubectl会返回一个新生成的PipelineRun resource名字。
+      ```
+      pipelinerun.tekton.dev/picalc-pr-rqzgp created
+      ```
+可以用一下命令检查pipeline的状态。   
+`kubectl describe pipelinerun picalc-pr-rqzgp`
+多检查几次直到你看到类似下面的状态。   
+      ```
+            Status:
+              Completion Time:  2019-11-28T09:21:09Z
+              Conditions:
+                Last Transition Time:  2019-11-28T09:21:09Z
+                Message:               All Steps have completed executing
+                Reason:                Succeeded
+                Status:                True
+                Type:                  Succeeded
+              Pod Name:                picalc-pr-rqzgp-source-to-image-dng6x-pod-97cd19
+              Start Time:              2019-11-28T09:20:11Z
+      ```
+如果看到以上结果，我们就可以查看部署好的Knative service了。READY状态应该为True。    
+      ```
+      $ kubectl get ksvc picalc
+      NAME     URL                                                             LATESTCREATED   LATESTREADY    READY   REASON
+      picalc   http://picalc-default.cdl-performance-3c3cell.us-south.containers.appdomain.cloud   picalc-zgqkq    picalc-zgqkq   True
+      ```
+如果Pipeline没有执行成功，状态可能是这样：   
+      ```
+      Status:
+        Conditions:
+          Last Transition Time:  2019-04-15T14:30:46Z
+          Message:               TaskRun picalc-pr-db6p6-deploy-to-cluster-7h8pm has failed
+          Reason:                Failed
+          Status:                False
+          Type:                  Succeeded
+        Start Time:              2019-04-15T14:29:23Z
+      ```
+在task run的状态下面，会有一条信息告诉您如何去查看失败的task的log。请根据log提示查看问题。      
+你也可以通过下面的命令查看taskrun的状态，和失败的task的描述信息。   
+`kubectl get taskruns`   
+`kubectl describe taskrun <failed-task-run-name>`   
 
-6. 创建service account
-The last step before running the pipeline is to set up a service account so that it can access protected resources. The service account ties together a couple of secrets containing credentials for authentication along with RBAC-related resources for permission to create and modify certain Kubernetes resources.
-
-First you need to enable programmatic access to your private container registry by creating either a registry token or an IBM Cloud Identity and Access Management (IAM) API key. The process for creating a token or an API key is described here.
-
-After you have the token or API key, you can create the following secret.
-
-kubectl create secret generic ibm-cr-push-secret --type="kubernetes.io/basic-auth" --from-literal=username=<USER> --from-literal=password=<TOKEN/APIKEY>
-kubectl annotate secret ibm-cr-push-secret tekton.dev/docker-0=<REGISTRY>
-
-替换`<APIKEY>`为实验准备->2 中使用的apikey，执行以下命令创建一个secret
-```
-kubectl create secret generic ibm-cr-push-secret --type="kubernetes.io/basic-auth" --from-literal=username=iamapikey --from-literal=password=<APIKEY>
-```
-*输出示例:*
-`kubectl annotate secret ibm-cr-push-secret tekton.dev/docker-0=secret/ibm-cr-push-secret created`
-
-替换`<REGISTRY>`为实验准备->7 中获得的`registry`
-```
-kubectl annotate secret ibm-cr-push-secret tekton.dev/docker-0=<REGISTRY>
-
-
-where
-
-    <USER> is either token if you are using a token or iamapikey if you are using an API key
-    <TOKEN/APIKEY> is either the token or API key that you created
-    <REGISTRY> is the URL of your container registry, such as us.icr.io or registry.ng.bluemix.net
-
-Now you can create the service account using the following yaml. You can find this yaml file at tekton/pipeline-account.yaml.
-
-This yaml creates the following Kubernetes resources:
-
-    A ServiceAccount named pipeline-account. This is the name that the PipelineRun seen earlier uses to reference this account. The service account references the ibm-cr-push-secret secret so that the pipeline can authenticate to your private container registry when it pushes a container image.
-
-    A Secret named kube-api-secret which contains an API credential (generated by Kubernetes) for accessing the Kubernetes API. This allows the pipeline to use kubectl to talk to your cluster.
-
-    A Role named pipeline-role and a RoleBinding named pipeline-role-binding which provide the resource-based access control permissions needed for this pipeline to create and modify Knative services.
-
-Apply the file to your cluster to create the service account and related resources.
-
-kubectl apply -f tekton/pipeline-account.yaml
-
-
-`kubectl apply -f tekton/pipeline-account.yaml`
-
-7. 执行Pipeline  
-现在万事俱备，我们来执行这个pipeline。       
-`kubectl create -f tekton/run/picalc-pipeline-run.yaml`
+7. （可选）访问service   
+获得 istio ingressgateway的ip。   
+`kubectl get svc istio-ingressgateway --namespace istio-system --output jsonpath="{.status.loadBalancer.ingress[*].ip}"`
+获得picalc service的domain URL。   
+`kubectl get route picalc --output jsonpath="{.status.url}"| awk -F/ '{print $3}'`
+curl service。   
+`curl -H "Host: <service-domain-url>" http://<istio-ingressgateway-ip>?iterations=20000000`
+你将得到返回结果：       
+`a`
+如果curl命令没有返回正确的结果，添加-vvv获得详细的信息。   
+`curl -H "Host: <service-domain-url>" http://<istio-ingressgateway-ip>?iterations=20000000 -vvv`
