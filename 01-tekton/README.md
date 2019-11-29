@@ -131,7 +131,9 @@ PipelineRun文件：[tekton/run/picalc-pipeline-run.yaml](https://github.com/IBM
 下面我们创建这个Pipelineresource。   
 `kubectl apply -f tekton/resources/picalc-git.yaml`   
 下面我们来创建service account。Service account让pipeline可以访问被保护的资源-您私人的container registry。在创建service account之前，我们先要创建一个secret,它含了对您的container registry进行操作所需要的认证信息。   
-`kubectl create secret docker-registry ibm-cr-push-secret --docker-server=<REGISTRY> --docker-username=iamapikey --docker-password=<YOURAPIKEY> --docker-email=me@here.com`   
+```
+      kubectl create secret docker-registry ibm-cr-push-secret --docker-server=<REGISTRY> --docker-username=iamapikey --docker-password=<YOURAPIKEY> --docker-email=me@here.com
+      ``` 
 其中`<YOURAPIKEY>`和`<REGISTRY>`的值，请参考实验步骤5。      
 现在可以创建service account了。Service account的文件在这里[tekton/pipeline-account.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/pipeline-account.yaml)。   
 `kubectl apply -f tekton/pipeline-account.yaml`   
