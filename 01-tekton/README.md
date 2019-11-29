@@ -142,24 +142,24 @@ PipelineRun文件：[tekton/run/picalc-pipeline-run.yaml](https://github.com/IBM
 ### 6. 执行Pipeline  
 现在万事俱备，我们来执行这个pipeline。        
 `kubectl create -f tekton/run/picalc-pipeline-run.yaml`   
-就像前面说过的，PipelineRun没有一个固定的名字，每次执行的的时候会使用generateName的内容生成一个名字。kubectl会返回一个新生成的PipelineRun resource名字。   
+- PipelineRun没有一个固定的名字，每次执行的的时候会使用generateName的内容生成一个名字。kubectl会返回一个新生成的PipelineRun resource名字。   
 `pipelinerun.tekton.dev/picalc-pr-rqzgp created`   
-可以用一下命令检查pipeline的状态。   
+- 可以用一下命令检查pipeline的状态。   
 `kubectl describe pipelinerun picalc-pr-rqzgp`   
-多检查几次直到你看到类似下面的状态。   
-      ```
-      Status:
-        Completion Time:  2019-11-28T09:21:09Z
-        Conditions:
-          Last Transition Time:  2019-11-28T09:21:09Z
-          Message:               All Steps have completed executing
-          Reason:                Succeeded
-          Status:                True
-          Type:                  Succeeded
-        Pod Name:                picalc-pr-rqzgp-source-to-image-dng6x-pod-97cd19
-        Start Time:              2019-11-28T09:20:11Z
-      ```   
-      如果看到以上结果，我们就可以查看部署好的Knative service了。READY状态应该为True。    
+- 多检查几次直到你看到类似下面的状态。   
+```
+Status:
+  Completion Time:  2019-11-28T09:21:09Z
+  Conditions:
+    Last Transition Time:  2019-11-28T09:21:09Z
+    Message:               All Steps have completed executing
+    Reason:                Succeeded
+    Status:                True
+    Type:                  Succeeded
+  Pod Name:                picalc-pr-rqzgp-source-to-image-dng6x-pod-97cd19
+  Start Time:              2019-11-28T09:20:11Z
+```   
+- 如果看到以上结果，我们就可以查看部署好的Knative service了。READY状态应该为True。    
       ```
       $ kubectl get ksvc picalc
       NAME     URL                                                             LATESTCREATED   LATESTREADY    READY   REASON
@@ -177,7 +177,7 @@ PipelineRun文件：[tekton/run/picalc-pipeline-run.yaml](https://github.com/IBM
         Start Time:              2019-04-15T14:29:23Z
       ```   
       在task run的状态下面，会有一条信息告诉您如何去查看失败的task的log。请根据log提示查看问题。      
-你也可以通过下面的命令查看taskrun的状态，和失败的task的描述信息。   
+- 你也可以通过下面的命令查看taskrun的状态，和失败的task的描述信息。   
 `kubectl get taskruns`   
 `kubectl describe taskrun <failed-task-run-name>`   
 
