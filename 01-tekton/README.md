@@ -94,35 +94,35 @@ PipelineRun文件：[tekton/run/picalc-pipeline-run.yaml](https://github.com/IBM
 - 如果您还没有一个namespace,创建一个。   
 `ibmcloud cr namespace-add <yourspacename>`
 - 执行以下命令获得registry，在以下例子中registry为us.icr.io。      
-      ```
-      $ ibmcloud cr region
-      You are targeting region 'us-south', the registry is 'us.icr.io'.
-      ```   
-      将文件中的`<REGISTRY>`和`<NAMESPACE>`用以上的值代替。
-      ```
-      apiVersion: tekton.dev/v1alpha1
-      kind: PipelineRun
-      metadata:
-        generateName: picalc-pr-
-      spec:
-        pipelineRef:
-          name: build-and-deploy-pipeline
-        resources:
-          - name: git-source
-            resourceRef:
-              name: picalc-git
-        params:
-          - name: pathToYamlFile
-            value: "knative/picalc.yaml"
-          - name: imageUrl
-            value: <REGISTRY>/<NAMESPACE>/picalc
-          - name: imageTag
-            value: "1.0"
-        trigger:
-          type: manual
-        serviceAccount: pipeline-account
-      ```
-      - PipelineRun没有一个固定的名字，每次执行的的时候会使用generateName的内容生成一个名字，例如‘picalc-pr-4jrtd’。这样做的好处是可以多次执行PipelineRun。   
+```
+$ ibmcloud cr region
+You are targeting region 'us-south', the registry is 'us.icr.io'.
+```   
+将文件中的`<REGISTRY>`和`<NAMESPACE>`用以上的值代替。
+```
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+  generateName: picalc-pr-
+spec:
+  pipelineRef:
+    name: build-and-deploy-pipeline
+  resources:
+    - name: git-source
+      resourceRef:
+        name: picalc-git
+  params:
+    - name: pathToYamlFile
+      value: "knative/picalc.yaml"
+    - name: imageUrl
+      value: <REGISTRY>/<NAMESPACE>/picalc
+    - name: imageTag
+      value: "1.0"
+  trigger:
+    type: manual
+  serviceAccount: pipeline-account
+```
+- PipelineRun没有一个固定的名字，每次执行的的时候会使用generateName的内容生成一个名字，例如‘picalc-pr-4jrtd’。这样做的好处是可以多次执行PipelineRun。   
 - PipelineRun要执行的Pipeline由pipelineRef指定。   
 - Pipeline暴露出来的parameters被指定了具体的值。   
 - 关于Pipeline需要的resources，我们之后会定义一个名为picalc-git的PipelineResources。   
@@ -132,8 +132,8 @@ PipelineRun文件：[tekton/run/picalc-pipeline-run.yaml](https://github.com/IBM
 `kubectl apply -f tekton/resources/picalc-git.yaml`   
 下面我们来创建service account。Service account让pipeline可以访问被保护的资源-您私人的container registry。在创建service account之前，我们先要创建一个secret,它含了对您的container registry进行操作所需要的认证信息。   
 ```
-      kubectl create secret docker-registry ibm-cr-push-secret --docker-server=<REGISTRY> --docker-username=iamapikey --docker-password=<YOURAPIKEY> --docker-email=me@here.com
-      ``` 
+kubectl create secret docker-registry ibm-cr-push-secret --docker-server=<REGISTRY> --docker-username=iamapikey --docker-password=<YOURAPIKEY> --docker-email=me@here.com
+``` 
 其中`<YOURAPIKEY>`和`<REGISTRY>`的值，请参考实验步骤5。      
 现在可以创建service account了。Service account的文件在这里[tekton/pipeline-account.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/pipeline-account.yaml)。   
 `kubectl apply -f tekton/pipeline-account.yaml`   
