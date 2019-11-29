@@ -56,27 +56,29 @@ Tekton is an open source project to configure and run CI/CD pipelines within a K
 
 #### 2. 创建一个Task来build一个image并push到container registry。 
 这个Task的文件在[tekton/tasks/source-to-image.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/tasks/source-to-image.yaml)。这个Taskbuild一个docker image并把它push到一个registry。   
-- 一个Task可以包含一个或多个`Steps`。每个step定义了一个image用来执行这个step. 这个Task的步骤中使用了[kaniko](https://github.com/GoogleContainerTools/kaniko)项目来build source为一个docker image并把它push到一个registry。      
+
+*- 一个Task可以包含一个或多个`Steps`。每个step定义了一个image用来执行这个step. 这个Task的步骤中使用了[kaniko](https://github.com/GoogleContainerTools/kaniko)项目来build source为一个docker image并把它push到一个registry。      
 - 这个Task需要一个git类型的input resource,来定义souce的位置。这个git souce将被clone到本地的/workspace/git-source目录下。在Task中这个resource只是一个引用。后面我们将创建一个PipelineResources来定义真正的resouce资源。Task还使用了input parameters。这样做的好处是可以重用Task。   
-- 后面我们会看到task是如何获得认证来puhs image到repository的。  
+- 后面我们会看到task是如何获得认证来puhs image到repository的。  *
 
 下面创建这个Task。   
 `kubectl apply -f tekton/tasks/source-to-image.yaml`
 
 #### 3. 创建另一个Task来将image部署到Kubernetes cluster。   
-这个Task的文件在[tekton/tasks/deploy-using-kubectl.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/tasks/deploy-using-kubectl.yaml)。这个Task有两个步骤。    
+这个Task的文件在[tekton/tasks/deploy-using-kubectl.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/tasks/deploy-using-kubectl.yaml)。
+*这个Task有两个步骤。    
 - 第一，在container里通过执行sed命令更新yaml文件来部署第1步时通过source-to-image Task创建出来image。   
 - 第二，使用Lachlan Evenson的k8s-kubectl container image执行kubectl命令来apply上一步的yaml文件。   
-后面我们会看到这个task是如何获得认证来apply这个yaml文件中的resouce的。   
+后面我们会看到这个task是如何获得认证来apply这个yaml文件中的resouce的。   *
 
 下面创建这个Task。   
 `kubectl apply -f tekton/tasks/deploy-using-kubectl.yaml`
 
 #### 4. 创建一个Pipeline来组合以上两个Task。   
 这个Pipeline文件在[tekton/pipeline/build-and-deploy-pipeline.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/pipeline/build-and-deploy-pipeline.yaml)    
-- Pipeline列出了需要执行的task，以及input output resources。所有的resources都必须定义为inputs或outputs。Pipeline 无法绑定一个PipelineResource。      
+*- Pipeline列出了需要执行的task，以及input output resources。所有的resources都必须定义为inputs或outputs。Pipeline 无法绑定一个PipelineResource。      
 - Pipeline还定义了每个task需要的input parameters。Task的input可以以多种方式进行定义，通过pipeline里的input parameter定义，或者直接设置，也可以使用task中的default值。在这个pipeline里，source-to-image task中的pathToContext parameter被暴露成为一个parameter - - pathToContext，而source-to-image task中pathToDockerFile则使用task中的default值。      
-- Task之间的顺序用runAfter关键字来定义。在这个例子中，deploy-using-kubectl task需要在source-to-image task之后执行。    
+- Task之间的顺序用runAfter关键字来定义。在这个例子中，deploy-using-kubectl task需要在source-to-image task之后执行。    *
 
 下面创建这个Pipeline。    
 `kubectl apply -f tekton/pipeline/build-and-deploy-pipeline.yaml`
@@ -84,7 +86,7 @@ Tekton is an open source project to configure and run CI/CD pipelines within a K
 #### 5. 创建PipelineRun和PipelineResources   
 以上我们定义了可以重用的Pipeline和Task，下面我们创建一个PipelineRun来为它指定input resource和parameters，并执行这个pipeline。     
 PipelineRun文件：[tekton/run/picalc-pipeline-run.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/run/picalc-pipeline-run.yaml)    
-我们需要修改PipelineRun文件，替换`<REGISTRY>/<NAMESPACE>`为具体的值。   
+5.1 修改PipelineRun文件，替换`<REGISTRY>/<NAMESPACE>`为具体的值。   
 - 使用**您自己的**ibm account登录   
 `ibmcloud login --apikey <YOURAPIKEY>`   
 - 登录您的私人container registry   
@@ -122,25 +124,29 @@ spec:
     type: manual
   serviceAccount: pipeline-account
 ```
-- PipelineRun没有一个固定的名字，每次执行的的时候会使用generateName的内容生成一个名字，例如‘picalc-pr-4jrtd’。这样做的好处是可以多次执行PipelineRun。   
+*- PipelineRun没有一个固定的名字，每次执行的的时候会使用generateName的内容生成一个名字，例如‘picalc-pr-4jrtd’。这样做的好处是可以多次执行PipelineRun。   
 - PipelineRun要执行的Pipeline由pipelineRef指定。   
 - Pipeline暴露出来的parameters被指定了具体的值。   
 - 关于Pipeline需要的resources，我们之后会定义一个名为picalc-git的PipelineResources。   
-- 名为pipeline-account的service account用来提供pipeline执行时所需要的认证信息。我们后面将会创建这个service account。
+- 名为pipeline-account的service account用来提供pipeline执行时所需要的认证信息。我们后面将会创建这个service account。*
+
 下面我们来创建Tekton PipelineResource。名为picalc-git的PipelineResource指向一个git source。这git source是一个计算圆周率的go程序。它包含了一个Dockerfile来测试，编译代码，build image。[tekton/resources/picalc-git.yaml]（https://github.com/IBM/tekton-tutorial/blob/master/tekton/resources/picalc-git.yaml)     
-下面我们创建这个Pipelineresource。   
+
+5.2 创建Pipelineresource。   
 `kubectl apply -f tekton/resources/picalc-git.yaml`   
-下面我们来创建service account。Service account让pipeline可以访问被保护的资源-您私人的container registry。在创建service account之前，我们先要创建一个secret,它含了对您的container registry进行操作所需要的认证信息。   
+
+5.3 创建service account。
+Service account让pipeline可以访问被保护的资源-您私人的container registry。在创建service account之前，我们先要创建一个secret,它含了对您的container registry进行操作所需要的认证信息。   
 ```
 kubectl create secret docker-registry ibm-cr-push-secret --docker-server=<REGISTRY> --docker-username=iamapikey --docker-password=<YOURAPIKEY> --docker-email=me@here.com
 ``` 
 其中`<YOURAPIKEY>`和`<REGISTRY>`的值，请参考实验步骤5。      
 现在可以创建service account了。Service account的文件在这里[tekton/pipeline-account.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/pipeline-account.yaml)。   
 `kubectl apply -f tekton/pipeline-account.yaml`   
-这个yaml创建了一下资源：   
-一个名为pipeline-account的ServiceAccount。在之前PipelineRun的定义中我们引用了这个serviceAccount。这个serviceAccount引用了我们之前创建的名为ibm-cr-push-secret的secret。这样就让pipeline获得了向你私人的container registry push image的认证。   
-一个名为kube-api-secret的Secret,包含了用来访问Kubernetes API的认证信息信息，使得pipeline可以适用kubectl去操作您的kube cluster。   
-一个名为pipeline-role的Role和一个名为pipeline-role-binding的RoleBinding，提供给pipeline基于resource的访问控制权限来创建和修改Knative services。   
+*这个yaml创建了一下资源：   
+- 一个名为pipeline-account的ServiceAccount。在之前PipelineRun的定义中我们引用了这个serviceAccount。这个serviceAccount引用了我们之前创建的名为ibm-cr-push-secret的secret。这样就让pipeline获得了向你私人的container registry push image的认证。   
+- 一个名为kube-api-secret的Secret,包含了用来访问Kubernetes API的认证信息信息，使得pipeline可以适用kubectl去操作您的kube cluster。   
+- 一个名为pipeline-role的Role和一个名为pipeline-role-binding的RoleBinding，提供给pipeline基于resource的访问控制权限来创建和修改Knative services。   *
 
 #### 6. 执行Pipeline  
 现在万事俱备，我们来执行这个pipeline。        
@@ -148,7 +154,7 @@ kubectl create secret docker-registry ibm-cr-push-secret --docker-server=<REGIST
 - PipelineRun没有一个固定的名字，每次执行的的时候会使用generateName的内容生成一个名字。kubectl会返回一个新生成的PipelineRun resource名字。   
 `pipelinerun.tekton.dev/picalc-pr-rqzgp created`   
 - 可以用一下命令检查pipeline的状态。   
-`kubectl describe pipelinerun picalc-pr-rqzgp`   
+`kubectl describe pipelinerun <picalc-pr-xxxx>`   
 - 多检查几次直到你看到类似下面的状态。   
 ```
 Status:
@@ -163,23 +169,23 @@ Status:
   Start Time:              2019-11-28T09:20:11Z
 ```   
 - 如果看到以上结果，我们就可以查看部署好的Knative service了。READY状态应该为True。    
-      ```
-      $ kubectl get ksvc picalc
-      NAME     URL                                                             LATESTCREATED   LATESTREADY    READY   REASON
-      picalc   http://picalc-default.cdl-performance-3c3cell.us-south.containers.appdomain.cloud   picalc-zgqkq    picalc-zgqkq   True
-      ```   
-      如果Pipeline没有执行成功，状态可能是这样：   
-      ```
-      Status:
-        Conditions:
-          Last Transition Time:  2019-04-15T14:30:46Z
-          Message:               TaskRun picalc-pr-db6p6-deploy-to-cluster-7h8pm has failed
-          Reason:                Failed
-          Status:                False
-          Type:                  Succeeded
-        Start Time:              2019-04-15T14:29:23Z
-      ```   
-      在task run的状态下面，会有一条信息告诉您如何去查看失败的task的log。请根据log提示查看问题。      
+```
+$ kubectl get ksvc picalc
+NAME     URL                                                             LATESTCREATED   LATESTREADY    READY   REASON
+picalc   http://picalc-default.cdl-performance-3c3cell.us-south.containers.appdomain.cloud   picalc-zgqkq    picalc-zgqkq   True
+```   
+如果Pipeline没有执行成功，状态可能是这样：   
+```
+Status:
+  Conditions:
+    Last Transition Time:  2019-04-15T14:30:46Z
+    Message:               TaskRun picalc-pr-db6p6-deploy-to-cluster-7h8pm has failed
+    Reason:                Failed
+    Status:                False
+    Type:                  Succeeded
+  Start Time:              2019-04-15T14:29:23Z
+```   
+在task run的状态下面，会有一条信息告诉您如何去查看失败的task的log。请根据log提示查看问题。      
 - 你也可以通过下面的命令查看taskrun的状态，和失败的task的描述信息。   
 `kubectl get taskruns`   
 `kubectl describe taskrun <failed-task-run-name>`   
