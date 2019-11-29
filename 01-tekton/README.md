@@ -183,11 +183,11 @@ Status:
 
 ### 7. （可选）访问service   
 Patch default service account,添加"imagePullSecrets"为我们前面创建的"ibm-cr-push-secret" 
-      ```
-      $ kubectl patch sa default -p '"imagePullSecrets": [{"name": "ibm-cr-push-secret" }]'
-      serviceaccount/default patched
-      ```   
-      获得 istio ingressgateway的ip。    
+```
+$ kubectl patch sa default -p '"imagePullSecrets": [{"name": "ibm-cr-push-secret" }]'
+serviceaccount/default patched
+```   
+获得 istio ingressgateway的ip。    
 `kubectl get svc istio-ingressgateway --namespace istio-system --output jsonpath="{.status.loadBalancer.ingress[*].ip}"`   
 获得picalc service的domain URL。    
 `kubectl get route picalc --output jsonpath="{.status.url}"| awk -F/ '{print $3}'`   
