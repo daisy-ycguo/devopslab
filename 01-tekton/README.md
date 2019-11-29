@@ -57,7 +57,8 @@ Tekton is an open source project to configure and run CI/CD pipelines within a K
 这个Task的文件在[tekton/tasks/source-to-image.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/tasks/source-to-image.yaml)。这个Taskbuild一个docker image并把它push到一个registry。   
 - 一个Task可以包含一个或多个`Steps`。每个step定义了一个image用来执行这个step. 这个Task的步骤中使用了[kaniko](https://github.com/GoogleContainerTools/kaniko)项目来build source为一个docker image并把它push到一个registry。      
 - 这个Task需要一个git类型的input resource,来定义souce的位置。这个git souce将被clone到本地的/workspace/git-source目录下。在Task中这个resource只是一个引用。后面我们将创建一个PipelineResources来定义真正的resouce资源。Task还使用了input parameters。这样做的好处是可以重用Task。   
-- 后面我们会看到task是如何获得认证来puhs image到repository的。   
+- 后面我们会看到task是如何获得认证来puhs image到repository的。  
+
 下面创建这个Task。   
 `kubectl apply -f tekton/tasks/source-to-image.yaml`
 
@@ -66,6 +67,7 @@ Tekton is an open source project to configure and run CI/CD pipelines within a K
 - 第一，在container里通过执行sed命令更新yaml文件来部署第1步时通过source-to-image Task创建出来image。   
 - 第二，使用Lachlan Evenson的k8s-kubectl container image执行kubectl命令来apply上一步的yaml文件。   
 后面我们会看到这个task是如何获得认证来apply这个yaml文件中的resouce的。   
+
 下面创建这个Task。   
 `kubectl apply -f tekton/tasks/deploy-using-kubectl.yaml`
 
@@ -74,6 +76,7 @@ Tekton is an open source project to configure and run CI/CD pipelines within a K
 - Pipeline列出了需要执行的task，以及input output resources。所有的resources都必须定义为inputs或outputs。Pipeline 无法绑定一个PipelineResource。      
 - Pipeline还定义了每个task需要的input parameters。Task的input可以以多种方式进行定义，通过pipeline里的input parameter定义，或者直接设置，也可以使用task中的default值。在这个pipeline里，source-to-image task中的pathToContext parameter被暴露成为一个parameter - - pathToContext，而source-to-image task中pathToDockerFile则使用task中的default值。      
 - Task之间的顺序用runAfter关键字来定义。在这个例子中，deploy-using-kubectl task需要在source-to-image task之后执行。    
+
 下面创建这个Pipeline。    
 `kubectl apply -f tekton/pipeline/build-and-deploy-pipeline.yaml`
 
