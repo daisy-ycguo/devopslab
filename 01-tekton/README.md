@@ -50,10 +50,11 @@ Tekton is an open source project to configure and run CI/CD pipelines within a K
 `ibmcloud plugin install container-registry`
 
 ## 实验步骤
-### 1. Clone tekton-tutorial项目到本地目录。   
+### 第一部分：from source code to production 
+#### 1. Clone tekton-tutorial项目到本地目录。   
 `git clone https://github.com/IBM/tekton-tutorial`
 
-### 2. 创建一个Task来build一个image并push到container registry。 
+#### 2. 创建一个Task来build一个image并push到container registry。 
 这个Task的文件在[tekton/tasks/source-to-image.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/tasks/source-to-image.yaml)。这个Taskbuild一个docker image并把它push到一个registry。   
 - 一个Task可以包含一个或多个`Steps`。每个step定义了一个image用来执行这个step. 这个Task的步骤中使用了[kaniko](https://github.com/GoogleContainerTools/kaniko)项目来build source为一个docker image并把它push到一个registry。      
 - 这个Task需要一个git类型的input resource,来定义souce的位置。这个git souce将被clone到本地的/workspace/git-source目录下。在Task中这个resource只是一个引用。后面我们将创建一个PipelineResources来定义真正的resouce资源。Task还使用了input parameters。这样做的好处是可以重用Task。   
@@ -62,7 +63,7 @@ Tekton is an open source project to configure and run CI/CD pipelines within a K
 下面创建这个Task。   
 `kubectl apply -f tekton/tasks/source-to-image.yaml`
 
-### 3. 创建另一个Task来将image部署到Kubernetes cluster。   
+#### 3. 创建另一个Task来将image部署到Kubernetes cluster。   
 这个Task的文件在[tekton/tasks/deploy-using-kubectl.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/tasks/deploy-using-kubectl.yaml)。这个Task有两个步骤。    
 - 第一，在container里通过执行sed命令更新yaml文件来部署第1步时通过source-to-image Task创建出来image。   
 - 第二，使用Lachlan Evenson的k8s-kubectl container image执行kubectl命令来apply上一步的yaml文件。   
@@ -71,7 +72,7 @@ Tekton is an open source project to configure and run CI/CD pipelines within a K
 下面创建这个Task。   
 `kubectl apply -f tekton/tasks/deploy-using-kubectl.yaml`
 
-### 4. 创建一个Pipeline来组合以上两个Task。   
+#### 4. 创建一个Pipeline来组合以上两个Task。   
 这个Pipeline文件在[tekton/pipeline/build-and-deploy-pipeline.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/pipeline/build-and-deploy-pipeline.yaml)    
 - Pipeline列出了需要执行的task，以及input output resources。所有的resources都必须定义为inputs或outputs。Pipeline 无法绑定一个PipelineResource。      
 - Pipeline还定义了每个task需要的input parameters。Task的input可以以多种方式进行定义，通过pipeline里的input parameter定义，或者直接设置，也可以使用task中的default值。在这个pipeline里，source-to-image task中的pathToContext parameter被暴露成为一个parameter - - pathToContext，而source-to-image task中pathToDockerFile则使用task中的default值。      
@@ -80,7 +81,7 @@ Tekton is an open source project to configure and run CI/CD pipelines within a K
 下面创建这个Pipeline。    
 `kubectl apply -f tekton/pipeline/build-and-deploy-pipeline.yaml`
 
-### 5. 创建PipelineRun和PipelineResources   
+#### 5. 创建PipelineRun和PipelineResources   
 以上我们定义了可以重用的Pipeline和Task，下面我们创建一个PipelineRun来为它指定input resource和parameters，并执行这个pipeline。     
 PipelineRun文件：[tekton/run/picalc-pipeline-run.yaml](https://github.com/IBM/tekton-tutorial/blob/master/tekton/run/picalc-pipeline-run.yaml)    
 我们需要修改PipelineRun文件，替换`<REGISTRY>/<NAMESPACE>`为具体的值。   
@@ -139,7 +140,7 @@ PipelineRun文件：[tekton/run/picalc-pipeline-run.yaml](https://github.com/IBM
 一个名为kube-api-secret的Secret,包含了用来访问Kubernetes API的认证信息信息，使得pipeline可以适用kubectl去操作您的kube cluster。   
 一个名为pipeline-role的Role和一个名为pipeline-role-binding的RoleBinding，提供给pipeline基于resource的访问控制权限来创建和修改Knative services。   
 
-### 6. 执行Pipeline  
+#### 6. 执行Pipeline  
 现在万事俱备，我们来执行这个pipeline。        
 `kubectl create -f tekton/run/picalc-pipeline-run.yaml`   
 - PipelineRun没有一个固定的名字，每次执行的的时候会使用generateName的内容生成一个名字。kubectl会返回一个新生成的PipelineRun resource名字。   
@@ -181,14 +182,16 @@ Status:
 `kubectl get taskruns`   
 `kubectl describe taskrun <failed-task-run-name>`   
 
-### 7. （可选）访问service   
+#### 7. （可选）访问service   
 Patch default service account,添加"imagePullSecrets"为我们前面创建的"ibm-cr-push-secret" 
 ```
 $ kubectl patch sa default -p '"imagePullSecrets": [{"name": "ibm-cr-push-secret" }]'
 serviceaccount/default patched
 ```   
 获得 istio ingressgateway的ip。    
-`kubectl get svc istio-ingressgateway --namespace istio-system --output jsonpath="{.status.loadBalancer.ingress[*].ip}"`   
+```
+kubectl get svc istio-ingressgateway --namespace istio-system --output jsonpath="{.status.loadBalancer.ingress[*].ip}"
+```   
 获得picalc service的domain URL。    
 `kubectl get route picalc --output jsonpath="{.status.url}"| awk -F/ '{print $3}'`   
 curl service。    
@@ -197,3 +200,5 @@ curl service。
 `3.1415926036`   
 如果curl命令没有返回正确的结果，添加-vvv获得详细的信息。      
 `curl -H "Host: <service-domain-url>" http://<istio-ingressgateway-ip>?iterations=20000000 -vvv`   
+
+### 第二部分: 配置Trigger
