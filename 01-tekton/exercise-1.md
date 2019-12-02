@@ -33,7 +33,7 @@
 
 ## 实验步骤
 ### 1. Fork tekton-tutorial 项目到您自己的repo并且clone到local workstation
-1. 登录您的github account。如果您没有github account, 请先注册一个账号。
+1. 登录您的github account。如果您没有github account, 请先注册一个账号，可参考： https://github.com/daisy-ycguo/devopslab/blob/master/00-install/apply-github-account.md
 2. 在浏览器中打开https://github.com/QiuJieLi/tekton-tutorial 点击Fork。
 3. Fork成功后会跳转到您自己的github账户下的tekton-tutorial repo。点击"Clone or download",拷贝url。
 4. 在您的本地目录克隆以上的repository    
