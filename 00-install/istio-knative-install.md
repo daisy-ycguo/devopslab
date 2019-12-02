@@ -18,8 +18,8 @@ ibmcloud ks cluster addon enable knative --cluster $MYCLUSTER
 
 当提示`Enable istio? [y/N]>`输入y。期待输出：
 ```
-Enabling add-on knative for cluster knative-guoyc...
-The istio add-on version 1.1.7 is required to enable the knative add-on. Enable istio? [y/N]> y
+Enabling add-on knative for cluster bnia1jds0iuker17r33g...
+The istio add-on version 1.3.4 is required to enable the knative add-on. Enable istio? [y/N]> y
 OK
 ```
 整个安装过程大约需要几分钟，请耐心等待，可以通过下面步骤检查安装进程。

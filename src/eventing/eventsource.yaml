@@ -1,0 +1,15 @@
+apiVersion: sources.eventing.knative.dev/v1alpha1
+kind: ApiServerSource
+metadata:
+  name: service-events
+  namespace: default
+spec:
+  serviceAccountName: service-sa
+  mode: Resource
+  resources:
+  - apiVersion: serving.knative.dev/v1alpha1
+    kind: Service
+  sink:
+    apiVersion: eventing.knative.dev/v1alpha1
+    kind: Broker
+    name: default
