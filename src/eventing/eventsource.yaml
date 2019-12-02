@@ -1,7 +1,7 @@
 apiVersion: sources.eventing.knative.dev/v1alpha1
 kind: ApiServerSource
 metadata:
-  name: service-events
+  name: service-update
   namespace: default
 spec:
   serviceAccountName: service-sa
