@@ -51,7 +51,7 @@ $ Kubectl log <listener-pod-name>
 $ Kubectl get tr
 $ kubectl get ksvc picalc
 
-## 4.进入在Tekton实验中fork的你的github上的tekton-tutorial repo，并配置这个repo的webhook
+## 4.进入你在Tekton实验1中fork的tekton-tutorial github hub，并配置这个repo的webhook
  
 ## 5. 在你的tekton-tutorial 对source code做些修改并push 
 
