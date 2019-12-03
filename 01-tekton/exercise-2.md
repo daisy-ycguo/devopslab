@@ -13,16 +13,15 @@
 - TriggerBinding - 检验events并且抽取payload中的fields
 - EventListener - 将TriggerBindings和TriggerTemplates连接起来，提供一个可访问的endpoint (事件接收器). 它使用TriggerBinding从events中抽取出来的内容作为参数，来创建TriggerTemplate中指定的资源。
 
-## 实验准备
-1.Fork 开源Trigger 项目到自己的repo并clone到local workstation
-https://github.com/tektoncd/triggers
-
 ## 实验步骤
 下面的实验中，我们将使用Trigger来创建一个PipelineRun和一个PipelineResource。这个PipelineRun克隆了一个GitHub repository并打印一些信息。
 
-### 2.1 创建实验的资源
+### 1.Fork 开源Trigger 项目到自己的repo并clone到local workstation
+https://github.com/tektoncd/triggers
 
-按如下步骤配置Trigger：
+### 2. 创建实验的资源
+
+#### 2.1 按如下步骤配置Trigger：
 ```
 $ cd examples
 $ kubectl apply -f role-resources
@@ -42,7 +41,7 @@ eventlistener.tekton.dev/my-listener created
 
 ```
 
-### 2.2 检查我们所需要的pods和services已经建好并且状态健康
+#### 2.2 检查我们所需要的pods和services已经建好并且状态健康
 ```
 $ kubectl get svc
 NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP                                           PORT(S)             AGE
@@ -53,7 +52,7 @@ NAME                                                 READY   STATUS      RESTART
 el-listener-5f98f8cdcd-nrd4l                         1/1     Running     0          18s
 ```
 
-### 2.3 Apply pipeline和tasks
+#### 2.3 Apply pipeline和tasks
 pipeline和tasks被TriggerTemplate中的piepeline引用。
 ```
 $ kubectl apply -f example-pipeline.yaml
@@ -62,7 +61,7 @@ task.tekton.dev/source-to-image configured
 task.tekton.dev/deploy-using-kubectl configured
 ```
 
-### 2.4 配置Ingress
+#### 2.4 配置Ingress
 使得listner endpoint可以被从cluster外部访问。后面我们会通过git repository的webhook来访问这个listener endpoint。
 1. 获取你的集群的Ingress Subdomain
 ```
@@ -104,7 +103,7 @@ el-listener   el-listener.capacity-demo.us-south.containers.appdomain.cloud   16
 ```
 
 
-### 2.5 配置webhook
+#### 2.5 配置webhook
 当指定的event发生时，Webhook会发送一个POST请求到下面配置的URL。这个URL就是我们上面建好的listener的endpoint。
 进入你在[Tekton实验1](https://github.com/daisy-ycguo/devopslab/blob/master/01-tekton/exercise-1.md)实验步骤1中fork到您自己的git账户下的repo，配置这个repo的webhook。   
 1. 在浏览器中您的tekton-tutorial repo https://github.com/<your name>/tekton-tutorial   
@@ -119,7 +118,7 @@ el-listener   el-listener.capacity-demo.us-south.containers.appdomain.cloud   16
  - 勾选 'Active'
  ![image](https://github.com/daisy-ycguo/devopslab/blob/master/images/create-webhook.png)
 
-### 2.6 修改source code并push
+#### 2.6 修改source code并push
 Push操作这个event发生时，webhook会发送一个POST请求到listener的endpoint,从而出发一个pipeline run。
 ```
 $ vi src/picalc.go
@@ -160,7 +159,7 @@ $(inputs.params.message)
 观察你的github repo webhook的变化，有新的delivery产生。
 ![image](https://github.com/daisy-ycguo/devopslab/blob/master/images/webhook-deliveries.png)
 
-## 5. 发生了什么
+## 5. 了解发生了什么
 一个PipelineResource被创建出来了，其url参数的值是webhook发出的POST request的body里面提供的。
 ```
 $ kubectl get pipelineresource git-source-v5tml -o yaml
