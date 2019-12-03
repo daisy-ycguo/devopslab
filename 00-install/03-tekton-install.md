@@ -8,11 +8,11 @@ Knative Lab使用了IBM公有云上的Kubernetes集群，以及一个云上的�
 * 准备一个可以联网的浏览器，推荐Chrome，Firefox，和Safari。
 * 在IBM公有云上准备一个可以使用的Kubernetes集群。
 
-## 第一步：访问在线CommondLine 工具。
+## 第一步：访问在线CommondLine 工具
 https://workshop.shell.cloud.ibm.com/
 在右上角切换到IBM账户，然后点击账户左边的shell图标，进入shell。此时ibmcloud已经自动登录。
 
-## 第二步：访问准备好的Kubenetes集群，假设你的集群名字为testcluster：
+## 第二步：访问准备好的Kubenetes集群，假设你的集群名字为testcluster
 ```
 $ ibmcloud ks cluster-config testcluster
 ```
@@ -51,7 +51,7 @@ $ oc login --token=*** --server=https://c100-e.us-south.containers.cloud.ibm.com
      $ ibmcloud login --apikey @apikey.json
 ```
 
-## 第三步：在在线CommondLine 里安装必要的工具：
+## 第三步：在在线CommondLine 里安装必要的工具
 * 检查必要的工具已经安装上了（ibmcloud,kubectl, ibmcloud ks, ibmcloud cr, git, kn)
 * 安装Tekton
 ```
@@ -63,7 +63,7 @@ $ kubectl apply --filename https://storage.googleapis.com/tekton-releases/trigge
 $ ibmcloud ks cluster addon enable knative --cluster testcluster -y
 ```
 
-## 第四步：检查集群已经配置好：
+## 第四步：检查集群已经配置好
 ```
 $ kubectl get namespace
 NAME                 STATUS   AGE
