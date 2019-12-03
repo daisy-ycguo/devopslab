@@ -3,6 +3,7 @@
 
 
 如果想用IBM Cloud API Key 登陆IBM Cloud，需要记得自己的API Key，或者马上申请，用一下两种方法之一申请：
+
 (1) 在浏览器上打开Console： https://cloud.ibm.com/iam/apikeys，点击 “Create an IBM Cloud API key”， 输入key名字和描述信息。 
  
  Key生成之后，下载API Key并保存为apikey.json：
