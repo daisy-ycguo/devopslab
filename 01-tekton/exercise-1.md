@@ -176,10 +176,13 @@ resource: git-source
 ### 5. 创建PipelineRun和PipelineResources   
 下面我们创建一个PipelineRun来指定input resource和parameters，并执行这个pipeline。     
 #### 5.1 修改PipelineRun文件，替换`<REGISTRY>/<NAMESPACE>`为具体的值。PipelineRun文件：tekton/run/picalc-pipeline-run.yaml。      
-1. 登录UI https://cloud.ibm.com/login，切换到**您自己的**ibm account(很重要!不要使用IBM account)。
+1. 登录UI https://cloud.ibm.com/login，切换到**您自己的**ibm account(很重要!不要使用IBM ccount)。
+![alt text](https://github.com/daisy-ycguo/devopslab/blob/master/images/login-personal-account.png)
 2. 打开 https://cloud.ibm.com/iam/apikeys 页面， 点击“Create an IBM Cloud API key”按钮。
 3. 输入一个名字，点击"Create"按钮。
-4. Download API key，打开文件获取apikey。
+![alt text](https://github.com/daisy-ycguo/devopslab/blob/master/images/create-api-key.png)
+4. Download API key，打开apikey.json文件获取apikey。
+![alt text](https://github.com/daisy-ycguo/devopslab/blob/master/images/download-apikey.png)
 5. 使用刚刚得到的API key登录 ibmcloud。
 `ibmcloud login --apikey <YOURAPIKEY>`   
 6. 登录您的私人container registry   
@@ -239,7 +242,7 @@ spec:
     - name: url
 value: https://github.com/IBM/tekton-tutorial
 ```
-创建Pipelineresource。   
+下面创建Pipelineresource。   
 `kubectl apply -f tekton/resources/picalc-git.yaml`   
 
 #### 5.3 创建service account
@@ -292,6 +295,8 @@ subjects:
 - kind: ServiceAccount
 name: pipeline-account
 ```
+
+下面创建service account。
 `kubectl apply -f tekton/pipeline-account.yaml`   
 
 说明：
@@ -304,7 +309,7 @@ name: pipeline-account
 `kubectl patch sa pipeline-account -p '"imagePullSecrets": [{"name": "ibm-cr-push-secret" }]'`
 
 ### 6. 执行Pipeline  
-1. 执行这个pipeline run。        
+1. 下面执行这个pipeline run。        
 `kubectl create -f tekton/run/picalc-pipeline-run.yaml`   
 PipelineRun没有一个固定的名字，每次执行的的时候会使用generateName的内容生成一个名字。kubectl会返回一个新生成的PipelineRun resource名字。   
 `pipelinerun.tekton.dev/picalc-pr-rqzgp created`   
