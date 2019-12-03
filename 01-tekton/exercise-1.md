@@ -4,6 +4,7 @@
 - 了解Tekton pipelline的基本概念
 - 创建一个pipeline来build和部署一个Knatvie的应用
 - 执行一个pipeline并查看状态
+- 问题诊断
 
 ## 基本概念
 
