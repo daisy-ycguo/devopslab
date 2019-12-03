@@ -41,6 +41,7 @@ Ingress Subdomain: testcluster-973348.us-south.containers.appdomain.cloud
 ```
 
 然后更新myexample目录下的ingress.yaml文件：
+![image](https://github.com/daisy-ycguo/devopslab/blob/master/images/trigger1.png)
 
 再apply ingress文件:
 ```
@@ -50,17 +51,18 @@ ingress.extensions/el-my-listener created
 
 ## 3.验证Trigger配置成功
 ```
-$ Kubectl get pr 
+$ kubectl get pr 
 Verify listener pod
-$ Kubectl get pod
-$ Kubectl log <listener-pod-name>
-$ Kubectl get tr
+$ kubectl get pod
+$ kubectl log <listener-pod-name>
+$ kubectl get tr
 $ kubectl get ksvc picalc
+```
 
 ## 4.进入你在Tekton实验1中fork的tekton-tutorial github hub，并配置这个repo的webhook
+ ![image](https://github.com/daisy-ycguo/devopslab/blob/master/images/trigger2.png)
  
-## 5. 在你的tekton-tutorial 对source code做些修改并push 
-
+## 5. 在你的tekton-tutorial 对source code做些修改并push
 ```
 $ vi src/picalc.go
 $ git status
@@ -68,6 +70,9 @@ $ git add src/picalc.go
 $ git commit -m "first change"
 $ git push
 ```
+然后观察你的github repo webhook的变化
+![image](https://github.com/daisy-ycguo/devopslab/blob/master/images/trigger3.png)
+
  
 ## 6.验证Tekton pipeline 运行成功
 ```
