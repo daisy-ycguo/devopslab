@@ -116,5 +116,5 @@ Resource Group Name:            default
 
 这里，`kubectl get nodes`能够得到正确返回，看到您的集群中的节点，那么您就可以继续下面的实验了。
 
-继续 [exercise 2](./exercise-2.md).
+继续 [Exercise 2 安装Istio和Knative](./02-istio-knative-install.md).
 
