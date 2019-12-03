@@ -6,6 +6,12 @@ https://github.com/tektoncd/triggers
 ## 2.配置Trigger
 按如下步骤配置Trigger：
 ```
+$ kubectl apply -f ../examples/role-resources
+rolebinding.rbac.authorization.k8s.io/tekton-triggers-example-binding created
+role.rbac.authorization.k8s.io/tekton-triggers-example-minimal created
+secret/githubsecret created
+serviceaccount/tekton-triggers-example-sa created
+
 $ kubectl apply -f triggertemplates/triggertemplate.yaml
 triggertemplate.tekton.dev/my-pipeline-template created
 
