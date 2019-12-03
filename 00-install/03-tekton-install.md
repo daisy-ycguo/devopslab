@@ -8,8 +8,9 @@ Knative Lab使用了IBM公有云上的Kubernetes集群，以及一个云上的�
 * 准备一个可以联网的浏览器，推荐Chrome，Firefox，和Safari。
 * 在IBM公有云上准备一个可以使用的Kubernetes集群。
 
-## 第一步：访问在线CommondLine 工具，在右上角切换到IBM账户，然后点击账户左边的shell图标，进入shell。此时ibmcloud已经自动登录：
+## 第一步：访问在线CommondLine 工具。
 https://workshop.shell.cloud.ibm.com/
+在右上角切换到IBM账户，然后点击账户左边的shell图标，进入shell。此时ibmcloud已经自动登录。
 
 ## 第二步：访问准备好的Kubenetes集群，假设你的集群名字为testcluster：
 ```
