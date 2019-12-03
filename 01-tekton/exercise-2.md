@@ -1,9 +1,23 @@
-# 配置Tekton Trigger
+# Tekton Trigger
 
-## 1.Fork 开源Trigger 项目到自己的repo并clone到local workstation
+## 实验目标
+
+- 了解Trigger的基本概念
+- 创建TriggerTemplate, TriggerBinding和EventListener
+- 创建一个pipeline
+- 为git repo创建一个webhook,当有push操作发生的时候，发送请求到EventListener来创建pipeline resource和pipeline run,执行指定的pipeline。
+
+## 基本概念
+
+- TriggerTemplate - 资源模板 例如：PipelineResources和PipelineRun
+- TriggerBinding - 检验events并且抽取payload中的fields
+- EventListener - 将TriggerBindings和TriggerTemplates连接起来，提供一个可访问的endpoint (the event sink). 它使用TriggerBinding从events中抽取出来的内容作为参数 (and any supplied static parameters)来创建TriggerTemplate中指定的资源。
+
+## 实验准备
+1.Fork 开源Trigger 项目到自己的repo并clone到local workstation
 https://github.com/tektoncd/triggers
 
-## 2.配置Trigge
+## 实验步骤
 下面的实验中，我们将使用Trigger来创建一个PipelineRun和一个PipelineResource。这个PipelineRun克隆了一个GitHub repository并打印一些信息。
 
 ### 2.1 创建实验的资源
@@ -146,3 +160,59 @@ $(inputs.params.message)
 ## 4.	查看webhook的变化
 观察你的github repo webhook的变化，有新的delivery产生。
 ![image](https://github.com/daisy-ycguo/devopslab/blob/master/images/webhook-deliveries.png)
+
+## 5. 发生了什么
+一个PipelineResource被创建出来了，其url参数的值是webhook发出的POST request的body里面提供的。
+```
+$ kubectl get pipelineresource git-source-v5tml -o yaml
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  creationTimestamp: 2019-12-03T08:07:05Z
+  generation: 1
+  labels:
+    tekton.dev/eventlistener: listener
+    tekton.dev/triggers-eventid: 4xk2x
+  name: git-source-v5tml
+  namespace: default
+  resourceVersion: "6316396"
+  selfLink: /apis/tekton.dev/v1alpha1/namespaces/default/pipelineresources/git-source-v5tml
+  uid: e548d761-15a3-11ea-8937-167b3451333f
+spec:
+  params:
+  - name: revision
+    value: aa7bac85bd56bf5f8a40e5a887b43de39bee6f67
+  - name: url
+    value: https://github.com/QiuJieLi/tekton-tutorial
+  type: git
+```
+一个PipelineRun被创建出来，使用了resource和指定的Tekton Pipeline:simple-pipeline。这个PipelineRun执行了simple-pipeline中定义的三个task。
+```
+$ kubectl describe pr simple-pipeline-runrzbt8
+...
+Spec:
+  Params:
+    Name:   message
+    Value:  Hello from the Triggers EventListener!
+    Name:   contenttype
+    Value:  application/json
+  Pipeline Ref:
+    Name:  simple-pipeline
+  Resources:
+    Name:  git-source
+    Resource Ref:
+      Name:         git-source-v5tml
+  Service Account:
+  Timeout:          1h0m0s
+Status:
+  Completion Time:  2019-12-03T08:07:33Z
+  Conditions:
+    Last Transition Time:  2019-12-03T08:07:33Z
+    Message:               All Tasks have completed executing
+    Reason:                Succeeded
+    Status:                True
+    Type:                  Succeeded
+  Start Time:              2019-12-03T08:07:05Z
+  Task Runs:
+  ...
+  ```
