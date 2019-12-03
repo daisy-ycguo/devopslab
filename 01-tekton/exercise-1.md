@@ -316,7 +316,7 @@ PipelineRun没有一个固定的名字，每次执行的的时候会使用genera
 `pipelinerun.tekton.dev/picalc-pr-rqzgp created`   
 2. 检查taskruns的状态,直到的状态都是SUCCEEDED。
 ```
-$ k get tr
+$ kubectl get taskrun
 NAME                                      SUCCEEDED   REASON      STARTTIME   COMPLETIONTIME
 picalc-pr-wwcwh-deploy-to-cluster-d9tdj   True        Succeeded   9m19s       9m8s
 picalc-pr-wwcwh-source-to-image-628bt     True        Succeeded   10m         9m19s
