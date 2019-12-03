@@ -116,16 +116,16 @@ $ git push
 ```
 [为github account添加ssh key](https://help.github.com/en/enterprise/2.19/user/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account)
 
-## 3.验证Pipeline运行成功
+## 3.	查看webhook的变化
+观察你的github repo webhook的变化，有新的delivery产生。
+![image](https://github.com/daisy-ycguo/devopslab/blob/master/images/webhook-deliveries.png)
+
+## 4.验证Pipeline运行成功
 ```
 $ kubectl get pipelinerun
 $ kubectl get taskrun
 $ kubectl get pod
 ```
- 
-## 4.	查看webhook的变化
-观察你的github repo webhook的变化，有新的delivery产生。
-![image](https://github.com/daisy-ycguo/devopslab/blob/master/images/webhook-deliveries.png)
 
 ## 5. 了解发生了什么
 一个PipelineResource被创建出来了，其url参数的值是webhook发出的POST request的body里面提供的。
