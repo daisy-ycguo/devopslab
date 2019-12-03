@@ -5,7 +5,7 @@
 $ kn service list
 $ kn revision list
 $ kn service update picalc –tag picalc-4rnfw=current
-
+```
 ## 2.把所有请求都路由到service的当前版本
 ```
 $ kn service update picalc –traffic current=100
