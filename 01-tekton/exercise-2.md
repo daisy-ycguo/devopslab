@@ -11,7 +11,7 @@
 
 - TriggerTemplate - 资源模板 例如：PipelineResources和PipelineRun
 - TriggerBinding - 检验events并且抽取payload中的fields
-- EventListener - 将TriggerBindings和TriggerTemplates连接起来，提供一个可访问的endpoint (the event sink). 它使用TriggerBinding从events中抽取出来的内容作为参数 (and any supplied static parameters)来创建TriggerTemplate中指定的资源。
+- EventListener - 将TriggerBindings和TriggerTemplates连接起来，提供一个可访问的endpoint (事件接收器). 它使用TriggerBinding从events中抽取出来的内容作为参数，来创建TriggerTemplate中指定的资源。
 
 ## 实验准备
 1.Fork 开源Trigger 项目到自己的repo并clone到local workstation
@@ -54,14 +54,13 @@ el-listener-5f98f8cdcd-nrd4l                         1/1     Running     0      
 ```
 
 ### 2.3 Apply pipeline和tasks
+pipeline和tasks被TriggerTemplate中的piepeline引用。
 ```
 $ kubectl apply -f example-pipeline.yaml
 pipeline.tekton.dev/build-and-deploy-pipeline configured
 task.tekton.dev/source-to-image configured
 task.tekton.dev/deploy-using-kubectl configured
 ```
-This is intentionally very simple and operates on a created Git resource. The trigger created Git resource will have the repository URL and revision parameters.
-
 
 ### 2.4 配置Ingress
 使得listner endpoint可以被从cluster外部访问。后面我们会通过git repository的webhook来访问这个listener endpoint。
