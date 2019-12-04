@@ -1,19 +1,19 @@
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineRun
 metadata:
-  generateName: picalc-pr-
+  generateName: hello-pr-
 spec:
   pipelineRef:
     name: build-and-deploy-pipeline
   resources:
     - name: git-source
       resourceRef:
-        name: picalc-git
+        name: hello-git
   params:
     - name: pathToYamlFile
-      value: "knative/picalc.yaml"
+      value: "knative/hello.yaml"
     - name: imageUrl
-      value: <REGISTRY>/<NAMESPACE>/picalc
+      value: <REGISTRY>/<NAMESPACE>/hello
     - name: imageTag
       value: "1.0"
   trigger:
