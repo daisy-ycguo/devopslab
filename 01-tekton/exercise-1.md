@@ -41,7 +41,10 @@
 `git clone https://github.com/<your-git-account>/devopslab.git`
 
 ### 2. 创建一个Task来build一个image并push到您的container registry。 
-这个Task的文件路径：src/tekton/basic/tekton/tasks/source-to-image.yaml。这个Task构建一个docker image并把它push到一个registry。   
+这个Task的文件路径：src/tekton/basic/tekton/tasks/source-to-image.yaml。请执行如下命令来创建这个Task。   
+`kubectl apply -f src/tekton/basic/tekton/tasks/source-to-image.yaml`
+
+这个Task会构建一个docker image并把它push到一个registry。如果您有兴趣查看，以下是task定义：
 ```
 apiVersion: tekton.dev/v1alpha1
 kind: Task
@@ -80,8 +83,6 @@ spec:
 - Task还使用了input parameters。这样做的好处是可以重用Task。   
 - 后面我们会看到task是如何获得认证来puhs image到repository的。  
 
-下面创建这个Task。   
-`kubectl apply -f src/tekton/basic/tekton/tasks/source-to-image.yaml`
 
 ### 3. 创建另一个Task来将image部署到Kubernetes cluster。   
 这个Task的文件路径：src/tekton/basic/tekton/tasks/deploy-using-kubectl.yaml。   
