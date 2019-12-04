@@ -332,7 +332,8 @@ Events:
 ### Webhook Recent Deliveries response 200但是没有pipeline run生成
 查看listener的pod
 ```
-kubectl get pod | grep el-my-listener
-kubectl logs el-my-listener-99b595cc6-4vqq6
+$ kubectl get pod | grep el-my-listener
+$ kubectl logs el-my-listener-99b595cc6-4vqq6
+2019/12/04 10:19:59 Error getting TriggerBinding my-pipeline-binding: triggerbindings.tekton.dev "my-pipeline-binding" not found
 ```
 ### 有pipeline run生成但是pipeline run失败，参考[tekton exercise-1](https://github.com/daisy-ycguo/devopslab/blob/master/01-tekton/exercise-1.md)的问题诊断
