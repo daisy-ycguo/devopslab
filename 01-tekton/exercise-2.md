@@ -24,20 +24,20 @@ https://github.com/zhanggbj/triggers
 #### 2.1 按如下步骤配置Trigger：
 ```
 $ git clone https://github.com/<your_name>/triggers
-$ cd triggers/example
-$ kubectl apply -f role-resources
+$ cd triggers
+$ kubectl apply -f example/role-resources
 rolebinding.rbac.authorization.k8s.io/tekton-triggers-example-binding created
 role.rbac.authorization.k8s.io/tekton-triggers-example-minimal created
 secret/githubsecret created
 serviceaccount/tekton-triggers-example-sa created
 
-$ kubectl apply -f triggertemplates/triggertemplate.yaml
+$ kubectl apply -f example/triggertemplates/triggertemplate.yaml
 triggertemplate.tekton.dev/my-pipeline-template created
 
-$ kubectl apply -f triggerbindings/triggerbinding.yaml
+$ kubectl apply -f example/triggerbindings/triggerbinding.yaml
 triggerbinding.tekton.dev/my-pipeline-binding created
 
-$ kubectl apply -f eventlisteners/eventlistener.yaml
+$ kubectl apply -f example/eventlisteners/eventlistener.yaml
 eventlistener.tekton.dev/my-listener created
 ```
 
@@ -86,7 +86,7 @@ ingress.extensions/el-my-listener created
 ```
 4. 查看ingress
 ```
-$ k get ing
+$ kubectl get ingress
 NAME             HOSTS                                                              ADDRESS         PORTS   AGE
 el-my-listener   el-my-listener.testcluster-973348.us-south.us-south.containers.appdomain.cloud   169.47.66.178   80      14s
 ```
