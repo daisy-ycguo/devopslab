@@ -17,20 +17,11 @@
 
 
 ## 实验准备   
-### 1. 登录Online command Line tool   
-1. 用浏览器打开https://workshop.shell.cloud.ibm.com/   
-2. 点击右上角的Login按钮，使用您自己的ibm account登录。
-3. 在右上角的下拉菜单中选择IBM。
-4. 点击右上角的命令行图标，根据提示输入passcode: ikslab
+### 1. [安装Istio和Knative](https://github.com/daisy-ycguo/devopslab/blob/master/00-install/istio-knative-install.md)   
 
-### 2. 登录Kubecluster
+### 2. [Tekton安装](https://github.com/daisy-ycguo/devopslab/blob/master/00-install/tekton-install.md)  
 
-### 3. 确保您已完成[安装Istio和Knative](https://github.com/daisy-ycguo/devopslab/blob/master/00-install/istio-knative-install.md)   
-
-### 4. 确保您已完成[Tekton安装](https://github.com/daisy-ycguo/devopslab/blob/master/00-install/tekton-install.md)  
-
-### 5. 安装container-registry CLI plug-in
-`ibmcloud plugin install container-registry`
+### 3. [准备Kubernetes集群环境](https://github.com/daisy-ycguo/devopslab/blob/master/00-install/01-k8s-connect.md)
 
 ## 实验步骤
 ### 1. Fork devopslab 项目到您自己的repo并且clone到local workstation
@@ -41,10 +32,7 @@
 `git clone https://github.com/<your-git-account>/devopslab.git`
 
 ### 2. 创建一个Task来build一个image并push到您的container registry。 
-这个Task的文件路径：src/tekton/basic/tekton/tasks/source-to-image.yaml。请执行如下命令来创建这个Task。   
-`kubectl apply -f src/tekton/basic/tekton/tasks/source-to-image.yaml`
-
-这个Task会构建一个docker image并把它push到一个registry。如果您有兴趣查看，以下是task定义：
+这个Task的文件路径：devopslab/src/tekton/basic/tekton/tasks/source-to-image.yaml。这个Task构建一个docker image并把它push到一个registry。   
 ```
 apiVersion: tekton.dev/v1alpha1
 kind: Task
@@ -83,9 +71,11 @@ spec:
 - Task还使用了input parameters。这样做的好处是可以重用Task。   
 - 后面我们会看到task是如何获得认证来puhs image到repository的。  
 
+下面创建这个Task。   
+`kubectl apply -f devopslab/src/tekton/basic/tekton/tasks/source-to-image.yaml`
 
 ### 3. 创建另一个Task来将image部署到Kubernetes cluster。   
-这个Task的文件路径：src/tekton/basic/tekton/tasks/deploy-using-kubectl.yaml。   
+这个Task的文件路径：devopslab/src/tekton/basic/tekton/tasks/deploy-using-kubectl.yaml。   
 说明：   
 这个Task有两个步骤。    
 - 第一，在container里通过执行sed命令更新yaml文件来部署第1步时通过source-to-image Task创建出来image。   
@@ -112,10 +102,10 @@ steps:
 ```
 
 下面创建这个Task。   
-`kubectl apply -f src/tekton/basic/tekton/tasks/deploy-using-kubectl.yaml`
+`kubectl apply -f devopslab/src/tekton/basic/tekton/tasks/deploy-using-kubectl.yaml`
 
 ### 4. 创建一个Pipeline来组合以上两个Task。   
-这个Pipeline文件路径：src/tekton/basic/tekton/pipeline/build-and-deploy-pipeline.yaml。
+这个Pipeline文件路径：devopslab/src/tekton/basic/tekton/pipeline/build-and-deploy-pipeline.yaml。
 ```
 apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
@@ -173,13 +163,13 @@ spec:
 - Task之间的顺序用runAfter关键字来定义。在这个例子中，deploy-using-kubectl task需要在source-to-image task之后执行。    
 
 下面创建这个Pipeline。    
-`kubectl apply -f src/tekton/basic/tekton/pipeline/build-and-deploy-pipeline.yaml`
+`kubectl apply -f devopslab/src/tekton/basic/tekton/pipeline/build-and-deploy-pipeline.yaml`
 
 ### 5. 创建PipelineRun和PipelineResources   
 下面我们创建一个PipelineRun来指定input resource和parameters，并执行这个pipeline。     
 #### 5.1 修改PipelineRun文件，替换`<REGISTRY>/<NAMESPACE>`为具体的值。
-PipelineRun文件路径：src/tekton/basic/tekton/run/hello-pipeline-run.yaml。      
-1. 登录UI https://cloud.ibm.com/login 切换到**您自己的**ibm account(很重要!不要使用`默认的ibm account`)。
+PipelineRun文件路径：devopslab/src/tekton/basic/tekton/run/hello-pipeline-run.yaml。      
+1. 登录UI https://cloud.ibm.com/login 切换到**您自己的**ibm account(很重要!不要使用IBM ccount)。
 ![alt text](https://github.com/daisy-ycguo/devopslab/blob/master/images/login-personal-account.png)
 2. 打开 https://cloud.ibm.com/iam/apikeys 页面， 点击“Create an IBM Cloud API key”按钮。
 3. 输入一个名字，点击"Create"按钮。
@@ -199,7 +189,7 @@ PipelineRun文件路径：src/tekton/basic/tekton/run/hello-pipeline-run.yaml。
 $ ibmcloud cr region
 You are targeting region 'us-south', the registry is 'us.icr.io'.
 ```   
-10. 将src/tekton/basic/tekton/run/hello-pipeline-run.yaml文件中的`<REGISTRY>`和`<NAMESPACE>`用以上的值代替。
+10. 将devopslab/src/tekton/basic/tekton/run/hello-pipeline-run.yaml文件中的`<REGISTRY>`和`<NAMESPACE>`用以上的值代替。
 ```
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineRun
@@ -231,8 +221,9 @@ spec:
 - 关于pipeline执行时所需要的认证信息，我们后面将会创建一个名为pipeline-account的service account。    
 
 #### 5.2 创建Tekton PipelineResource
+Pipeline resouce 文件路径：devopslab/src/tekton/basic/tekton/resources/hello-git.yaml
 PipelineResource指向一个git source。这git source是一个hello world的go程序。它包含了一个Dockerfile来测试，编译代码，build image。   
-更新下面url的value为您自己clone的git repo。
+更新hello-git.yaml，将下面url的value改为您自己clone的git repo。
 ```
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineResource
@@ -247,7 +238,7 @@ spec:
       value: https://github.com/<your-git-account>/devopslab
 ```
 下面创建Pipelineresource。   
-`kubectl apply -f src/tekton/basic/tekton/resources/hello-git.yaml`   
+`kubectl apply -f devopslab/src/tekton/basic/tekton/resources/hello-git.yaml`   
 
 #### 5.3 创建service account
 Service account让pipeline可以访问被保护的资源-您私人的container registry。在创建service account之前，我们先要创建一个secret,它含了对您的container registry进行操作所需要的认证信息。   
@@ -255,7 +246,7 @@ Service account让pipeline可以访问被保护的资源-您私人的container r
 kubectl create secret docker-registry ibm-cr-push-secret --docker-server=<REGISTRY> --docker-username=iamapikey --docker-password=<YOURAPIKEY> --docker-email=me@here.com
 ``` 
 其中`<YOURAPIKEY>`和`<REGISTRY>`的值，在实验步骤5.1中已经获得。      
-现在可以创建service account了。Service account的文件在这里tekton/pipeline-account.yaml。   
+现在可以创建service account了。Service account的文件在这里devopslab/src/tekton/basic/tekton/pipeline-account.yaml。   
 ```
 apiVersion: v1
 kind: ServiceAccount
@@ -301,7 +292,7 @@ name: pipeline-account
 ```
 
 下面创建service account。
-`kubectl apply -f tekton/pipeline-account.yaml`   
+`kubectl apply -f devopslab/src/tekton/basic/tekton/pipeline-account.yaml`   
 
 说明：
 这个yaml创建了以下资源：   
@@ -314,10 +305,10 @@ name: pipeline-account
 
 ### 6. 执行Pipeline  
 1. 下面执行这个pipeline run。        
-`kubectl create -f src/tekton/basic/tekton/run/hello-pipeline-run.yaml`   
+`kubectl create -f devopslab/src/tekton/basic/tekton/run/hello-pipeline-run.yaml`   
 PipelineRun没有一个固定的名字，每次执行的的时候会使用generateName的内容生成一个名字。kubectl会返回一个新生成的PipelineRun resource名字。   
 `pipelinerun.tekton.dev/hello-pr-ktc9j created`   
-2. 检查taskruns的状态,直到的状态都是SUCCEEDED。
+2. 检查taskruns的状态,直到的状态都是SUCCEEDED。（大概需要1-2分钟）
 ```
 $ kubectl get taskrun
 NAME                                     SUCCEEDED   REASON      STARTTIME   COMPLETIONTIME
