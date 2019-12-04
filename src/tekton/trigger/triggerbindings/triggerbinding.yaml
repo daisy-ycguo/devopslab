@@ -5,7 +5,7 @@ metadata:
 spec:
   params:
   - name: gitrevision
-    value: $(body.head_commit.id）
+    value: $(body.head_commit.id)
   - name: gittag
     value: $(body.head_commit.message)
   - name: gitrepositoryurl
