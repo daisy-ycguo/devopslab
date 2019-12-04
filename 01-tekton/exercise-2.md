@@ -178,8 +178,8 @@ hello-pr-bczph-source-to-image-fv5rl-pod-7936e2     0/2     Completed   0       
 ```
 $ kubectl get ksvc
 NAME    URL                                                                      LATESTCREATED   LATESTREADY   READY   REASON
-hello   http://hello-default.capacity-demo.us-south.containers.appdomain.cloud   hello-jqznl     hello-jqznl   True   
-curl http://hello-default.capacity-demo.us-south.containers.appdomain.cloud
+hello   http://hello-default.demo.us-south.containers.appdomain.cloud   hello-jqznl     hello-jqznl   True   
+curl http://hello-default.demo.us-south.containers.appdomain.cloud
 [ 20191031 ] Hello world, this is BLUE-xiaoming!!!
 ```
 
