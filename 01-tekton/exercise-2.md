@@ -16,28 +16,27 @@
 ## 实验步骤
 下面的实验中，我们将使用Trigger来创建一个PipelineRun和一个PipelineResource。这个PipelineRun运行了我们[tekton实验](https://github.com/daisy-ycguo/devopslab/blob/master/01-tekton/exercise-1.md)中创建的pipeline - "build-and-deploy-pipeline"。
 
-### 1.Fork一下Trigger项目到自己的repo并clone到local workstation
-https://github.com/zhanggbj/triggers
+### 1.Fork devopslab项目到自己的repo并clone到local workstation
+https://github.com/daisy-ycguo/devopslab.git
 
 ### 2. 创建实验的资源
 
 #### 2.1 按如下步骤配置Trigger：
 ```
-$ git clone https://github.com/<your_name>/triggers
-$ cd triggers
-$ kubectl apply -f example/role-resources
+$ cd devopslab/src/tekton/trigger
+$ kubectl apply -f role-resources
 rolebinding.rbac.authorization.k8s.io/tekton-triggers-example-binding created
 role.rbac.authorization.k8s.io/tekton-triggers-example-minimal created
 secret/githubsecret created
 serviceaccount/tekton-triggers-example-sa created
 
-$ kubectl apply -f example/triggertemplates/triggertemplate.yaml
+$ kubectl apply -f triggertemplates/triggertemplate.yaml
 triggertemplate.tekton.dev/my-pipeline-template created
 
-$ kubectl apply -f example/triggerbindings/triggerbinding.yaml
+$ kubectl apply -f triggerbindings/triggerbinding.yaml
 triggerbinding.tekton.dev/my-pipeline-binding created
 
-$ kubectl apply -f example/eventlisteners/eventlistener.yaml
+$ kubectl apply -f eventlisteners/eventlistener.yaml
 eventlistener.tekton.dev/my-listener created
 ```
 
@@ -61,8 +60,8 @@ $ ibmcloud ks cluster-get testcluster | grep 'Ingress Subdomain'
 Ingress Subdomain: testcluster-973348.us-south.containers.appdomain.cloud
 ```
 
-2. 更新myexample目录下的ingress.yaml文件
-- 将host的值替换为el-listener.<Ingress Subdomain 的值>， 例如 el-my-listener.testcluster-973348.us-south.containers.appdomain.cloud    
+2. 更新ingress.yaml文件
+- 将host的值替换为el-listener.<INGRESS-SUBDOMAIN>， 例如 el-my-listener.testcluster-973348.us-south.containers.appdomain.cloud    
 ```
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -71,7 +70,7 @@ metadata:
   namespace: default
 spec:
   rules:
-  - host: el-my-listener.testcluster-973348.us-south.containers.appdomain.cloud
+  - host: el-my-listener.<INGRESS-SUBDOMAIN>
     http:
       paths:
       - backend:
@@ -81,7 +80,7 @@ spec:
 ```
 3. Apply ingress文件:
 ```
-$ kubectl apply -f myexample/ingress.yaml
+$ kubectl apply -f ingress.yaml
 ingress.extensions/el-my-listener created
 ```
 4. 查看ingress
