@@ -21,14 +21,14 @@ spec:
   - apiVersion: tekton.dev/v1alpha1
     kind: PipelineResource
     metadata:
-      name: hello-git-${uid}
+      name: hello-git-$(uid)
     spec:
       type: git
       params:
         - name: revision
-          value: ${params.gitrevision}
+          value: $(params.gitrevision)
         - name: url
-          value: ${params.gitrepositoryurl}
+          value: $(params.gitrepositoryurl)
   - apiVersion: tekton.dev/v1alpha1
     kind: PipelineRun
     metadata:
@@ -39,12 +39,12 @@ spec:
       resources:
         - name: git-source
           resourceRef:
-            name: hello-git-${uid}
+            name: hello-git-$(uid)
       params:
         - name: pathToYamlFile
           value: "src/tekton/basic/knative/hello.yaml"
         - name: imageUrl
-          value: us.icr.io/<your-git-account>/hello
+          value: <REGISTRY>/<NAMESPACE>/hello
         - name: imageTag
           value: "1.0"
       serviceAccount: pipeline-account

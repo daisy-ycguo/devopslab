@@ -13,7 +13,7 @@ Knative Lab使用了IBM公有云上的Kubernetes集群，以及一个云上的�
 
 ## 第二步：准备CloudShell
 
-一，访问[CloudShell](https://cloudshell-console-ikslab.us-south.cf.cloud.ibm.com/)，点击左上角的Login按钮，用IBM Cloud 账号登陆。
+一，访问[CloudShell](https://workshop.shell.cloud.ibm.com)，点击左上角的Login按钮，用IBM Cloud 账号登陆。
 
 ![](https://github.com/daisy-ycguo/knativelab/raw/master/images/cloudshell-overview.png)
 
@@ -83,7 +83,7 @@ Resource Group Name:            default
 
    运行命令：
    ```text
-   ibmcloud ks cluster-config $MYCLUSTER
+   ibmcloud ks cluster config $MYCLUSTER
    ```
    期待输出：
    ```

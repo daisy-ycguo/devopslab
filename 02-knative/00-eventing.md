@@ -21,7 +21,7 @@ cd ~/devopslab/src/eventing/
 
 您可以使用下面的命令创建通知服务，请注意将`<your email address>`的部分替换为您的有效邮箱：
 ```
-kn service create --image docker.io/daisyycguo/servicenotifier mail-notifier --env EMAIL=guoyingc@cn.ibm.com
+kn service create --image docker.io/daisyycguo/servicenotifier mail-notifier --env EMAIL=<YOUR EMAIL>
 ```
 期待输出：
 ```
