@@ -5,7 +5,7 @@ metadata:
   namespace: default
 spec:
   rules:
-  - host: el-my-listener.capacity-demo.us-south.containers.appdomain.cloud
+  - host: el-my-listener.<Ingress Subdomain>
     http:
       paths:
       - backend:
