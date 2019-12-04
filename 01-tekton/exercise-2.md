@@ -28,7 +28,7 @@ role.rbac.authorization.k8s.io/tekton-triggers-example-minimal created
 secret/githubsecret created
 serviceaccount/tekton-triggers-example-sa created
 ```
-1.2 更新devopslab/src/tekton/trigger/triggertemplates/triggertemplate.yaml，将PipelineRun中的参数imageUrl的值<REGISTRY>/<NAMESPACE>/hello替换。请参考[tekton实验](https://github.com/daisy-ycguo/devopslab/blob/master/01-tekton/exercise-1.md)步骤5.1   
+1.2 更新devopslab/src/tekton/trigger/triggertemplates/triggertemplate.yaml，将PipelineRun中的参数imageUrl的值<REGISTRY>/<NAMESPACE>/hello替换。请参考[tekton exercise-1](https://github.com/daisy-ycguo/devopslab/blob/master/01-tekton/exercise-1.md)步骤5.1   
   
 ```
 ...
@@ -119,7 +119,7 @@ el-my-listener   el-my-listener.testcluster-973348.us-south.us-south.containers.
 ```
 
 
-#### 2.4 配置webhook
+#### 4 配置webhook
 当指定的event发生时，Webhook会发送一个POST请求到其配置的URL。这个URL就是我们上面建好的listener的endpoint。
 进入你在[tekton exercise-1](https://github.com/daisy-ycguo/devopslab/blob/master/01-tekton/exercise-1.md)实验步骤1中fork到您自己的git账户下的repo，配置这个repo的webhook。   
 1. 在浏览器中您的devopslab repo https://github.com/<your-git-account>/devopslab  
@@ -134,7 +134,7 @@ el-my-listener   el-my-listener.testcluster-973348.us-south.us-south.containers.
  - 勾选 'Active'
  ![image](https://github.com/daisy-ycguo/devopslab/blob/master/images/create-webhook.png)
 
-#### 2.5 修改hello.go source code并push
+#### 5 修改hello.go source code并push
 Push操作发生时，webhook会发送一个POST请求到listener的endpoint,从而出发一个pipeline run。
 ```
 $ vi devopslab/src/app/hello.go
@@ -156,11 +156,11 @@ $ git commit -m "first change"
 $ git push
 ```
 
-## 3.	查看webhook的变化
+### 6	查看webhook的变化
 观察你的github repo webhook的变化，有新的delivery产生，response应该为200。
 ![image](https://github.com/daisy-ycguo/devopslab/blob/master/images/webhook-deliveries.png)
 
-## 4.验证Pipeline运行成功
+### 7 验证Pipeline运行成功
 ```
 $ kubectl get pipelinerun
 NAME             SUCCEEDED   REASON      STARTTIME   COMPLETIONTIME
@@ -174,7 +174,7 @@ hello-pr-bczph-deploy-to-cluster-57zsv-pod-f53367   0/3     Completed   0       
 hello-pr-bczph-source-to-image-fv5rl-pod-7936e2     0/2     Completed   0          6m3s
 ```
 
-## 5. 查看service被更新了
+## 8 查看service被更新了
 ```
 $ kubectl get ksvc
 NAME    URL                                                                      LATESTCREATED   LATESTREADY   READY   REASON
@@ -183,7 +183,7 @@ curl http://hello-default.capacity-demo.us-south.containers.appdomain.cloud
 [ 20191031 ] Hello world, this is BLUE-xiaoming!!!
 ```
 
-## 6. 了解发生了什么
+## 了解发生了什么
 一个PipelineResource被创建出来了，其url参数的值是webhook发出的POST request的body里面提供的。
 ```
 $ kubectl get pipelineresource
