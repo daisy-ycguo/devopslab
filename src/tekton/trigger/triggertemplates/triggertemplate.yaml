@@ -44,7 +44,7 @@ spec:
         - name: pathToYamlFile
           value: "src/tekton/basic/knative/hello.yaml"
         - name: imageUrl
-          value: us.icr.io/<your-git-account>/hello
+          value: <REGISTRY>/<NAMESPACE>/hello
         - name: imageTag
           value: "1.0"
       serviceAccount: pipeline-account
