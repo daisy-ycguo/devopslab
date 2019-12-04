@@ -1,4 +1,4 @@
-# Tekton Trigger
+# exercise-2 Tekton Trigger
 
 ## 实验目标
 
@@ -13,8 +13,11 @@
 - TriggerBinding - 检验events并且抽取payload中的fields
 - EventListener - 将TriggerBindings和TriggerTemplates连接起来，提供一个可访问的endpoint (事件接收器). 它使用TriggerBinding从events中抽取出来的内容作为参数，来创建TriggerTemplate中指定的资源。
 
+## 实验准备
+成功完成[tekton exercise-1](https://github.com/daisy-ycguo/devopslab/blob/master/01-tekton/exercise-1.md)
+
 ## 实验步骤
-下面的实验中，我们将使用Trigger来创建一个PipelineRun和一个PipelineResource。这个PipelineRun运行了我们[tekton实验](https://github.com/daisy-ycguo/devopslab/blob/master/01-tekton/exercise-1.md)中创建的pipeline - "build-and-deploy-pipeline"。
+下面的实验中，我们将使用Trigger来创建一个PipelineRun和一个PipelineResource。这个PipelineRun运行了我们[tekton exercise-1](https://github.com/daisy-ycguo/devopslab/blob/master/01-tekton/exercise-1.md)中创建的pipeline - "build-and-deploy-pipeline"。
 
 ### 1. 按如下步骤配置Trigger：
 1.1 创建service account
@@ -118,7 +121,7 @@ el-my-listener   el-my-listener.testcluster-973348.us-south.us-south.containers.
 
 #### 2.4 配置webhook
 当指定的event发生时，Webhook会发送一个POST请求到其配置的URL。这个URL就是我们上面建好的listener的endpoint。
-进入你在[Tekton实验1](https://github.com/daisy-ycguo/devopslab/blob/master/01-tekton/exercise-1.md)实验步骤1中fork到您自己的git账户下的repo，配置这个repo的webhook。   
+进入你在[tekton exercise-1](https://github.com/daisy-ycguo/devopslab/blob/master/01-tekton/exercise-1.md)实验步骤1中fork到您自己的git账户下的repo，配置这个repo的webhook。   
 1. 在浏览器中您的devopslab repo https://github.com/<your-git-account>/devopslab  
 2. 点击最右侧的Settings tab，从左侧导航栏选择Webhooks   
 3. 点击'Add webhook'按钮   
@@ -332,4 +335,4 @@ Events:
 kubectl get pod | grep el-my-listener
 kubectl logs el-my-listener-99b595cc6-4vqq6
 ```
-### 有pipeline run生成但是pipeline run失败，参考[tekton实验](https://github.com/daisy-ycguo/devopslab/blob/master/01-tekton/exercise-1.md)的问题诊断
+### 有pipeline run生成但是pipeline run失败，参考[tekton exercise-1](https://github.com/daisy-ycguo/devopslab/blob/master/01-tekton/exercise-1.md)的问题诊断
