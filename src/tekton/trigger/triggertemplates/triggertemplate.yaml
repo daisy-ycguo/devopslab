@@ -21,7 +21,7 @@ spec:
   - apiVersion: tekton.dev/v1alpha1
     kind: PipelineResource
     metadata:
-      name: hello-git-${uid}
+      name: hello-git-$(uid)
     spec:
       type: git
       params:
@@ -39,7 +39,7 @@ spec:
       resources:
         - name: git-source
           resourceRef:
-            name: hello-git-${uid}
+            name: hello-git-$(uid)
       params:
         - name: pathToYamlFile
           value: "src/tekton/basic/knative/hello.yaml"
