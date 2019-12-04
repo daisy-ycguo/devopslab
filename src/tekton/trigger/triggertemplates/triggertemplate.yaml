@@ -21,7 +21,7 @@ spec:
   - apiVersion: tekton.dev/v1alpha1
     kind: PipelineResource
     metadata:
-      name: picalc-git-${uid}
+      name: hello-git-${uid}
     spec:
       type: git
       params:
@@ -32,19 +32,19 @@ spec:
   - apiVersion: tekton.dev/v1alpha1
     kind: PipelineRun
     metadata:
-      generateName: picalc-pr-
+      generateName: hello-pr-
     spec:
       pipelineRef:
         name: build-and-deploy-pipeline
       resources:
         - name: git-source
           resourceRef:
-            name: picalc-git-${uid}
+            name: hello-git-${uid}
       params:
         - name: pathToYamlFile
-          value: "knative/picalc.yaml"
+          value: "src/tekton/basic/knative/hello.yaml"
         - name: imageUrl
-          value: us.icr.io/liqiujie/picalc
+          value: us.icr.io/<your-git-account>/hello
         - name: imageTag
           value: "1.0"
       serviceAccount: pipeline-account
