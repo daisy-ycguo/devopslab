@@ -26,9 +26,9 @@ spec:
       type: git
       params:
         - name: revision
-          value: ${params.gitrevision}
+          value: $(params.gitrevision)
         - name: url
-          value: ${params.gitrepositoryurl}
+          value: $(params.gitrepositoryurl)
   - apiVersion: tekton.dev/v1alpha1
     kind: PipelineRun
     metadata:
