@@ -23,7 +23,9 @@ https://github.com/zhanggbj/triggers
 
 #### 2.1 按如下步骤配置Trigger：
 ```
-$ kubectl apply -f ../examples/role-resources
+$ git clone https://github.com/<your_name>/triggers
+$ cd triggers/example
+$ kubectl apply -f role-resources
 rolebinding.rbac.authorization.k8s.io/tekton-triggers-example-binding created
 role.rbac.authorization.k8s.io/tekton-triggers-example-minimal created
 secret/githubsecret created
