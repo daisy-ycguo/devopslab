@@ -94,7 +94,7 @@ el-my-listener   el-my-listener.testcluster-973348.us-south.us-south.containers.
 #### 2.4 配置webhook
 当指定的event发生时，Webhook会发送一个POST请求到其配置的URL。这个URL就是我们上面建好的listener的endpoint。
 进入你在[Tekton实验1](https://github.com/daisy-ycguo/devopslab/blob/master/01-tekton/exercise-1.md)实验步骤1中fork到您自己的git账户下的repo，配置这个repo的webhook。   
-1. 在浏览器中您的tekton-tutorial repo https://github.com/<your name>/tekton-tutorial   
+1. 在浏览器中您的devopslab repo https://github.com/<your-git-account>/devopslab  
 2. 点击最右侧的Settings tab，从左侧导航栏选择Webhooks   
 3. 点击'Add webhook'按钮   
 4. Add webhook
@@ -106,12 +106,13 @@ el-my-listener   el-my-listener.testcluster-973348.us-south.us-south.containers.
  - 勾选 'Active'
  ![image](https://github.com/daisy-ycguo/devopslab/blob/master/images/create-webhook.png)
 
-#### 2.5 修改source code并push
-Push操作这个event发生时，webhook会发送一个POST请求到listener的endpoint,从而出发一个pipeline run。
+#### 2.5 修改hello.go source code并push
+Push操作发生时，webhook会发送一个POST请求到listener的endpoint,从而出发一个pipeline run。
 ```
-$ vi src/picalc.go
+$ vi src/app/hello.go
+e.g. 修改为 fmt.Fprintf(w, "%s\n", say("BLUE-xiaming!!!"))
 $ git status
-$ git add src/picalc.go
+$ git add src/app/hello.go
 $ git commit -m "first change"
 $ git push
 ```
