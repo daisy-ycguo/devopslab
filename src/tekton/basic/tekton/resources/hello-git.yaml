@@ -1,11 +1,11 @@
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineResource
 metadata:
-  name: picalc-git
+  name: hello-git
 spec:
   type: git
   params:
     - name: revision
       value: master
     - name: url
-      value: https://github.com/QiuJieLi/tekton-tutorial
+      value: https://github.com/daisy-ycguo/devopslab
