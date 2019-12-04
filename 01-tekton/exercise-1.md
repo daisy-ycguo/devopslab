@@ -1,4 +1,4 @@
-# Tekton Hands-on Lab - from source code to production 
+# exercise-1 Tekton - from source code to production 
 
 ## 实验目标
 - 了解Tekton pipelline的基本概念
