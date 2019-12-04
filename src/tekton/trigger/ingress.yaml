@@ -5,7 +5,7 @@ metadata:
   namespace: default
 spec:
   rules:
-  - host: el-my-listener.<Ingress Subdomain>
+  - host: el-my-listener.<INGRESS-SUBDOMAIN>
     http:
       paths:
       - backend:
