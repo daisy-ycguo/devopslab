@@ -16,31 +16,56 @@
 ## 实验步骤
 下面的实验中，我们将使用Trigger来创建一个PipelineRun和一个PipelineResource。这个PipelineRun运行了我们[tekton实验](https://github.com/daisy-ycguo/devopslab/blob/master/01-tekton/exercise-1.md)中创建的pipeline - "build-and-deploy-pipeline"。
 
-### 1.Fork devopslab项目到自己的repo并clone到local workstation
-https://github.com/daisy-ycguo/devopslab.git
-
-### 2. 创建实验的资源
-
-#### 2.1 按如下步骤配置Trigger：
+### 1. 按如下步骤配置Trigger：
+1.1 创建service account
 ```
-$ cd devopslab/src/tekton/trigger
-$ kubectl apply -f role-resources
+$ kubectl apply -f devopslab/src/tekton/trigger/role-resources
 rolebinding.rbac.authorization.k8s.io/tekton-triggers-example-binding created
 role.rbac.authorization.k8s.io/tekton-triggers-example-minimal created
 secret/githubsecret created
 serviceaccount/tekton-triggers-example-sa created
-
-$ kubectl apply -f triggertemplates/triggertemplate.yaml
+```
+1.2 更新devopslab/src/tekton/trigger/triggertemplates/triggertemplate.yaml，将PipelineRun中的参数imageUrl的值<REGISTRY>/<NAMESPACE>/hello替换。请参考[tekton实验](https://github.com/daisy-ycguo/devopslab/blob/master/01-tekton/exercise-1.md)步骤5.1   
+  
+```
+...
+  - apiVersion: tekton.dev/v1alpha1
+    kind: PipelineRun
+    metadata:
+      generateName: hello-pr-
+    spec:
+      pipelineRef:
+        name: build-and-deploy-pipeline
+      resources:
+        - name: git-source
+          resourceRef:
+            name: hello-git-${uid}
+      params:
+        - name: pathToYamlFile
+          value: "src/tekton/basic/knative/hello.yaml"
+        - name: imageUrl
+          value: <REGISTRY>/<NAMESPACE>/hello
+        - name: imageTag
+          value: "1.0"
+      serviceAccount: pipeline-account
+```
+1.3 创建TriggerTemplate   
+```
+$ kubectl apply -f devopslab/src/tekton/trigger/triggertemplates/triggertemplate.yaml
 triggertemplate.tekton.dev/my-pipeline-template created
-
-$ kubectl apply -f triggerbindings/triggerbinding.yaml
+```
+1.4 创建TriggerBinding   
+```
+$ kubectl apply -f devopslab/src/tekton/trigger/triggerbindings/triggerbinding.yaml
 triggerbinding.tekton.dev/my-pipeline-binding created
-
-$ kubectl apply -f eventlisteners/eventlistener.yaml
+```
+1.5 创建EventListener   
+```
+$ kubectl apply -f devopslab/src/tekton/trigger/eventlisteners/eventlistener.yaml
 eventlistener.tekton.dev/my-listener created
 ```
 
-#### 2.2 检查我们所需要的pods和services已经建好并且状态健康
+#### 2 检查我们所需要的pods和services已经建好并且状态健康
 ```
 $ kubectl get svc
 NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP                                           PORT(S)             AGE
@@ -51,7 +76,7 @@ NAME                                                 READY   STATUS      RESTART
 el-my-listener-99b595cc6-4vqq6                          1/1     Running     0          21s
 ```
 
-#### 2.3 配置Ingress
+#### 3 配置Ingress
 使得listner endpoint可以被从cluster外部访问。后面我们会通过git repository的webhook来访问这个listener endpoint。
 1. 获取你的集群的Ingress Subdomain
 ```
@@ -60,7 +85,7 @@ $ ibmcloud ks cluster-get testcluster | grep 'Ingress Subdomain'
 Ingress Subdomain: testcluster-973348.us-south.containers.appdomain.cloud
 ```
 
-2. 更新ingress.yaml文件
+2. 更新devopslab/src/tekton/trigger/ingress.yaml文件
 - 将host的值替换为el-listener.<INGRESS-SUBDOMAIN>， 例如 el-my-listener.testcluster-973348.us-south.containers.appdomain.cloud    
 ```
 apiVersion: extensions/v1beta1
@@ -80,7 +105,7 @@ spec:
 ```
 3. Apply ingress文件:
 ```
-$ kubectl apply -f ingress.yaml
+$ kubectl apply -f devopslab/src/tekton/trigger/ingress.yaml
 ingress.extensions/el-my-listener created
 ```
 4. 查看ingress
@@ -109,14 +134,24 @@ el-my-listener   el-my-listener.testcluster-973348.us-south.us-south.containers.
 #### 2.5 修改hello.go source code并push
 Push操作发生时，webhook会发送一个POST请求到listener的endpoint,从而出发一个pipeline run。
 ```
-$ vi src/app/hello.go
-e.g. 修改为 fmt.Fprintf(w, "%s\n", say("BLUE-xiaming!!!"))
+$ vi devopslab/src/app/hello.go
+e.g. 修改为 fmt.Fprintf(w, "%s\n", say("BLUE-XiaoMing!!!"))
+$ cd devopslab
 $ git status
 $ git add src/app/hello.go
+```
+准备
+```
+$ git config --global user.email "you@example.com"
+$ git config --global user.name "Your Name"
+$ ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+```
+拷贝cat ~/.ssh/id_rsa.pub的内容，在您的git account下创建sshkey。参考[为github account添加ssh key](https://help.github.com/en/enterprise/2.19/user/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account)
+
+```
 $ git commit -m "first change"
 $ git push
 ```
-[为github account添加ssh key](https://help.github.com/en/enterprise/2.19/user/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account)
 
 ## 3.	查看webhook的变化
 观察你的github repo webhook的变化，有新的delivery产生。
