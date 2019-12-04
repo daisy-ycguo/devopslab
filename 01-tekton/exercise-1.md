@@ -178,7 +178,7 @@ spec:
 下面我们创建一个PipelineRun来指定input resource和parameters，并执行这个pipeline。     
 #### 5.1 修改PipelineRun文件，替换`<REGISTRY>/<NAMESPACE>`为具体的值。
 PipelineRun文件路径：src/tekton/basic/tekton/run/hello-pipeline-run.yaml。      
-1. 登录UI https://cloud.ibm.com/login，切换到**您自己的**ibm account(很重要!不要使用IBM ccount)。
+1. 登录UI https://cloud.ibm.com/login 切换到**您自己的**ibm account(很重要!不要使用IBM ccount)。
 ![alt text](https://github.com/daisy-ycguo/devopslab/blob/master/images/login-personal-account.png)
 2. 打开 https://cloud.ibm.com/iam/apikeys 页面， 点击“Create an IBM Cloud API key”按钮。
 3. 输入一个名字，点击"Create"按钮。
