@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: el-my-listener
+  namespace: default
+spec:
+  rules:
+  - host: el-my-listener.<INGRESS-SUBDOMAIN>
+    http:
+      paths:
+      - backend:
+          serviceName: el-my-listener
+          servicePort: 8080
+        path: /
