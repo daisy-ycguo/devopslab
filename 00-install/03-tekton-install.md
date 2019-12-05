@@ -1,40 +1,25 @@
-## 前提：确认Kubernetes集群以准备好
-如果您已经按照文档00-install/01-k8s-connect.md准备好自己的Kubernetes集群，本步骤可以忽略。
+# 安装Istio和Knative
 
+Knative基于Kubernetes和Istio。IBM公有云上提供的Kubernetes集群可以一键安装Istio和Knative，省去安装的烦恼。
 
-如果想用IBM Cloud API Key 登陆IBM Cloud，需要记得自己的API Key，或者马上申请，用一下两种方法之一申请：
+## 前提
 
-(1) 在浏览器上打开Console： https://cloud.ibm.com/iam/apikeys，点击 “Create an IBM Cloud API key”， 输入key名字和描述信息。 
- 
- Key生成之后，下载API Key并保存为apikey.json：
- 
- 然后可以用Key登陆：
- ```
- $ ibmcloud login --apikey @apikey.json
- ```
+* 分配到一个IBM Kubernetes Cluster；
+* 启动CloudShell云端命令行窗口，本次试验的所有命令行输入都在CloudShell窗口中完成；
+* 通过kubectl连接到了云端的Kubernetes集群。
 
-(2) 通过命令行申请API key：
+## 第一步：使用IBM Cloud命令行工具安装
+
+安装Tekton
 ```
-     $ ibmcloud iam api-key-create tekton-lab-apikey --file apikey.json
-     Creating API key tekton-lab-apikey as someuser@email.address...
-     OK
-     API key tekton-lab-apikey was created
-     Successfully save API key information to apikey.json
-     $ ibmcloud login --apikey @apikey.json
-```
-
-## 第一步：在CloudShell里安装必要的工具
-* 安装Tekton
-```
-$ kubectl apply --filename https://storage.googleapis.com/tekton-releases/latest/release.yaml
+$ kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/previous/v0.8.0/release.yaml
 $ kubectl apply --filename https://storage.googleapis.com/tekton-releases/triggers/latest/release.yaml
 ```
-* 在准备好的集群上安装Knative
-```
-$ ibmcloud ks cluster addon enable knative --cluster testcluster -y
-```
 
-## 第二步：检查集群已经配置好
+
+## 第二步：检查Tekton的Pipleline和Trigger已经安装好
+
+查看所有安装的名称空间：
 ```
 $ kubectl get namespace
 NAME                 STATUS   AGE
@@ -52,33 +37,16 @@ kube-system          Active   60d
 tekton-pipelines     Active   5d13h
 ```
 
-检查istio-system和knative-*** namespaces已经安装完毕。
-
+查看tekton-pipelines名称空间下面的pod，确认tekton-pipelines*和tekton-triggers都处于运行状态。
 ```
-$ kubectl get pods --namespace istio-system
-NAME                                      READY   STATUS    RESTARTS   AGE
-cluster-local-gateway-5d8ccd46db-jvfk6    1/1     Running   0          5d13h
-istio-citadel-654897999b-blq9v            1/1     Running   0          5d13h
-istio-egressgateway-77cfcd4f8d-44ztp      1/1     Running   0          5d13h
-istio-egressgateway-77cfcd4f8d-64rsg      1/1     Running   0          5d13h
-istio-galley-67987bf6cd-h5ngb             1/1     Running   0          5d13h
-istio-ingressgateway-55b8654b85-69rhh     1/1     Running   0          5d13h
-istio-ingressgateway-55b8654b85-tknnh     1/1     Running   0          5d13h
-istio-pilot-796cfc6987-nnc8h              2/2     Running   0          5d13h
-istio-policy-68f46ddd67-667ss             2/2     Running   3          5d13h
-istio-sidecar-injector-75479d8b85-gg9qt   1/1     Running   0          5d13h
-istio-telemetry-b8dbc5985-r2vzw           2/2     Running   4          5d13h
-prometheus-7b87f6d744-n8gql               1/1     Running   0          5d13h
-
-$ kubectl get pods --namespace knative-serving
-NAME                                READY   STATUS    RESTARTS   AGE
-activator-7654759547-csp8h          2/2     Running   4          5d13h
-autoscaler-74878dccf9-8g6tz         2/2     Running   4          5d13h
-autoscaler-hpa-6fc598cdb-g5rv7      1/1     Running   0          5d13h
-controller-dc64bc644-9vbfc          1/1     Running   0          5d13h
-networking-istio-65f5b87479-dbmhw   1/1     Running   0          5d13h
-webhook-76c4d8d998-jmf85            1/1     Running   0          11h
+$ kubectl get pods -n tekton-pipelines
+NAME                                           READY     STATUS    RESTARTS   AGE
+tekton-pipelines-controller-756f4f448f-x76fh   1/1       Running   0          5m5s
+tekton-pipelines-controller-7769bc5b76-b7jx2   1/1       Running   0          20s
+tekton-pipelines-webhook-7849d4f75f-6z8ds      1/1       Running   0          20s
+tekton-pipelines-webhook-79fcc6c768-sq52q      1/1       Running   0          5m5s
+tekton-triggers-controller-6d8fd9596b-wv5nw    1/1       Running   0          4m3s
+tekton-triggers-webhook-5f8d569d5f-8v58q       1/1       Running   0          4m2s
 ```
-
 
 
