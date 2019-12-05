@@ -46,6 +46,6 @@ spec:
         - name: imageUrl
           value: <REGISTRY>/<NAMESPACE>/hello
         - name: imageTag
-          value: "2.0"
+          value: $(params.gitrevision)
       serviceAccount: pipeline-account
 
