@@ -49,7 +49,7 @@ serviceaccount/tekton-triggers-example-sa created
         - name: imageUrl
           value: <REGISTRY>/<NAMESPACE>/hello
         - name: imageTag
-          value: "1.0"
+          value: "2.0"
       serviceAccount: pipeline-account
 ```
 1.3 创建TriggerTemplate   
@@ -136,6 +136,10 @@ el-my-listener   el-my-listener.testcluster-973348.us-south.us-south.containers.
 
 #### 5 修改hello.go source code并push
 Push操作发生时，webhook会发送一个POST请求到listener的endpoint,从而出发一个pipeline run。
+更新您自己的devopslab repo中的 src/app/hello.go文件，更新应用的输出。
+e.g. 修改为 fmt.Fprintf(w, "%s\n", say("BLUE-yourname!!!"))
+您可以在github UI上直接更新，也可以通过命令行更新。
+下面是通过命令行更新的步骤。
 ```
 $ vi devopslab/src/app/hello.go
 e.g. 修改为 fmt.Fprintf(w, "%s\n", say("BLUE-yourname!!!"))
