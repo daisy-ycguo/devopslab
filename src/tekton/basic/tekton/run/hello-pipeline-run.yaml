@@ -16,6 +16,4 @@ spec:
       value: <REGISTRY>/<NAMESPACE>/hello
     - name: imageTag
       value: "1.0"
-  trigger:
-    type: manual
   serviceAccount: pipeline-account
