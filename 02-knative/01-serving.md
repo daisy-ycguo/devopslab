@@ -29,7 +29,7 @@ http://hello-default.capacity-demo.us-south.containers.appdomain.cloud
 ```
 把下面命令中的hello-xfljl替换为您的GENERATION为1的revision，给它打上tag`version1`
 ```
-$ kn service update hello –-tag hello-xfljl=version1
+$ kn service update hello --tag hello-xfljl=version1
 Updating Service 'hello' in namespace 'default':
 
   0.090s The Route is still working to reflect the latest desired specification.
