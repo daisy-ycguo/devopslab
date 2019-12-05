@@ -72,13 +72,13 @@ $ for i in {1..50}; do sleep 0.5; curl "http://hello-default.<CLUSTER-NAME>.us-s
 
 - 获取 Prometheus 服务实例地址：
 
-(1)使用 CloudShell 时，无法利用本地 localhost 监听 Prometheus 服务实例，我们可以通过 `NodeIP:NodePort` 的方式直接访问 Prometheus ，输入以下命令获取访问地址：
+(1) 使用 CloudShell 时，无法利用本地 localhost 监听 Prometheus 服务实例，我们可以通过 `NodeIP:NodePort` 的方式直接访问 Prometheus ，输入以下命令获取访问地址：
 ```
-$ echo $(kubectl get nodes -o jsonpath='{.items[0].status.addresses[1].address}'):$(kubectl -n knative-monitoring get services grafana -ojsonpath='{.spec.ports[0].nodePort}')
+$ echo $(kubectl get nodes -o jsonpath='{.items[0].status.addresses[1].address}'):$(kubectl -n knative-monitoring get services prometheus-system-np -ojsonpath='{.spec.ports[0].nodePort}')
 xxx.xxx.xxx.xxx:xxxxx
 ```
 
-(2)当使用本地 CommandLine 工具时，我们还可以利用本地端口 **9090** 监听 Prometheus 服务实例，这种情况下 Prometheus 地址是 http://localhost:9090 ：
+(2) 当使用本地 CommandLine 工具时，我们还可以利用本地端口 **9090** 监听 Prometheus 服务实例，这种情况下 Prometheus 地址是 http://localhost:9090 ：
 
 ```
 $ kubectl -n knative-monitoring port-forward \
@@ -99,7 +99,7 @@ $ kubectl -n knative-monitoring port-forward \
 (1) 使用 CloudShell 时，无法利用本地 localhost 监听 Grafana 服务实例，我们可以通过 `NodeIP:NodePort` 的方式直接访问 Grafana Dashboard，输入以下命令获取访问地址：
 
 ```
-$ echo $(kubectl get nodes -o jsonpath='{.items[0].status.addresses[1].address}'):$(kubectl -n knative-monitoring get services prometheus-system-np -ojsonpath='{.spec.ports[0].nodePort}')
+$ echo $(kubectl get nodes -o jsonpath='{.items[0].status.addresses[1].address}'):$(kubectl -n knative-monitoring get services grafana -ojsonpath='{.spec.ports[0].nodePort}')
 xxx.xxx.xxx.xxx:xxxxx
 ```
 
