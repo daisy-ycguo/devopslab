@@ -14,9 +14,9 @@ hello-xfljl   hello     1            2m40s   3 OK / 4     True
 ```
 
 ## 2. 给两个revision版本添加tag
-将AGE时间较短的revision加上tab`version2`
+将GENERATION为2的revision打上tag`version2`
 ```
-$ kn service update hello –-tag hello-jhvvz=version2
+$ kn service update hello --tag hello-jhvvz=version2
 Updating Servi ce 'hello' in namespace 'default':
 
   0.164s The Route is still working to reflect the latest desired specification.
