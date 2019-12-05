@@ -70,29 +70,48 @@ $ for i in {1..50}; do sleep 0.5; curl "http://hello-default.<CLUSTER-NAME>.us-s
 
 一， Prometheus
 
-- 使用本地端口 **9090** 监听 Prometheus 服务实例：
+- 获取 Prometheus 服务实例地址：
+
+(1)使用 CloudShell 时，无法利用本地 localhost 监听 Prometheus 服务实例，我们可以通过 `NodeIP:NodePort` 的方式直接访问 Prometheus ，输入以下命令获取访问地址：
 ```
-kubectl -n knative-monitoring port-forward \
+$ echo $(kubectl get nodes -o jsonpath='{.items[0].status.addresses[1].address}'):$(kubectl -n knative-monitoring get services grafana -ojsonpath='{.spec.ports[0].nodePort}')
+xxx.xxx.xxx.xxx:xxxxx
+```
+
+(2)当使用本地 CommandLine 工具时，我们还可以利用本地端口 **9090** 监听 Prometheus 服务实例，这种情况下 Prometheus 地址是 http://localhost:9090 ：
+
+```
+$ kubectl -n knative-monitoring port-forward \
   $(kubectl -n knative-monitoring get pod -l app=prometheus -o jsonpath='{.items[0].metadata.name}') \
   9090:9090 &
 ```
 
-- 在浏览器中打开 Prometheus 工作窗口：http://localhost:9090/graph
+- 在浏览器中打开 Prometheus 工作窗口
 
-- 在 **Expression** 框中输入 `istio_requests_total` , 点击 **Execute** 按钮，您将在 **Graph** 或 **Console** 标签页中观测到最近一段时间内 Kuberneters 系统中所有请求的数量。
+   - 在 **Expression** 框中输入 `istio_requests_total` , 点击 **Execute** 按钮，您将在 **Graph** 或 **Console** 标签页中观测到最近一段时间内 Kuberneters 系统中所有请求的数量。
 
-- 在 **Expression** 框中输入 `istio_requests_total{destination_service_name='hello-xxxxx'}` （您需要使用实际的服务实例名称替换 `hello-xxxxx` ） , 点击 **Execute** 按钮，您将在 **Graph** 或 **Console** 标签页中观测到最近一段时间内所有路由到 `hello` 服务的请求数量。
+   - 在 **Expression** 框中输入 `istio_requests_total{destination_service_name='hello-xxxxx'}` （您需要使用实际的服务实例名称替换 `hello-xxxxx` ） , 点击 **Execute** 按钮，您将在 **Graph** 或 **Console** 标签页中观测到最近一段时间内所有路由到 `hello` 服务的请求数量。
 
 二， Grafana
 
-- 使用本地端口 **3000** 监听 Grafana 服务实例：
+- 获取 Grafana 工作窗口地址：
+
+(1) 使用 CloudShell 时，无法利用本地 localhost 监听 Grafana 服务实例，我们可以通过 `NodeIP:NodePort` 的方式直接访问 Grafana Dashboard，输入以下命令获取访问地址：
+
 ```
-kubectl -n knative-monitoring port-forward \
+$ echo $(kubectl get nodes -o jsonpath='{.items[0].status.addresses[1].address}'):$(kubectl -n knative-monitoring get services prometheus-system-np -ojsonpath='{.spec.ports[0].nodePort}')
+xxx.xxx.xxx.xxx:xxxxx
+```
+
+(2) 当使用本地 CommandLine 工具时，我们还可以利用本地端口 **3000** 监听 Grafana 服务实例，这种情况下 Grafana 地址是 http://localhost:3000 ：
+
+```
+$ kubectl -n knative-monitoring port-forward \
   $(kubectl -n knative-monitoring get pod -l app=grafana -o jsonpath='{.items[0].metadata.name}') \
   3000:3000 &
 ```
 
-- 在浏览器中打开 Grafana 工作窗口：http://localhost:3000 ，点击 **Home** 菜单项，展开 **General** 列表，Grafana 已为您配置了多个的监控项供选择：
+- 在浏览器中打开 Grafana 工作窗口地址，点击 **Home** 菜单项，展开 **General** 列表，Grafana 已为您配置了多个的监控项供选择：
   - **Deployment**：在 **Namespace** 下拉框中选择 `default` , **Deployment** 下拉框中选择 `hello-xxxxx-deployment`，页面刷新完成后，您将观测到当前服务部署的统计指标图表。
   - **Pods**：在 **Namespace** 下拉框中选择 `default` , **Pod** 下拉框中选择 `hello-xxxxx-deployment-xxxxxxxxxx-xxxxx`，页面刷新完成后，您将观测到当前pod的统计指标图表。
 
