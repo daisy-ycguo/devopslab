@@ -367,3 +367,28 @@ kubectl get ksvc
 ```
 $ kubectl describe ksvc hello
 ```
+
+6. 清理环境
+如果以上步骤无法找到问题并解决，可以尝试清掉以上实验所创建的资源，重新开始。
+清理脚本：
+```
+kubectl delete pipeline --all
+kubectl delete task --all
+kubectl delete sa pipeline-account
+kubectl delete PipelineResource hello-git
+kubectl delete secret ibm-cr-push-secret
+kubectl delete pipelinerun --all
+kubectl delete ksvc hello
+```
+
+所有实验步骤脚本：(确保需要更新的文件已经更新好）
+```
+kubectl apply -f devopslab/src/tekton/basic/tekton/tasks/source-to-image.yaml
+kubectl apply -f devopslab/src/tekton/basic/tekton/tasks/deploy-using-kubectl.yaml
+kubectl apply -f devopslab/src/tekton/basic/tekton/pipeline/build-and-deploy-pipeline.yaml
+kubectl create secret docker-registry ibm-cr-push-secret --docker-server=us.icr.io --docker-username=iamapikey --docker-password=<YOURAPIKEY> --docker-email=me@here.com
+kubectl apply -f devopslab/src/tekton/basic/tekton/pipeline-account.yaml
+kubectl patch sa pipeline-account -p '"imagePullSecrets": [{"name": "ibm-cr-push-secret" }]'
+kubectl apply -f devopslab/src/tekton/basic/tekton/resources/hello-git.yaml
+kubectl create -f devopslab/src/tekton/basic/tekton/run/hello-pipeline-run.yaml
+```
