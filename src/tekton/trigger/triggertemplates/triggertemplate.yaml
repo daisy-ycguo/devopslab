@@ -46,6 +46,6 @@ spec:
         - name: imageUrl
           value: <REGISTRY>/<NAMESPACE>/hello
         - name: imageTag
-          value: "1.0"
+          value: "2.0"
       serviceAccount: pipeline-account
 
