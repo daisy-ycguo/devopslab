@@ -1,4 +1,4 @@
-# 安装Istio和Knative
+# 安装Tekton
 
 Knative基于Kubernetes和Istio。IBM公有云上提供的Kubernetes集群可以一键安装Istio和Knative，省去安装的烦恼。
 
