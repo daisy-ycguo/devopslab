@@ -319,12 +319,12 @@ hello-pr-ktc9j-source-to-image-ccvfg     True        Succeeded   67s         11s
 ```
 $ kubectl get ksvc hello
 NAME    URL                                                                      LATESTCREATED   LATESTREADY   READY   REASON
-hello   http://hello-default.capacity-demo.us-south.containers.appdomain.cloud   hello-thjf9     hello-thjf9   True
+hello   http://hello-default.<CLUSTER-NAME>.us-south.containers.appdomain.cloud   hello-thjf9     hello-thjf9   True
 ```   
 4. 最后，访问应用。
 ```
-curl http://hello-default.capacity-demo.us-south.containers.appdomain.cloud
-[ 20191031 ] Hello world, this is BLUE-1203!!!
+curl http://hello-default.<CLUSTER-NAME>.us-south.containers.appdomain.cloud
+Hello world, this is BLUE-IBM!!!
 ```
 
 ### 问题诊断
