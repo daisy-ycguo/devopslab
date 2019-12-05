@@ -222,6 +222,7 @@ spec:
 
 #### 5.2 创建Tekton PipelineResource
 Pipeline resouce 文件路径：devopslab/src/tekton/basic/tekton/resources/hello-git.yaml
+
 PipelineResource指向一个git source。这git source是一个hello world的go程序。它包含了一个Dockerfile来测试，编译代码，build image。   
 更新hello-git.yaml，将下面url的value改为您自己clone的git repo。
 ```
