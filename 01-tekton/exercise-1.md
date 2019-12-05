@@ -167,60 +167,7 @@ spec:
 
 ### 5. 创建PipelineRun和PipelineResources   
 下面我们创建一个PipelineRun来指定input resource和parameters，并执行这个pipeline。     
-#### 5.1 修改PipelineRun文件，替换`<REGISTRY>/<NAMESPACE>`为具体的值。
-PipelineRun文件路径：devopslab/src/tekton/basic/tekton/run/hello-pipeline-run.yaml。      
-1. 登录UI https://cloud.ibm.com/login 切换到**您自己的**ibm account(很重要!不要使用IBM ccount)。
-![alt text](https://github.com/daisy-ycguo/devopslab/blob/master/images/login-personal-account.png)
-2. 打开 https://cloud.ibm.com/iam/apikeys 页面， 点击“Create an IBM Cloud API key”按钮。
-3. 输入一个名字，点击"Create"按钮。
-![alt text](https://github.com/daisy-ycguo/devopslab/blob/master/images/create-api-key.png)
-4. Download API key，打开apikey.json文件获取apikey。
-![alt text](https://github.com/daisy-ycguo/devopslab/blob/master/images/download-apikey.png)
-5. 使用刚刚得到的API key登录 ibmcloud。
-`ibmcloud login --apikey <YOURAPIKEY>`   
-6. 登录您的私人container registry   
-`ibmcloud cr login`   
-7. 列出您的`namespace`   
-`ibmcloud cr namespaces`   
-8. 如果您还没有一个namespace,创建一个。   
-`ibmcloud cr namespace-add <yourspacename>`
-9. 执行以下命令获得registry，在以下例子中registry为us.icr.io。      
-```
-$ ibmcloud cr region
-You are targeting region 'us-south', the registry is 'us.icr.io'.
-```   
-10. 将devopslab/src/tekton/basic/tekton/run/hello-pipeline-run.yaml文件中的`<REGISTRY>`和`<NAMESPACE>`用以上的值代替。
-```
-apiVersion: tekton.dev/v1alpha1
-kind: PipelineRun
-metadata:
-  generateName: hello-pr-
-spec:
-  pipelineRef:
-    name: build-and-deploy-pipeline
-  resources:
-    - name: git-source
-      resourceRef:
-        name: hello-git
-  params:
-    - name: pathToYamlFile
-      value: "src/tekton/basic/knative/hello.yaml"
-    - name: imageUrl
-      value: <REGISTRY>/<NAMESPACE>/hello
-    - name: imageTag
-      value: "1.0"
-  trigger:
-    type: manual
-  serviceAccount: pipeline-account
-```
-说明：
-- PipelineRun没有一个固定的名字，每次执行的的时候会使用generateName的内容生成一个名字，例如‘hello-pr-4jrtd’。这样做的好处是可以多次执行PipelineRun。   
-- PipelineRun要执行的Pipeline由pipelineRef指定。   
-- Pipeline暴露出来的parameters被指定了具体的值。   
-- 关于Pipeline需要的resources，我们之后会定义一个名为hello-git的PipelineResources。   
-- 关于pipeline执行时所需要的认证信息，我们后面将会创建一个名为pipeline-account的service account。    
-
-#### 5.2 创建Tekton PipelineResource
+#### 5.1 创建Tekton PipelineResource
 Pipeline resouce 文件路径：devopslab/src/tekton/basic/tekton/resources/hello-git.yaml
 
 PipelineResource指向一个git source。这git source是一个hello world的go程序。它包含了一个Dockerfile来测试，编译代码，build image。   
@@ -241,7 +188,7 @@ spec:
 下面创建Pipelineresource。   
 `kubectl apply -f devopslab/src/tekton/basic/tekton/resources/hello-git.yaml`   
 
-#### 5.3 创建service account
+#### 5.2 创建service account
 Service account让pipeline可以访问被保护的资源-您私人的container registry。在创建service account之前，我们先要创建一个secret,它含了对您的container registry进行操作所需要的认证信息。   
 ```
 kubectl create secret docker-registry ibm-cr-push-secret --docker-server=<REGISTRY> --docker-username=iamapikey --docker-password=<YOURAPIKEY> --docker-email=me@here.com
@@ -303,6 +250,59 @@ name: pipeline-account
 
 下面为pipeline-account添加imagePullSecrets    
 `kubectl patch sa pipeline-account -p '"imagePullSecrets": [{"name": "ibm-cr-push-secret" }]'`
+
+#### 5.3 修改PipelineRun文件，替换`<REGISTRY>/<NAMESPACE>`为具体的值。
+PipelineRun文件路径：devopslab/src/tekton/basic/tekton/run/hello-pipeline-run.yaml。      
+1. 登录UI https://cloud.ibm.com/login 切换到**您自己的**ibm account(很重要!不要使用IBM ccount)。
+![alt text](https://github.com/daisy-ycguo/devopslab/blob/master/images/login-personal-account.png)
+2. 打开 https://cloud.ibm.com/iam/apikeys 页面， 点击“Create an IBM Cloud API key”按钮。
+3. 输入一个名字，点击"Create"按钮。
+![alt text](https://github.com/daisy-ycguo/devopslab/blob/master/images/create-api-key.png)
+4. Download API key，打开apikey.json文件获取apikey。
+![alt text](https://github.com/daisy-ycguo/devopslab/blob/master/images/download-apikey.png)
+5. 使用刚刚得到的API key登录 ibmcloud。
+`ibmcloud login --apikey <YOURAPIKEY>`   
+6. 登录您的私人container registry   
+`ibmcloud cr login`   
+7. 列出您的`namespace`   
+`ibmcloud cr namespaces`   
+8. 如果您还没有一个namespace,创建一个。   
+`ibmcloud cr namespace-add <yourspacename>`
+9. 执行以下命令获得registry，在以下例子中registry为us.icr.io。      
+```
+$ ibmcloud cr region
+You are targeting region 'us-south', the registry is 'us.icr.io'.
+```   
+10. 将devopslab/src/tekton/basic/tekton/run/hello-pipeline-run.yaml文件中的`<REGISTRY>`和`<NAMESPACE>`用以上的值代替。
+```
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineRun
+metadata:
+  generateName: hello-pr-
+spec:
+  pipelineRef:
+    name: build-and-deploy-pipeline
+  resources:
+    - name: git-source
+      resourceRef:
+        name: hello-git
+  params:
+    - name: pathToYamlFile
+      value: "src/tekton/basic/knative/hello.yaml"
+    - name: imageUrl
+      value: <REGISTRY>/<NAMESPACE>/hello
+    - name: imageTag
+      value: "1.0"
+  trigger:
+    type: manual
+  serviceAccount: pipeline-account
+```
+说明：
+- PipelineRun没有一个固定的名字，每次执行的的时候会使用generateName的内容生成一个名字，例如‘hello-pr-4jrtd’。这样做的好处是可以多次执行PipelineRun。   
+- PipelineRun要执行的Pipeline由pipelineRef指定。   
+- Pipeline暴露出来的parameters被指定了具体的值。   
+- 关于Pipeline需要的resources，我们之后会定义一个名为hello-git的PipelineResources。   
+- 关于pipeline执行时所需要的认证信息，我们后面将会创建一个名为pipeline-account的service account。    
 
 ### 6. 执行Pipeline  
 1. 下面执行这个pipeline run。        
