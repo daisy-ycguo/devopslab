@@ -1,10 +1,10 @@
-# 使用 Istio 监控服务
+# 使用 Knative 监控服务
 
 
 ## 前提
 
 * Istio 和 Knative 在 IBM Kubernetes Cluster 上安装完毕。
-* Service `picalc` 已通过 Knative pipeline 正确安装。
+* Service `hello` 已通过 Knative pipeline 正确安装。
 
 ## 第一步：配置 Knative 监控环境
 
@@ -36,33 +36,33 @@ prometheus-system-discovery   ClusterIP   None             <none>        9090/TC
 prometheus-system-np          NodePort    172.21.202.105   <none>        8080:32344/TCP        9h
 ```
 
-二， 获取 `picalc` 服务地址，并验证服务：
+二， 获取 `hello` 服务地址，并验证服务：
 ```
-$ kubectl get ksvc picalc
-NAME     URL                                                                        LATESTCREATED   LATESTREADY    READY   REASON
-picalc   http://picalc-default.<CLUSTER-NAME>.us-south.containers.appdomain.cloud   picalc-xxxxx    picalc-xxxxx   True
+$ kubectl get ksvc hello
+NAME    URL                                                                      LATESTCREATED   LATESTREADY   READY   REASON
+hello   http://hello-default.<CLUSTER-NAME>.us-south.containers.appdomain.cloud   hello-xxxx     hello-xxxx   True   
 
-$ kubectl get service picalc-xxxxx
-NAME           TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
-picalc-xxxxx   ClusterIP   172.21.255.191   <none>        80/TCP    8h
+$ kubectl get service hello-xxxxx
+NAME          TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+hello-xxxx   ClusterIP   172.21.60.115   <none>        80/TCP    45m
 
 $ kubectl get deployment
-NAME                      READY   UP-TO-DATE   AVAILABLE   AGE
-picalc-xxxxx-deployment   1/1     1            1           8h
+NAME                     READY   UP-TO-DATE   AVAILABLE   AGE
+hello-xxxx-deployment   0/0     0            0           45m
 
 $ kubectl get pods
 NAME                                       READY   STATUS    RESTARTS   AGE
-picalc-xxxxx-deployment-xxxxxxxxxx-xxxxx   2/2     Running   0          14m
+hello-xxxxx-deployment-xxxxxxxxxx-xxxxx   2/2     Running   0          14m
 
-$ curl "http://picalc-default.<CLUSTER-NAME>.us-south.containers.appdomain.cloud?iterations=20000000"
-3.1415926036
+$ curl http://hello-default.<CLUSTER-NAME>.us-south.containers.appdomain.cloud
+[ 20191031 ] Hello world, this is BLUE-<your-name>!!!
 ```
 
 三， 手动为服务添加工作负载
 ```
-$ for i in {1..50}; do sleep 0.5; curl "http://picalc-default.<CLUSTER-NAME>.us-south.containers.appdomain.cloud?iterations=20000000"; done
-3.1415926036
-3.1415926036
+$ for i in {1..50}; do sleep 0.5; curl "http://hello-default.<CLUSTER-NAME>.us-south.containers.appdomain.cloud"; done
+[ 20191031 ] Hello world, this is BLUE-<your-name>!!!
+[ 20191031 ] Hello world, this is BLUE-<your-name>!!!
 ......
 ```
 
@@ -70,38 +70,57 @@ $ for i in {1..50}; do sleep 0.5; curl "http://picalc-default.<CLUSTER-NAME>.us-
 
 一， Prometheus
 
-- 使用本地端口 **9090** 监听 Prometheus 服务实例：
+- 获取 Prometheus 服务实例地址：
+
+(1)使用 CloudShell 时，无法利用本地 localhost 监听 Prometheus 服务实例，我们可以通过 `NodeIP:NodePort` 的方式直接访问 Prometheus ，输入以下命令获取访问地址：
 ```
-kubectl -n knative-monitoring port-forward \
+$ echo $(kubectl get nodes -o jsonpath='{.items[0].status.addresses[1].address}'):$(kubectl -n knative-monitoring get services grafana -ojsonpath='{.spec.ports[0].nodePort}')
+xxx.xxx.xxx.xxx:xxxxx
+```
+
+(2)当使用本地 CommandLine 工具时，我们还可以利用本地端口 **9090** 监听 Prometheus 服务实例，这种情况下 Prometheus 地址是 http://localhost:9090 ：
+
+```
+$ kubectl -n knative-monitoring port-forward \
   $(kubectl -n knative-monitoring get pod -l app=prometheus -o jsonpath='{.items[0].metadata.name}') \
   9090:9090 &
 ```
 
-- 在浏览器中打开 Prometheus 工作窗口：http://localhost:9090/graph
+- 在浏览器中打开 Prometheus 工作窗口
 
-- 在 **Expression** 框中输入 `istio_requests_total` , 点击 **Execute** 按钮，您将在 **Graph** 或 **Console** 标签页中观测到最近一段时间内 Kuberneters 系统中所有请求的数量。
+   - 在 **Expression** 框中输入 `istio_requests_total` , 点击 **Execute** 按钮，您将在 **Graph** 或 **Console** 标签页中观测到最近一段时间内 Kuberneters 系统中所有请求的数量。
 
-- 在 **Expression** 框中输入 `istio_requests_total{destination_service_name='picalc-xxxxx'}` （您需要使用实际的服务实例名称替换 `picalc-xxxxx` ） , 点击 **Execute** 按钮，您将在 **Graph** 或 **Console** 标签页中观测到最近一段时间内所有路由到 `picalc` 服务的请求数量。
+   - 在 **Expression** 框中输入 `istio_requests_total{destination_service_name='hello-xxxxx'}` （您需要使用实际的服务实例名称替换 `hello-xxxxx` ） , 点击 **Execute** 按钮，您将在 **Graph** 或 **Console** 标签页中观测到最近一段时间内所有路由到 `hello` 服务的请求数量。
 
 二， Grafana
 
-- 使用本地端口 **3000** 监听 Grafana 服务实例：
+- 获取 Grafana 工作窗口地址：
+
+(1) 使用 CloudShell 时，无法利用本地 localhost 监听 Grafana 服务实例，我们可以通过 `NodeIP:NodePort` 的方式直接访问 Grafana Dashboard，输入以下命令获取访问地址：
+
 ```
-kubectl -n knative-monitoring port-forward \
+$ echo $(kubectl get nodes -o jsonpath='{.items[0].status.addresses[1].address}'):$(kubectl -n knative-monitoring get services prometheus-system-np -ojsonpath='{.spec.ports[0].nodePort}')
+xxx.xxx.xxx.xxx:xxxxx
+```
+
+(2) 当使用本地 CommandLine 工具时，我们还可以利用本地端口 **3000** 监听 Grafana 服务实例，这种情况下 Grafana 地址是 http://localhost:3000 ：
+
+```
+$ kubectl -n knative-monitoring port-forward \
   $(kubectl -n knative-monitoring get pod -l app=grafana -o jsonpath='{.items[0].metadata.name}') \
   3000:3000 &
 ```
 
-- 在浏览器中打开 Grafana 工作窗口：http://localhost:3000 ，点击 **Home** 菜单项，展开 **General** 列表，Grafana 已为您配置了多个的监控项供选择：
-  - **Deployment**：在 **Namespace** 下拉框中选择 `default` , **Deployment** 下拉框中选择 `picalc-xxxxx-deployment`，页面刷新完成后，您将观测到当前服务部署的统计指标图表。
-  - **Pods**：在 **Namespace** 下拉框中选择 `default` , **Pod** 下拉框中选择 `picalc-xxxxx-deployment-xxxxxxxxxx-xxxxx`，页面刷新完成后，您将观测到当前pod的统计指标图表。
+- 在浏览器中打开 Grafana 工作窗口地址，点击 **Home** 菜单项，展开 **General** 列表，Grafana 已为您配置了多个的监控项供选择：
+  - **Deployment**：在 **Namespace** 下拉框中选择 `default` , **Deployment** 下拉框中选择 `hello-xxxxx-deployment`，页面刷新完成后，您将观测到当前服务部署的统计指标图表。
+  - **Pods**：在 **Namespace** 下拉框中选择 `default` , **Pod** 下拉框中选择 `hello-xxxxx-deployment-xxxxxxxxxx-xxxxx`，页面刷新完成后，您将观测到当前pod的统计指标图表。
 
 - 您可以继续使用前面提到的命令为服务增加工作负载，持续监控服务数据。
 
 ```
-$ for i in {1..50}; do sleep 0.5; curl "http://picalc-default.<CLUSTER-NAME>.us-south.containers.appdomain.cloud?iterations=20000000"; done
-3.1415926036
-3.1415926036
+$ for i in {1..50}; do sleep 0.5; curl "http://hello-default.<CLUSTER-NAME>.us-south.containers.appdomain.cloud?iterations=20000000"; done
+[ 20191031 ] Hello world, this is BLUE-<your-name>!!!
+[ 20191031 ] Hello world, this is BLUE-<your-name>!!!
 ......
 ```
 
