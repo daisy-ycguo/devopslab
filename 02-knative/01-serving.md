@@ -14,7 +14,7 @@ hello-xfljl   hello     1            2m40s   3 OK / 4     True
 ```
 
 ## 2. 给两个revision版本添加tag
-将GENERATION为2的revision打上tag`version2`
+把下面命令中的hello-jhvvz替换为您的GENERATION为2的revision，给它打上tag`version2`
 ```
 $ kn service update hello --tag hello-jhvvz=version2
 Updating Servi ce 'hello' in namespace 'default':
@@ -27,7 +27,7 @@ Updating Servi ce 'hello' in namespace 'default':
 Service 'hello' updated with latest revision 'hello-jhvvz' (unchanged) and URL:
 http://hello-default.capacity-demo.us-south.containers.appdomain.cloud
 ```
-将AGE时间较长的revision加上tab`version1`
+把下面命令中的hello-xfljl替换为您的GENERATION为1的revision，给它打上tag`version1`
 ```
 $ kn service update hello –-tag hello-xfljl=version1
 Updating Service 'hello' in namespace 'default':
