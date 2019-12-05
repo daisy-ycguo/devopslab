@@ -267,13 +267,14 @@ PipelineRun文件路径：devopslab/src/tekton/basic/tekton/run/hello-pipeline-r
 7. 列出您的`namespace`   
 `ibmcloud cr namespaces`   
 8. 如果您还没有一个namespace,创建一个。   
-`ibmcloud cr namespace-add <yourspacename>`
-9. 执行以下命令获得registry，在以下例子中registry为us.icr.io。      
+`ibmcloud cr namespace-add yourspacename`
+9. 执行以下命令获得registry，在以下例子中r<NAMESPACE>为us.icr.io。      
 ```
 $ ibmcloud cr region
 You are targeting region 'us-south', the registry is 'us.icr.io'.
 ```   
 10. 将devopslab/src/tekton/basic/tekton/run/hello-pipeline-run.yaml文件中的`<REGISTRY>`和`<NAMESPACE>`用以上的值代替。
+在以上例子中<REGISTRY>为us.icr.io，<NAMESPACE>为yourspacename
 ```
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineRun
