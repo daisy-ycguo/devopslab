@@ -239,10 +239,10 @@ Service account让pipeline可以访问被保护的资源-您私人的IBM contain
 
 在CloudShell中请执行命令：
 ```
-kubectl create secret docker-registry ibm-cr-push-secret --docker-server=$REGISTRY --docker-username=iamapikey --docker-password=$APIKEY --docker-email=$EMAIL
+kubectl create secret docker-registry ibm-cr-push-secret --docker-server=us.icr.io --docker-username=iamapikey --docker-password=$APIKEY --docker-email=$EMAIL
 ``` 
 
-其中$REGISTRY, $APIKEY, $EMAIL的值在环境变量中配置过。
+其中$APIKEY, $EMAIL的值在环境变量中配置过。
 
 * 创建service account。
 
@@ -304,11 +304,11 @@ name: pipeline-account
 - 一个名为kube-api-secret的Secret,包含了用来访问Kubernetes API的认证信息信息，使得pipeline可以适用kubectl去操作您的kube cluster。   
 - 一个名为pipeline-role的Role和一个名为pipeline-role-binding的RoleBinding，提供给pipeline基于resource的访问控制权限来创建和修改Knative services。  
 
-#### 5.5 修改PipelineRun文件，替换`<REGISTRY>/<NAMESPACE>`为具体的值。
+#### 5.5 修改PipelineRun文件，替换`<NAMESPACE>`为具体的值。
 
 PipelineRun文件路径：devopslab/src/tekton/basic/tekton/run/hello-pipeline-run.yaml。 
 
-将文件中的`<REGISTRY>`和`<NAMESPACE>`用前述的变量值替换。 
+将文件中的`<NAMESPACE>`用前述的变量值替换。 
 ```
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineRun
