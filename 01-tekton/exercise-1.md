@@ -1,7 +1,7 @@
-# exercise-1 Tekton - from source code to production 
+# 创建Tekton pipeline并手动运行 
 
 ## 实验目标
-- 了解Tekton pipelline的基本概念
+- 了解Tekton pipeline的基本概念
 - 创建一个pipeline来build和部署一个Knatvie的应用
 - 执行一个pipeline并查看状态
 - 问题诊断
@@ -24,11 +24,9 @@
 ### 3. [准备Kubernetes集群环境](https://github.com/daisy-ycguo/devopslab/blob/master/00-install/01-k8s-connect.md)
 
 ## 实验步骤
-### 1. Fork devopslab 项目到您自己的repo并且clone到local workstation
-1. 登录您的github account。如果您没有github account, 请先注册一个账号，可参考： https://github.com/daisy-ycguo/devopslab/blob/master/00-install/apply-github-account.md
-2. 在浏览器中打开https://github.com/daisy-ycguo/devopslab 点击Fork。
-3. Fork成功后会跳转到您自己的github账户下的devopslab repo。点击"Clone or download",拷贝url。
-4. 在您的本地目录克隆以上的repository    
+### 1. clone代码到本地
+1. 在您的github代码库页面，点击"Clone or download"，获取URL。
+2. 将代码库clone到本地，在CloudShell窗口运行这个命令：    
 `git clone https://github.com/<your-git-account>/devopslab.git`
 
 ### 2. 创建一个Task， 用于build一个image并push到您的container registry。 

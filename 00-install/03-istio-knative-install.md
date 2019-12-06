@@ -91,7 +91,7 @@ OK
 
 恭喜您已经完成了Knative的安装！
 
-请继续[安装Tekton](https://github.com/daisy-ycguo/devopslab/blob/master/00-install/03-tekton-install.md)
+请继续[安装Tekton](https://github.com/daisy-ycguo/devopslab/blob/master/00-install/04-tekton-install.md)
 
 ## 参考资料
 
@@ -107,4 +107,3 @@ OK
    想学习Kubernetes可以访问[Kube101](https://github.com/IBM/kube101/tree/master/workshop)。
 
    想学习Istio可以访问[Istio101](https://github.com/IBM/istio101/tree/master/workshop).
-
