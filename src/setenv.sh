@@ -1,4 +1,4 @@
-export GITACCOUNT=
+export GITACCOUNT=guoyingc
 
 export MYCLUSTER=
 export KUBECONFIG=
