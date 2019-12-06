@@ -336,10 +336,14 @@ $ kubectl get ksvc hello
 NAME    URL                                                                      LATESTCREATED   LATESTREADY   READY   REASON
 hello   http://hello-default.<CLUSTER-NAME>.us-south.containers.appdomain.cloud   hello-thjf9     hello-thjf9   True
 ```   
+请记录这里的Ingress-doman
+```
+export INGRESS=<CLUSTER-NAME>.us-south.containers.appdomain.cloud
+```
 
 3. 最后，访问应用。
 ```
-curl http://hello-default.<CLUSTER-NAME>.us-south.containers.appdomain.cloud
+curl http://hello-default.$INGRESS
 Hello world, this is BLUE-IBM!!!
 ```
 
