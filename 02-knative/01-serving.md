@@ -1,7 +1,7 @@
 # 流量管控
 
 ## 1.检查service和revision
-完成了Tekton exercise-1 和 exercise-2后， 我们已经有两个service revision版本
+完成了[01-tekton/exercise-1](../01-tekton/exercise-1.md),[01-tekton/exercise-2](../01-tekton/exercise-2.md)和[02-knative/00-eventing](./00-eventing.md)后， 我们已经有三个service revision版本。在本实验中我们只关心前两个版本。
 ```
 $ kn service list
 NAME    URL                                                                      LATEST        AGE     CONDITIONS   READY   REASON
@@ -10,7 +10,8 @@ hello   http://hello-default.capacity-demo.us-south.containers.appdomain.cloud  
 $ kn revision list
 NAME          SERVICE   GENERATION   AGE     CONDITIONS   READY   REASON
 hello-jhvvz   hello     2            62s     4 OK / 4     True    
-hello-xfljl   hello     1            2m40s   3 OK / 4     True    
+hello-xfljl   hello     1            2m40s   3 OK / 4     True 
+...
 ```
 
 ## 2. 给两个revision版本添加tag
