@@ -83,7 +83,7 @@ el-my-listener-99b595cc6-4vqq6                          1/1     Running     0   
 使得listner endpoint可以被从cluster外部访问。后面我们会通过git repository的webhook来访问这个listener endpoint。
 1. 获取你的集群的Ingress Subdomain
 ```
-$ ibmcloud ks cluster-get <CLUSTER-NAME> | grep 'Ingress Subdomain'
+$ ibmcloud ks cluster-get $MYCLUSTER | grep 'Ingress Subdomain'
 
 Ingress Subdomain: <CLUSTER-NAME>.us-south.containers.appdomain.cloud
 ```
