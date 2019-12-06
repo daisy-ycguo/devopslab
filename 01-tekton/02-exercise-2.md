@@ -337,4 +337,4 @@ $ kubectl logs el-my-listener-99b595cc6-4vqq6
 2019/12/04 10:19:59 Error getting TriggerBinding my-pipeline-binding: triggerbindings.tekton.dev "my-pipeline-binding" not found
 ```
 ### 有pipeline run生成但是pipeline run失败
-参考[tekton exercise-1](./exercise-1.md)的问题诊断
+参考[tekton exercise-1](./01-exercise-1.md)的问题诊断
