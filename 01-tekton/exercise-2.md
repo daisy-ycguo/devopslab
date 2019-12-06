@@ -176,7 +176,7 @@ hello   http://hello-default.capacity-demo.us-south.containers.appdomain.cloud  
 Hello world, this is BLUE-yourname!!!
 ```
 
-恭喜您，您已经完成了Tekton全部实验。下面继续阅读，或者进行下一步[使用Knative Eventing监控新服务](../02-knative/00-eventing.md)
+恭喜您！您已经完成了Tekton全部实验。下面继续阅读，或者进行下一步[使用Knative Eventing监控新服务](../02-knative/00-eventing.md)
 
 ## 了解发生了什么
 一个PipelineRun被创建出来，这个PipelineRun执行了上个实验中我们创建好的pipeline 'build-and-deploy-pipeline'。

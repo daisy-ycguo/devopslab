@@ -24,7 +24,7 @@
 
 ## 设置环境变量
 
-通过浏览器，打开您github代码库下面的文件：https://github.com/<your-github-account>/devopslab/tree/master/src/setenv.sh，直接点击编辑按钮，把您的github的账号、邮箱填写，然后commit。
+通过浏览器，打开您github代码库下面的文件：[src/setenv.sh](../src/setenv.sh)，直接点击编辑按钮，把您的github的账号、邮箱填写，然后commit。
 
 ```
 export GITACCOUNT=<my_account>

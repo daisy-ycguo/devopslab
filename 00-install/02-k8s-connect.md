@@ -11,7 +11,7 @@ Knative Lab使用了IBM公有云上的Kubernetes集群，以及一个云上的�
 
 我们预先为这次实验创建了若干个多节点的Kubernetes集群，请您到IBM工作人员那里分配一个Kubernetes集群。 分配到集群后，请记住您的集群的名字。
 
-通过浏览器，打开您github代码库下面的文件：https://github.com/<your-github-account>/devopslab/tree/master/src/setenv.sh，直接点击编辑按钮，把您的集群名称填写，然后commit。
+通过浏览器，打开您github代码库下面的文件：[src/setenv.sh](../src/setenv.sh)，直接点击编辑按钮，把您的集群名称填写，然后commit。
 
 ```
 export GITACCOUNT=<your_account>
@@ -118,7 +118,7 @@ Resource Group Name:            default
 
 九，记录环境变量。
 
-通过浏览器，打开您github代码库下面的文件：https://github.com/<your-github-account>/devopslab/tree/master/src/setenv.sh，直接点击编辑按钮，把您的KUBECONFIG填写，然后commit。至此，您已经完成了所有环境变量的配置。
+通过浏览器，打开您github代码库下面的文件：[src/setenv.sh](../src/setenv.sh)，直接点击编辑按钮，把您的KUBECONFIG填写，然后commit。至此，您已经完成了所有环境变量的配置。
 
 ```
 export GITACCOUNT=<your_account>
