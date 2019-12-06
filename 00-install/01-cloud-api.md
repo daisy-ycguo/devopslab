@@ -32,8 +32,22 @@ OK
 六，列出您的`namespace`   
 `ibmcloud cr namespaces`   
 
-七, 创建一个叫做tektondevops的namespace。   
-`ibmcloud cr namespace-add tektondevops`
+七, 创建一个叫做 `tektondevops-<your_name>` 的 namespace（如果收到提示 *The requested namespace is already in use*，请修改 namespace 名称再重复操作）
+
+`ibmcloud cr namespace-add tektondevops-<your_name>`
+
+八，继续修改环境变量，您应该已经在浏览器中打开了 github 代码库下面的文件：[src/setenv.sh](../src/setenv.sh)，将在上面步骤中获得的 registry 以及 namespace 信息填入，接下来将获取其余的环境变量，请继续保留这个页面。
+
+```
+export GITACCOUNT=<my_account>
+
+export MYCLUSTER=
+export KUBECONFIG=
+
+export REGISTRY=us.icr.io
+export NAMESPACE=tektondevops-<your_name>
+export EMAIL=<my_email>
+```
 
 ## 第二步：获取IBM Cloud API KEY。 
 
