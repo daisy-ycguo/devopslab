@@ -209,7 +209,7 @@ kubectl get pipelinerun
 NAME             SUCCEEDED   REASON      STARTTIME   COMPLETIONTIME
 hello-pr-njq8h   True        Succeeded   9m23s       8m19s           <-上个实验(exercise-1)产生的pipeline run
 hello-pr-xk29f   True        Succeeded   62s         1s              <-这次产生的pipeline run
-
+```
 在CloudShell中请执行命令：
 ```
 kubectl get taskrun
