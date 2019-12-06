@@ -309,8 +309,8 @@ spec:
 - PipelineRun没有一个固定的名字，每次执行的的时候会使用generateName的内容生成一个名字，例如‘hello-pr-4jrtd’。这样做的好处是可以多次执行PipelineRun。   
 - PipelineRun要执行的Pipeline由pipelineRef指定。   
 - Pipeline暴露出来的parameters被指定了具体的值。   
-- 关于Pipeline需要的resources，我们之后会定义一个名为hello-git的PipelineResources。   
-- 关于pipeline执行时所需要的认证信息，我们后面将会创建一个名为pipeline-account的service account。    
+- Pipeline需要的resources是我们已经定义的hello-git的PipelineResources。   
+- pipeline执行时所需要的认证信息是我们已经定义的pipeline-account的service account。    
 
 #### 5.6 执行Pipeline  
 
