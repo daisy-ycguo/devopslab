@@ -325,7 +325,7 @@ spec:
     - name: pathToYamlFile
       value: "src/tekton/basic/knative/hello.yaml"
     - name: imageUrl
-      value: <REGISTRY>/<NAMESPACE>/hello
+      value: us.icr.io/<NAMESPACE>/hello
     - name: imageTag
       value: "1.0"
   trigger:
