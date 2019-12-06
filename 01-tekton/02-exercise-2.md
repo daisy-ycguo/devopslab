@@ -17,7 +17,7 @@
 成功完成[tekton exercise-1](./01-exercise-1.md)
 
 ## 实验步骤
-下面的实验中，我们将使用Trigger来创建一个PipelineRun和一个PipelineResource。这个PipelineRun运行了我们[tekton exercise-1](./exercise-1.md)中创建的pipeline - "build-and-deploy-pipeline"。
+下面的实验中，我们将使用Trigger来创建一个PipelineRun和一个PipelineResource。这个PipelineRun运行了我们[tekton exercise-1](./01-exercise-1.md)中创建的pipeline - "build-and-deploy-pipeline"。
 
 ### 1. 按如下步骤配置Trigger
 
