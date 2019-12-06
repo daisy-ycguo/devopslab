@@ -144,3 +144,5 @@ Hello world, this is BLUE-IBM!!!
 Hello world, this is BLUE-IBM!!!
 Hello world, this is BLUE-IBM!!!
 ```
+
+恭喜您，您已经完成了Knative Serving的实验。下面进行[监控服务](./02-monitoring.md)

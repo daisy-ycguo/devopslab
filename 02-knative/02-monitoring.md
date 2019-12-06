@@ -118,3 +118,5 @@ $ for i in {1..50}; do sleep 0.5; curl "http://hello-default.<CLUSTER-NAME>.us-s
 这样，只须通过简单配置，Grafana 就可以为您的服务提供基础的监控能力。
 
 另外，您还可以安装通过安装 Kiali 以及 Jaeger 工具帮助监测服务。参考 [Jaeger](https://www.jaegertracing.io/docs/1.15/) 以及 [Kiali](https://kiali.io/) 了解更多内容。
+
+恭喜您，您已经完成了全部实验的内容。

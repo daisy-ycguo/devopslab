@@ -242,3 +242,5 @@ kubectl logs -f $(kubectl get pods --selector=serving.knative.dev/configuration=
 
 观察完毕，使用`ctrl + c`结束进程。
 
+恭喜您，您已经完成了Knative Eventing的实验。下面进行[Serving流量管控](./02-serving.md)
+
