@@ -33,11 +33,11 @@ OK
 `ibmcloud cr namespaces`   
 （如果列出很多namesapce,可能您使用了错误的账户，请务必使用`您的个人账户`(非IBM账户)，参考第三步）
 
-七, 创建一个namespace，推荐使用您的CLUSTERID，以免与其他人冲突。 （如果收到提示 *The requested namespace is already in use*，请修改 namespace 名称再重复操作）
+七, 创建一个namespace，推荐使用您的CLUSTER名字，以免与其他人冲突。 （如果收到提示 *The requested namespace is already in use*，请修改 namespace 名称再重复操作）
 
-`ibmcloud cr namespace-add $CLUSTERID`
+`ibmcloud cr namespace-add <您的CLUSTER名字>`
 
-八，继续修改环境变量，您应该已经在浏览器中打开了 github 代码库下面的文件：[src/setenv.sh](../src/setenv.sh)，将在上面步骤中获得的 registry 以及 namespace 信息填入，接下来将获取其余的环境变量，请继续保留这个页面。
+八，继续修改环境变量，您应该已经在浏览器中打开了 github 代码库下面的文件：[src/setenv.sh](../src/setenv.sh)，将在上面步骤中获得的namespace 信息填入，接下来将获取其余的环境变量，请继续保留这个页面。
 
 ```
 export GITACCOUNT=<my_account>
