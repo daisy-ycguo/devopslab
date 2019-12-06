@@ -24,7 +24,7 @@
 五，在Cloud Shell 页面中，set您的IBM Cloud Registry Region
 
 ```
->> ibmcloud cr region-set us-south
+ibmcloud cr region-set us-south
 The region is set to 'us-south', the registry is 'us.icr.io'.
 OK
 ```
