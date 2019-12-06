@@ -78,7 +78,7 @@ $ kubectl -n knative-monitoring port-forward \
 
    - 在 **Expression** 框中输入 `istio_requests_total` , 点击 **Execute** 按钮，您将在 **Graph** 或 **Console** 标签页中观测到最近一段时间内 Kuberneters 系统中所有请求的数量。
 
-   - 在 **Expression** 框中输入 `istio_requests_total{destination_service_name='hello-xxxxx'}` （您需要使用实际的服务实例名称替换 `hello-xxxxx` ） , 点击 **Execute** 按钮，您将在 **Graph** 或 **Console** 标签页中观测到最近一段时间内所有路由到 `hello` 服务的请求数量。
+   - 在 **Expression** 框中输入 `istio_requests_total{destination_service_name=~"hello.*"}` （您需要使用实际的服务实例名称替换 `hello-xxxxx` ） , 点击 **Execute** 按钮，您将在 **Graph** 或 **Console** 标签页中观测到最近一段时间内所有路由到 `hello` 服务的请求数量。
 
 ![Prometheus](https://user-images.githubusercontent.com/42362436/70292111-222ede00-1818-11ea-8d7e-94418a4ea634.png)
 
