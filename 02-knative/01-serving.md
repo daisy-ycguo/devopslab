@@ -58,7 +58,7 @@ http://hello-default.capacity-demo.us-south.containers.appdomain.cloud
 ## 4.验证流量管控
 访问应用两个版本各处理50%的请求。
 ```
-$ for i in {1..50}; do curl http://hello-default.capacity-demo.us-south.containers.appdomain.cloud; done
+$ for i in {1..50}; do curl http://hello-default.$INGRESS; done
 Hello world, this is BLUE-update2.0!!!
 Hello world, this is BLUE-IBM!!!
 Hello world, this is BLUE-IBM!!!
@@ -134,7 +134,7 @@ Conditions:
 
 ## 6.验证所有流量都被路由到版本2.0
 ```
-$ for i in {1..50}; do curl http://hello-default.capacity-demo.us-south.containers.appdomain.cloud; done
+$ for i in {1..50}; do curl http://hello-default.$INGRESS; done
 Hello world, this is BLUE-IBM!!!
 Hello world, this is BLUE-IBM!!!
 Hello world, this is BLUE-IBM!!!
