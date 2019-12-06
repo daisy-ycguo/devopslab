@@ -21,7 +21,7 @@
 
 四，点击上图中右上角账户信息左侧的*命令行窗口图标*，页面会开始刷新。首次使用需要等待1-5分钟（等待时间与网速有关），一个云上的命令行窗口就创建好了。
 
-五，在Cloud Shell 页面中，设置您的IBM Cloud Registry Region 信息
+五，在Cloud Shell 页面中，set您的IBM Cloud Registry Region
 
 ```
 >> ibmcloud cr region-set us-south
@@ -45,7 +45,6 @@ export GITACCOUNT=<my_account>
 export MYCLUSTER=
 export KUBECONFIG=
 
-export REGISTRY=us.icr.io
 export NAMESPACE=
 export EMAIL=<my_email>
 export INGRESS=
