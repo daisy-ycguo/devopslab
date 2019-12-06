@@ -4,6 +4,8 @@ metadata:
   name: pipeline-account
 secrets:
 - name: ibm-cr-push-secret
+imagePullSecrets:
+- name: ibm-cr-push-secret
 
 ---
 
