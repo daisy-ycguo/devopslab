@@ -37,7 +37,7 @@ OK
 
 `ibmcloud cr namespace-add <您的CLUSTER名字>`
 
-八，继续修改环境变量，您应该已经在浏览器中打开了 github 代码库下面的文件：[src/setenv.sh](../src/setenv.sh)，将在上面步骤中获得的namespace 信息填入，接下来将获取其余的环境变量，请继续保留这个页面。
+八，继续修改环境变量，您应该已经在浏览器中打开了 github 代码库下面的文件：[src/setenv.sh](../src/setenv.sh)，将在上面步骤中创建的namespace 信息填入到`NAMESPACE=`后面，接下来将获取其余的环境变量，请继续保留这个页面。
 
 ```
 export GITACCOUNT=<my_account>
