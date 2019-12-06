@@ -35,7 +35,7 @@ secret/githubsecret created
 serviceaccount/tekton-triggers-example-sa created
 ```
 
-1.2 更新devopslab/src/tekton/trigger/triggertemplates/triggertemplate.yaml，将PipelineRun中的参数imageUrl的值<REGISTRY>/<NAMESPACE>/hello替换。请参考[tekton exercise-1](./exercise-1.md)步骤5.1   
+1.2 更新devopslab/src/tekton/trigger/triggertemplates/triggertemplate.yaml，将PipelineRun中的参数imageUrl的值<REGISTRY>/<NAMESPACE>/hello替换。请参考[tekton exercise-1](./exercise-1.md)步骤5.5   
   
 ```
 ...
@@ -222,7 +222,7 @@ hello-pr-njq8h-deploy-to-cluster-dtmlz   True        Succeeded   9m54s       9m4
 hello-pr-njq8h-source-to-image-vrx4x     True        Succeeded   10m         9m54s
 hello-pr-xk29f-deploy-to-cluster-mtk92   True        Succeeded   98s         87s
 hello-pr-xk29f-source-to-image-tzvg2     True        Succeeded   2m28s       98s
-
+```
 在CloudShell中请执行命令：
 ```
 kubectl get pods | grep hello
