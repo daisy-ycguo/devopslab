@@ -16,12 +16,10 @@
 ![alt text](https://github.com/IBM/tekton-tutorial/blob/master/doc/source/images/crd.png)
 
 
-## 实验准备   
-### 1. [安装Istio和Knative](https://github.com/daisy-ycguo/devopslab/blob/master/00-install/istio-knative-install.md)   
-
-### 2. [Tekton安装](https://github.com/daisy-ycguo/devopslab/blob/master/00-install/tekton-install.md)  
-
-### 3. [准备Kubernetes集群环境](https://github.com/daisy-ycguo/devopslab/blob/master/00-install/01-k8s-connect.md)
+## 前提
+- [安装Istio和Knative](https://github.com/daisy-ycguo/devopslab/blob/master/00-install/istio-knative-install.md)   
+- [Tekton安装](https://github.com/daisy-ycguo/devopslab/blob/master/00-install/tekton-install.md)  
+- [准备Kubernetes集群环境](https://github.com/daisy-ycguo/devopslab/blob/master/00-install/01-k8s-connect.md)
 
 ## 实验步骤
 ### 第一步. clone代码到本地
@@ -47,8 +45,10 @@ export APIKEY=abcedef123434
 ```
 
 ### 第二步. 创建一个Task， 用于build一个image并push到您的container registry。 
-请执行命令：
-`kubectl apply -f devopslab/src/tekton/basic/tekton/tasks/source-to-image.yaml`
+在CloudShell中请执行命令：
+```
+kubectl apply -f devopslab/src/tekton/basic/tekton/tasks/source-to-image.yaml
+```
 
 在这个步骤中， 我们创建了Task：devopslab/src/tekton/basic/tekton/tasks/source-to-image.yaml。
 
@@ -94,8 +94,10 @@ spec:
 
 
 ### 第三步. 创建另一个Task来将image部署到Kubernetes cluster。  
-请执行命令：
-`kubectl apply -f devopslab/src/tekton/basic/tekton/tasks/deploy-using-kubectl.yaml`
+在CloudShell中请执行命令：
+```
+kubectl apply -f devopslab/src/tekton/basic/tekton/tasks/deploy-using-kubectl.yaml
+```
 
 在这个步骤中， 我们创建了Task：devopslab/src/tekton/basic/tekton/tasks/deploy-using-kubectl.yaml。  
 
@@ -127,8 +129,10 @@ steps:
 
 ### 第四步. 创建一个Pipeline来组合以上两个Task。   
 
-请执行命令：    
-`kubectl apply -f devopslab/src/tekton/basic/tekton/pipeline/build-and-deploy-pipeline.yaml`
+在CloudShell中请执行命令：
+```  
+kubectl apply -f devopslab/src/tekton/basic/tekton/pipeline/build-and-deploy-pipeline.yaml
+```
 
 在这个步骤中， 我们创建了Pipeline：devopslab/src/tekton/basic/tekton/pipeline/build-and-deploy-pipeline.yaml。
 
@@ -200,9 +204,12 @@ spec:
 Pipeline resouce 文件路径：
 
 * *请修改文件* devopslab/src/tekton/basic/tekton/resources/hello-git.yaml, 输入您的git-account信息；
-* 保存您的修改， *请执行*
+* 保存您的修改， 
 
-`kubectl apply -f devopslab/src/tekton/basic/tekton/resources/hello-git.yaml`  
+在CloudShell中请执行命令：
+```
+kubectl apply -f devopslab/src/tekton/basic/tekton/resources/hello-git.yaml
+```
 
 说明： 
 
@@ -228,7 +235,7 @@ Service account让pipeline可以访问被保护的资源-您私人的IBM contain
 
 * 在创建service account之前，我们先要创建一个secret,它含了对您的container registry进行操作所需要的认证信息。  
 
-请执行如下命令：
+在CloudShell中请执行命令：
 ```
 kubectl create secret docker-registry ibm-cr-push-secret --docker-server=$REGISTRY --docker-username=iamapikey --docker-password=$APIKEY --docker-email=$EMAIL
 ``` 
@@ -237,7 +244,9 @@ kubectl create secret docker-registry ibm-cr-push-secret --docker-server=$REGIST
 
 * 创建service account。
 
-请执行命令 `kubectl apply -f devopslab/src/tekton/basic/tekton/pipeline-account.yaml`   
+在CloudShell中请执行命令：
+```
+kubectl apply -f devopslab/src/tekton/basic/tekton/pipeline-account.yaml ``` 
 
 在这个步骤中，我们使用了devopslab/src/tekton/basic/tekton/pipeline-account.yaml创建service account. 
 
@@ -294,6 +303,7 @@ name: pipeline-account
 - 一个名为pipeline-role的Role和一个名为pipeline-role-binding的RoleBinding，提供给pipeline基于resource的访问控制权限来创建和修改Knative services。  
 
 #### 5.5 修改PipelineRun文件，替换`<REGISTRY>/<NAMESPACE>`为具体的值。
+
 PipelineRun文件路径：devopslab/src/tekton/basic/tekton/run/hello-pipeline-run.yaml。 
 
 将文件中的`<REGISTRY>`和`<NAMESPACE>`用前述的变量值替换。 
@@ -329,8 +339,10 @@ spec:
 
 #### 5.6 执行Pipeline  
 
-请执行命令
-`kubectl create -f devopslab/src/tekton/basic/tekton/run/hello-pipeline-run.yaml`   
+在CloudShell中请执行命令：
+```
+kubectl create -f devopslab/src/tekton/basic/tekton/run/hello-pipeline-run.yaml
+```   
 
 #### 5.7  检查Pipeline Run的执行结果
 

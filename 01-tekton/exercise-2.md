@@ -13,22 +13,29 @@
 - TriggerBinding - 检验events并且抽取payload中的fields
 - EventListener - 将TriggerBindings和TriggerTemplates连接起来，提供一个可访问的endpoint (事件接收器). 它使用TriggerBinding从events中抽取出来的内容作为参数，来创建TriggerTemplate中指定的资源。
 
-## 实验准备
-成功完成[tekton exercise-1](https://github.com/daisy-ycguo/devopslab/blob/master/01-tekton/exercise-1.md)
+## 前提
+成功完成[tekton exercise-1](./exercise-1.md)
 
 ## 实验步骤
-下面的实验中，我们将使用Trigger来创建一个PipelineRun和一个PipelineResource。这个PipelineRun运行了我们[tekton exercise-1](https://github.com/daisy-ycguo/devopslab/blob/master/01-tekton/exercise-1.md)中创建的pipeline - "build-and-deploy-pipeline"。
+下面的实验中，我们将使用Trigger来创建一个PipelineRun和一个PipelineResource。这个PipelineRun运行了我们[tekton exercise-1](./exercise-1.md)中创建的pipeline - "build-and-deploy-pipeline"。
 
-### 1. 按如下步骤配置Trigger：
+### 1. 按如下步骤配置Trigger
+
 1.1 创建service account
+在CloudShell中请执行命令：
 ```
-$ kubectl apply -f devopslab/src/tekton/trigger/role-resources
+kubectl apply -f devopslab/src/tekton/trigger/role-resources
+```
+
+期待输出：
+```
 rolebinding.rbac.authorization.k8s.io/tekton-triggers-example-binding created
 role.rbac.authorization.k8s.io/tekton-triggers-example-minimal created
 secret/githubsecret created
 serviceaccount/tekton-triggers-example-sa created
 ```
-1.2 更新devopslab/src/tekton/trigger/triggertemplates/triggertemplate.yaml，将PipelineRun中的参数imageUrl的值<REGISTRY>/<NAMESPACE>/hello替换。请参考[tekton exercise-1](https://github.com/daisy-ycguo/devopslab/blob/master/01-tekton/exercise-1.md)步骤5.1   
+
+1.2 更新devopslab/src/tekton/trigger/triggertemplates/triggertemplate.yaml，将PipelineRun中的参数imageUrl的值<REGISTRY>/<NAMESPACE>/hello替换。请参考[tekton exercise-1](./exercise-1.md)步骤5.1   
   
 ```
 ...
@@ -53,28 +60,58 @@ serviceaccount/tekton-triggers-example-sa created
       serviceAccount: pipeline-account
 ```
 1.3 创建TriggerTemplate   
+
+在CloudShell中请执行命令：
 ```
-$ kubectl apply -f devopslab/src/tekton/trigger/triggertemplates/triggertemplate.yaml
+kubectl apply -f devopslab/src/tekton/trigger/triggertemplates/triggertemplate.yaml
+```
+
+期待输出：
+```
 triggertemplate.tekton.dev/my-pipeline-template created
 ```
 1.4 创建TriggerBinding   
+
+在CloudShell中请执行命令：
 ```
-$ kubectl apply -f devopslab/src/tekton/trigger/triggerbindings/triggerbinding.yaml
+kubectl apply -f devopslab/src/tekton/trigger/triggerbindings/triggerbinding.yaml
+```
+
+期待输出：
+```
 triggerbinding.tekton.dev/my-pipeline-binding created
 ```
 1.5 创建EventListener   
+
+在CloudShell中请执行命令：
 ```
-$ kubectl apply -f devopslab/src/tekton/trigger/eventlisteners/eventlistener.yaml
+kubectl apply -f devopslab/src/tekton/trigger/eventlisteners/eventlistener.yaml
+```
+
+期待输出：
+```
 eventlistener.tekton.dev/my-listener created
 ```
 
 #### 2 检查我们所需要的pods和services已经建好并且状态健康
+在CloudShell中请执行命令：
 ```
-$ kubectl get svc
+kubectl get svc
+```
+
+期待输出：
+```
 NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP                                           PORT(S)             AGE
 el-my-listener       ClusterIP      172.21.142.64   <none>                                                8080/TCP            4s
+```
 
-$ kubectl get pods
+在CloudShell中请执行命令：
+```
+kubectl get pods
+```
+
+期待输出：
+```
 NAME                                                 READY   STATUS      RESTARTS   AGE
 el-my-listener-99b595cc6-4vqq6                          1/1     Running     0          21s
 ```
@@ -82,9 +119,14 @@ el-my-listener-99b595cc6-4vqq6                          1/1     Running     0   
 #### 3 配置Ingress
 使得listner endpoint可以被从cluster外部访问。后面我们会通过git repository的webhook来访问这个listener endpoint。
 1. 获取你的集群的Ingress Subdomain
-```
-$ ibmcloud ks cluster-get $MYCLUSTER | grep 'Ingress Subdomain'
 
+在CloudShell中请执行命令：
+```
+ibmcloud ks cluster-get $MYCLUSTER | grep 'Ingress Subdomain'
+```
+
+期待输出：
+```
 Ingress Subdomain: <CLUSTER-NAME>.us-south.containers.appdomain.cloud
 ```
 
@@ -107,37 +149,47 @@ spec:
         path: /
 ```
 3. Apply ingress文件:
+在CloudShell中请执行命令：
 ```
-$ kubectl apply -f devopslab/src/tekton/trigger/ingress.yaml
+kubectl apply -f devopslab/src/tekton/trigger/ingress.yaml
+```
+
+期待输出：
+```
 ingress.extensions/el-my-listener created
 ```
 4. 查看ingress
+在CloudShell中请执行命令：
 ```
-$ kubectl get ingress
+kubectl get ingress
+```
+
+期待输出：
+```
 NAME             HOSTS                                                              ADDRESS         PORTS   AGE
 el-my-listener   el-my-listener.testcluster-973348.us-south.us-south.containers.appdomain.cloud   169.47.66.178   80      14s
 ```
 
-
 #### 4 配置webhook
 当指定的event发生时，Webhook会发送一个POST请求到其配置的URL。这个URL就是我们上面建好的listener的endpoint。
-进入你在[tekton exercise-1](https://github.com/daisy-ycguo/devopslab/blob/master/01-tekton/exercise-1.md)实验步骤1中fork到您自己的git账户下的repo，配置这个repo的webhook。   
+进入你的git账户下的devopslab代码库，配置这个代码库的webhook。 
+
 1. 在浏览器中您的devopslab repo `https://github.com/<your-git-account>/devopslab`
 2. 点击最右侧的Settings tab，从左侧导航栏选择Webhooks   
 3. 点击'Add webhook'按钮   
-4. Add webhook
+4. 添加 webhook
  其中：
  - Payload URL: http://加上步骤2.4中配置的ingress的HOSTS 例如：http://el-my-listener.testcluster-973348.us-south.us-south.containers.appdomain.cloud
  - Content type: application/json
- - Secret: 任意输入一个密码
+ - Secret: 不用填写，留白
  - 选择 'Just the push event'
  - 勾选 'Active'
  ![image](https://github.com/daisy-ycguo/devopslab/blob/master/images/create-webhook.png)
 
 #### 5 修改hello.go source code并push
 Push操作发生时，webhook会发送一个POST请求到listener的endpoint,从而出发一个pipeline run。   
-更新您自己的devopslab repo中的 src/app/hello.go文件，更新应用的输出。   
-e.g. 修改为 `fmt.Fprintf(w, "%s\n", say("BLUE-yourname!!!"))`   
+更新您自己的devopslab repo中的 [src/app/hello.go](../src/app/hello.go)文件，更新应用的输出。   
+例如，第17行修改为 `fmt.Fprintf(w, "%s\n", say("GREEN-IBM!!!"))`   
 您可以在github UI上直接更新并提交。
  ![image](https://github.com/daisy-ycguo/devopslab/blob/master/images/git-update.png)
   ![image](https://github.com/daisy-ycguo/devopslab/blob/master/images/git-commit.png)
@@ -147,19 +199,37 @@ e.g. 修改为 `fmt.Fprintf(w, "%s\n", say("BLUE-yourname!!!"))`
 ![image](https://github.com/daisy-ycguo/devopslab/blob/master/images/webhook-deliveries.png)
 
 ### 7 验证Pipeline运行成功
+在CloudShell中请执行命令：
 ```
-$ kubectl get pipelinerun
+kubectl get pipelinerun
+```
+
+期待输出：
+```
 NAME             SUCCEEDED   REASON      STARTTIME   COMPLETIONTIME
 hello-pr-njq8h   True        Succeeded   9m23s       8m19s           <-上个实验(exercise-1)产生的pipeline run
 hello-pr-xk29f   True        Succeeded   62s         1s              <-这次产生的pipeline run
-$ kubectl get taskrun
-$ kubectl get taskrun
+
+在CloudShell中请执行命令：
+```
+kubectl get taskrun
+```
+
+期待输出：
+```
 NAME                                     SUCCEEDED   REASON      STARTTIME   COMPLETIONTIME
 hello-pr-njq8h-deploy-to-cluster-dtmlz   True        Succeeded   9m54s       9m46s
 hello-pr-njq8h-source-to-image-vrx4x     True        Succeeded   10m         9m54s
 hello-pr-xk29f-deploy-to-cluster-mtk92   True        Succeeded   98s         87s
 hello-pr-xk29f-source-to-image-tzvg2     True        Succeeded   2m28s       98s
-$ $ kubectl get pods | grep hello
+
+在CloudShell中请执行命令：
+```
+kubectl get pods | grep hello
+```
+
+期待输出：
+```
 hello-pr-njq8h-deploy-to-cluster-dtmlz-pod-e1eb68   0/3     Completed   0          10m
 hello-pr-njq8h-source-to-image-vrx4x-pod-a6716a     0/2     Completed   0          11m
 hello-pr-xk29f-deploy-to-cluster-mtk92-pod-6ab995   0/3     Completed   0          2m26s
@@ -167,8 +237,13 @@ hello-pr-xk29f-source-to-image-tzvg2-pod-8c1a39     0/2     Completed   0       
 ```
 
 ## 8 查看service被更新了
+在CloudShell中请执行命令：
 ```
-$ kubectl get ksvc
+kubectl get ksvc
+```
+
+期待输出：
+```
 NAME    URL                                                                      LATESTCREATED   LATESTREADY   READY   REASON
 hello   http://hello-default.capacity-demo.us-south.containers.appdomain.cloud   hello-ldtj8     hello-ldtj8   True  
 
