@@ -14,7 +14,7 @@
 - EventListener - 将TriggerBindings和TriggerTemplates连接起来，提供一个可访问的endpoint (事件接收器). 它使用TriggerBinding从events中抽取出来的内容作为参数，来创建TriggerTemplate中指定的资源。
 
 ## 前提
-成功完成[tekton exercise-1](./exercise-1.md)
+成功完成[tekton exercise-1](./01-exercise-1.md)
 
 ## 实验步骤
 下面的实验中，我们将使用Trigger来创建一个PipelineRun和一个PipelineResource。这个PipelineRun运行了我们[tekton exercise-1](./exercise-1.md)中创建的pipeline - "build-and-deploy-pipeline"。
@@ -35,7 +35,7 @@ secret/githubsecret created
 serviceaccount/tekton-triggers-example-sa created
 ```
 
-1.2 更新devopslab/src/tekton/trigger/triggertemplates/triggertemplate.yaml，将PipelineRun中的参数imageUrl的值<REGISTRY>/<NAMESPACE>/hello替换。请参考[tekton exercise-1](./exercise-1.md)步骤5.5   
+1.2 更新devopslab/src/tekton/trigger/triggertemplates/triggertemplate.yaml，将PipelineRun中的参数imageUrl的值<REGISTRY>/<NAMESPACE>/hello替换。请参考[tekton exercise-1](./01-exercise-1.md)步骤5.5   
   
 ```
 ...
