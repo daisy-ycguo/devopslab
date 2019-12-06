@@ -57,14 +57,14 @@ ID:                             c6e0aec577364c6faa3f1a68596bc986
 State:                          normal
 Created:                        2019-06-20T03:08:12+0000
 Location:                       syd01
-Master URL:                     https://c2.au-syd.containers.cloud.ibm.com:30425
-Public Service Endpoint URL:    https://c2.au-syd.containers.cloud.ibm.com:30425
+Master URL:                     https://c2.jp-tok.containers.cloud.ibm.com:30425
+Public Service Endpoint URL:    https://c2.jp-tok.containers.cloud.ibm.com:30425
 Private Service Endpoint URL:   -
 Master Location:                Sydney
 Master Status:                  Ready (1 hour ago)
 Master State:                   deployed
 Master Health:                  normal
-Ingress Subdomain:              knative-guoyc.au-syd.containers.appdomain.cloud
+Ingress Subdomain:              knative-guoyc.jp-tok.containers.appdomain.cloud
 Ingress Secret:                 knative-guoyc
 Workers:                        2
 Worker Zones:                   syd01
