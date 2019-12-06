@@ -35,7 +35,7 @@ secret/githubsecret created
 serviceaccount/tekton-triggers-example-sa created
 ```
 
-1.2 更新devopslab/src/tekton/trigger/triggertemplates/triggertemplate.yaml，将PipelineRun中的参数imageUrl的值<REGISTRY>/<NAMESPACE>/hello替换。请参考[tekton exercise-1](./01-exercise-1.md)步骤5.5   
+1.2 更新devopslab/src/tekton/trigger/triggertemplates/triggertemplate.yaml，将PipelineRun中的参数imageUrl的值`us.icr.io/<NAMESPACE>/hello`替换。请参考[tekton exercise-1](./01-exercise-1.md)步骤5.5   
   
 ```
 ...
@@ -54,7 +54,7 @@ serviceaccount/tekton-triggers-example-sa created
         - name: pathToYamlFile
           value: "src/tekton/basic/knative/hello.yaml"
         - name: imageUrl
-          value: <REGISTRY>/<NAMESPACE>/hello
+          value: us.icr.io/<NAMESPACE>/hello
         - name: imageTag
           value: "2.0"
       serviceAccount: pipeline-account
