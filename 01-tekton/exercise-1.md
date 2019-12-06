@@ -45,6 +45,7 @@ export APIKEY=abcedef123434
 ```
 
 ### 第二步. 创建一个Task， 用于build一个image并push到您的container registry。 
+
 在CloudShell中请执行命令：
 ```
 kubectl apply -f devopslab/src/tekton/basic/tekton/tasks/source-to-image.yaml
@@ -94,6 +95,7 @@ spec:
 
 
 ### 第三步. 创建另一个Task来将image部署到Kubernetes cluster。  
+
 在CloudShell中请执行命令：
 ```
 kubectl apply -f devopslab/src/tekton/basic/tekton/tasks/deploy-using-kubectl.yaml
@@ -246,10 +248,10 @@ kubectl create secret docker-registry ibm-cr-push-secret --docker-server=$REGIST
 
 在CloudShell中请执行命令：
 ```
-kubectl apply -f devopslab/src/tekton/basic/tekton/pipeline-account.yaml ``` 
+kubectl apply -f devopslab/src/tekton/basic/tekton/pipeline-account.yaml
+``` 
 
 在这个步骤中，我们使用了devopslab/src/tekton/basic/tekton/pipeline-account.yaml创建service account. 
-
 ```
 apiVersion: v1
 kind: ServiceAccount
