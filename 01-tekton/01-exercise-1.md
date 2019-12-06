@@ -349,9 +349,16 @@ kubectl create -f devopslab/src/tekton/basic/tekton/run/hello-pipeline-run.yaml
 #### 5.7  检查Pipeline Run的执行结果
 
 PipelineRun创建后没有一个固定的名字，每次执行的的时候会使用generateName的内容生成一个名字。kubectl会返回一个新生成的PipelineRun resource名字。   
-`pipelinerun.tekton.dev/hello-pr-ktc9j created`   
+`pipelinerun.tekton.dev/hello-pr-ktc9j created`  
 
-1. 检查taskruns的状态,直到的状态都是SUCCEEDED。（大概需要1-2分钟）
+1. 检查pipelinerun的状态，确保pipelinerun处在Running状态(REASON栏)。
+```
+$ kubectl get pr
+NAME             SUCCEEDED   REASON    STARTTIME   COMPLETIONTIME
+hello-pr-llpm4   Unknown     Running   4s
+```
+
+1. 检查taskrun的状态,直到的状态都变为True(SUCCEEDED)。（大概需要1-2分钟）
 ```
 $ kubectl get taskrun
 NAME                                     SUCCEEDED   REASON      STARTTIME   COMPLETIONTIME
