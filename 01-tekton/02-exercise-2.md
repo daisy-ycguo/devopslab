@@ -251,6 +251,16 @@ hello   http://hello-default.capacity-demo.us-south.containers.appdomain.cloud  
 Hello world, this is BLUE-yourname!!!
 ```
 
+## 9 清理已完成的pipelinerun
+查看之前实验中的pipelinerun都是Succeeded状态。
+```
+kubectl get pr
+```
+清理pipelinerun记录。
+```
+kubectl delete pr --all
+```
+
 恭喜您！您已经完成了Tekton全部实验。下面继续阅读，或者进行下一步[使用Knative Eventing监控新服务](../02-knative/00-eventing.md)
 
 ## 了解发生了什么
