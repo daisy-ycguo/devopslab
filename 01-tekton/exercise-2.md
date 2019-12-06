@@ -207,8 +207,8 @@ kubectl get pipelinerun
 期待输出：
 ```
 NAME             SUCCEEDED   REASON      STARTTIME   COMPLETIONTIME
-hello-pr-njq8h   True        Succeeded   9m23s       8m19s           <-上个实验(exercise-1)产生的pipeline run
-hello-pr-xk29f   True        Succeeded   62s         1s              <-这次产生的pipeline run
+hello-pr-njq8h   True        Succeeded   9m23s       8m19s           <-上个实验(exercise-1)产生的pipelinerun
+hello-pr-xk29f   True        Succeeded   62s         1s              <-这次产生的pipelinerun
 ```
 在CloudShell中请执行命令：
 ```
@@ -218,10 +218,10 @@ kubectl get taskrun
 期待输出：
 ```
 NAME                                     SUCCEEDED   REASON      STARTTIME   COMPLETIONTIME
-hello-pr-njq8h-deploy-to-cluster-dtmlz   True        Succeeded   9m54s       9m46s
-hello-pr-njq8h-source-to-image-vrx4x     True        Succeeded   10m         9m54s
-hello-pr-xk29f-deploy-to-cluster-mtk92   True        Succeeded   98s         87s
-hello-pr-xk29f-source-to-image-tzvg2     True        Succeeded   2m28s       98s
+hello-pr-njq8h-deploy-to-cluster-dtmlz   True        Succeeded   9m54s       9m46s <-上个实验(exercise-1)产生的taskrun
+hello-pr-njq8h-source-to-image-vrx4x     True        Succeeded   10m         9m54s <-上个实验(exercise-1)产生的taskrun
+hello-pr-xk29f-deploy-to-cluster-mtk92   True        Succeeded   98s         87s <-这次产生的taskrun
+hello-pr-xk29f-source-to-image-tzvg2     True        Succeeded   2m28s       98s <-这次产生的taskrun
 ```
 在CloudShell中请执行命令：
 ```
@@ -230,10 +230,10 @@ kubectl get pods | grep hello
 
 期待输出：
 ```
-hello-pr-njq8h-deploy-to-cluster-dtmlz-pod-e1eb68   0/3     Completed   0          10m
-hello-pr-njq8h-source-to-image-vrx4x-pod-a6716a     0/2     Completed   0          11m
-hello-pr-xk29f-deploy-to-cluster-mtk92-pod-6ab995   0/3     Completed   0          2m26s
-hello-pr-xk29f-source-to-image-tzvg2-pod-8c1a39     0/2     Completed   0          3m17s
+hello-pr-njq8h-deploy-to-cluster-dtmlz-pod-e1eb68   0/3     Completed   0          10m <-上个实验(exercise-1)产生的pod
+hello-pr-njq8h-source-to-image-vrx4x-pod-a6716a     0/2     Completed   0          11m <-上个实验(exercise-1)产生的pod
+hello-pr-xk29f-deploy-to-cluster-mtk92-pod-6ab995   0/3     Completed   0          2m26s <-这次产生的pod
+hello-pr-xk29f-source-to-image-tzvg2-pod-8c1a39     0/2     Completed   0          3m17s <-这次产生的pod
 ```
 
 ## 8 查看service被更新了
