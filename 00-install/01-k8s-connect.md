@@ -84,7 +84,7 @@ OK
 四， 此外，我们需要把上一步记录的IBM Cloud API KEY,  Cloud Container Registry Region, Namespace信息，也记录在环境变量中，以备后续使用。 
    ```text
    export APIKEY=<your_api_key> 
-   export REGION=us.icr.io
+   export REGISTRY=us.icr.io
    export NAMESPACE=<your_namespace>
    export EMAIL=<your_email_address>
    ```
