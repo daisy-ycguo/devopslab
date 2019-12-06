@@ -46,8 +46,9 @@ export MYCLUSTER=
 export KUBECONFIG=
 
 export REGISTRY=us.icr.io
-export NAMESPACE=tektondevops-<your_name>
+export NAMESPACE=
 export EMAIL=<my_email>
+export INGRESS=
 ```
 
 ## 第二步：获取IBM Cloud API KEY。 
