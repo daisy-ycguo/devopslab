@@ -11,48 +11,36 @@
 一， 验证 Knative 监控工具（Prometheus 和 Grafana）已正确安装：
 ```
 $ kubectl get pods --namespace knative-monitoring
-NAME                                  READY   STATUS    RESTARTS   AGE
-elasticsearch-logging-0               1/1     Running   0          9h
-elasticsearch-logging-1               1/1     Running   0          9h
-grafana-84fdfd44db-t5wcj              1/1     Running   0          9h
-kibana-logging-75bc875c85-25sjp       1/1     Running   0          9h
-kube-state-metrics-7ccb9449df-2htsh   4/4     Running   0          9h
-node-exporter-kzljf                   2/2     Running   0          9h
-node-exporter-pvzlg                   2/2     Running   0          9h
-node-exporter-zgwwf                   2/2     Running   0          9h
-prometheus-system-0                   1/1     Running   0          9h
-prometheus-system-1                   1/1     Running   0          9h
+NAME                              READY   STATUS    RESTARTS   AGE
+elasticsearch-logging-0           1/1     Running   0          13h
+elasticsearch-logging-1           1/1     Running   0          13h
+grafana-69bdcb4686-2x9wd          1/1     Running   0          13h
+kibana-logging-8587dcbb89-pk428   1/1     Running   0          13h
+prometheus-system-0               1/1     Running   0          13h
+prometheus-system-1               1/1     Running   0          13h
 
 $ kubectl get services --namespace knative-monitoring
 NAME                          TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)               AGE
-elasticsearch-logging         ClusterIP   172.21.167.162   <none>        9200/TCP              9h
-fluentd-ds                    ClusterIP   172.21.208.103   <none>        24224/TCP,24224/UDP   9h
-grafana                       NodePort    172.21.77.228    <none>        30802:30979/TCP       9h
-kibana-logging                NodePort    172.21.90.152    <none>        5601:31462/TCP        9h
-kube-controller-manager       ClusterIP   None             <none>        10252/TCP             9h
-kube-state-metrics            ClusterIP   None             <none>        8443/TCP,9443/TCP     9h
-node-exporter                 ClusterIP   None             <none>        9100/TCP              9h
-prometheus-system-discovery   ClusterIP   None             <none>        9090/TCP              9h
-prometheus-system-np          NodePort    172.21.202.105   <none>        8080:32344/TCP        9h
+elasticsearch-logging         ClusterIP   172.21.121.125   <none>        9200/TCP              13h
+fluentd-ds                    ClusterIP   172.21.99.72     <none>        24224/TCP,24224/UDP   13h
+grafana                       NodePort    172.21.108.212   <none>        30802:30834/TCP       13h
+kibana-logging                NodePort    172.21.191.39    <none>        5601:31253/TCP        13h
+kube-controller-manager       ClusterIP   None             <none>        10252/TCP             13h
+kube-state-metrics            ClusterIP   None             <none>        8443/TCP,9443/TCP     13h
+node-exporter                 ClusterIP   None             <none>        9100/TCP              13h
+prometheus-system-discovery   ClusterIP   None             <none>        9090/TCP              13h
+prometheus-system-np          NodePort    172.21.98.144    <none>        8080:30132/TCP        13h
 ```
 
 二， 获取 `hello` 服务地址，并验证服务：
 ```
 $ kubectl get ksvc hello
 NAME    URL                                                                      LATESTCREATED   LATESTREADY   READY   REASON
-hello   http://hello-default.<CLUSTER-NAME>.us-south.containers.appdomain.cloud   hello-xxxx     hello-xxxx   True   
+hello   http://hello-default.<CLUSTER-NAME>.us-south.containers.appdomain.cloud  hello-xxxx      hello-xxxx    True   
 
 $ kubectl get service hello-xxxxx
 NAME          TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
-hello-xxxx   ClusterIP   172.21.60.115   <none>        80/TCP    45m
-
-$ kubectl get deployment
-NAME                     READY   UP-TO-DATE   AVAILABLE   AGE
-hello-xxxx-deployment   0/0     0            0           45m
-
-$ kubectl get pods
-NAME                                       READY   STATUS    RESTARTS   AGE
-hello-xxxxx-deployment-xxxxxxxxxx-xxxxx   2/2     Running   0          14m
+hello-xxxx    ClusterIP   172.21.60.115   <none>        80/TCP    45m
 
 $ curl http://hello-default.<CLUSTER-NAME>.us-south.containers.appdomain.cloud
 [ 20191031 ] Hello world, this is BLUE-<your-name>!!!
@@ -91,6 +79,9 @@ $ kubectl -n knative-monitoring port-forward \
    - 在 **Expression** 框中输入 `istio_requests_total` , 点击 **Execute** 按钮，您将在 **Graph** 或 **Console** 标签页中观测到最近一段时间内 Kuberneters 系统中所有请求的数量。
 
    - 在 **Expression** 框中输入 `istio_requests_total{destination_service_name='hello-xxxxx'}` （您需要使用实际的服务实例名称替换 `hello-xxxxx` ） , 点击 **Execute** 按钮，您将在 **Graph** 或 **Console** 标签页中观测到最近一段时间内所有路由到 `hello` 服务的请求数量。
+
+![Prometheus](https://user-images.githubusercontent.com/42362436/70292111-222ede00-1818-11ea-8d7e-94418a4ea634.png)
+
 
 二， Grafana
 
