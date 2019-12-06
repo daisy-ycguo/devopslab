@@ -43,14 +43,14 @@ NAME          TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
 hello-xxxx    ClusterIP   172.21.60.115   <none>        80/TCP    45m
 
 $ curl http://hello-default.<CLUSTER-NAME>.us-south.containers.appdomain.cloud
-[ 20191031 ] Hello world, this is BLUE-<your-name>!!!
+Hello world, this is BLUE-<your-name>!!!
 ```
 
 三， 手动为服务添加工作负载
 ```
 $ for i in {1..50}; do sleep 0.5; curl "http://hello-default.<CLUSTER-NAME>.us-south.containers.appdomain.cloud"; done
-[ 20191031 ] Hello world, this is BLUE-<your-name>!!!
-[ 20191031 ] Hello world, this is BLUE-<your-name>!!!
+Hello world, this is BLUE-<your-name>!!!
+Hello world, this is BLUE-<your-name>!!!
 ......
 ```
 
@@ -110,8 +110,8 @@ $ kubectl -n knative-monitoring port-forward \
 
 ```
 $ for i in {1..50}; do sleep 0.5; curl "http://hello-default.<CLUSTER-NAME>.us-south.containers.appdomain.cloud?iterations=20000000"; done
-[ 20191031 ] Hello world, this is BLUE-<your-name>!!!
-[ 20191031 ] Hello world, this is BLUE-<your-name>!!!
+Hello world, this is BLUE-<your-name>!!!
+Hello world, this is BLUE-<your-name>!!!
 ......
 ```
 
