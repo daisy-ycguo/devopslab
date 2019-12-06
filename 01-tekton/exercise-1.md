@@ -233,6 +233,8 @@ metadata:
   name: pipeline-account
 secrets:
 - name: ibm-cr-push-secret
+imagePullSecrets:
+- name: ibm-cr-push-secret
 
 ---
 
@@ -276,13 +278,7 @@ name: pipeline-account
 - 一个名为kube-api-secret的Secret,包含了用来访问Kubernetes API的认证信息信息，使得pipeline可以适用kubectl去操作您的kube cluster。   
 - 一个名为pipeline-role的Role和一个名为pipeline-role-binding的RoleBinding，提供给pipeline基于resource的访问控制权限来创建和修改Knative services。  
 
-#### 5.3 为pipeline-account添加imagePullSecrets   
-
-请执行命令：
-
-`kubectl patch sa pipeline-account -p '"imagePullSecrets": [{"name": "ibm-cr-push-secret" }]'`
-
-#### 5.4 修改PipelineRun文件，替换`<REGISTRY>/<NAMESPACE>`为具体的值。
+#### 5.5 修改PipelineRun文件，替换`<REGISTRY>/<NAMESPACE>`为具体的值。
 PipelineRun文件路径：devopslab/src/tekton/basic/tekton/run/hello-pipeline-run.yaml。 
 
 将文件中的`<REGISTRY>`和`<NAMESPACE>`用前述的变量值替换。 
@@ -316,12 +312,12 @@ spec:
 - 关于Pipeline需要的resources，我们之后会定义一个名为hello-git的PipelineResources。   
 - 关于pipeline执行时所需要的认证信息，我们后面将会创建一个名为pipeline-account的service account。    
 
-#### 5.5 执行Pipeline  
+#### 5.6 执行Pipeline  
 
 请执行命令
 `kubectl create -f devopslab/src/tekton/basic/tekton/run/hello-pipeline-run.yaml`   
 
-#### 5.6  检查Pipeline Run的执行结果
+#### 5.7  检查Pipeline Run的执行结果
 
 PipelineRun创建后没有一个固定的名字，每次执行的的时候会使用generateName的内容生成一个名字。kubectl会返回一个新生成的PipelineRun resource名字。   
 `pipelinerun.tekton.dev/hello-pr-ktc9j created`   
