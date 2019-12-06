@@ -91,7 +91,7 @@ OK
 
 恭喜您已经完成了Knative的安装！
 
-请继续[安装Tekton](./04-tekton-install.md)
+请继续[安装Tekton](../01-tekton/00-tekton-install.md)
 
 ## 参考资料
 
