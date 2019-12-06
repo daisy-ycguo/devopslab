@@ -1,4 +1,4 @@
-export GITACCOUNT=guoyingc
+export GITACCOUNT=
 
 export MYCLUSTER=
 export KUBECONFIG=
@@ -6,3 +6,4 @@ export KUBECONFIG=
 export REGISTRY=us.icr.io
 export NAMESPACE=tektondevops-<your_name>
 export EMAIL=
+export INGRESS=
