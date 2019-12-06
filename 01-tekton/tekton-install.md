@@ -49,5 +49,5 @@ tekton-triggers-controller-6d8fd9596b-wv5nw    1/1       Running   0          4m
 tekton-triggers-webhook-5f8d569d5f-8v58q       1/1       Running   0          4m2s
 ```
 
-恭喜您，您的环境已经准备好了。下面可以开始实验了[Tekton实验](./01-tekton/exercise-1.md)
+恭喜您，您的环境已经准备好了。下面可以开始实验了[Tekton实验](./exercise-1.md)
 
