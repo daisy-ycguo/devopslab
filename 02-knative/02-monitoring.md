@@ -52,6 +52,6 @@ xxx.xxx.xxx.xxx:xxxxx
 
 ![Prometheus](https://user-images.githubusercontent.com/42362436/70297723-1cda8f00-182a-11ea-93a4-168991f6355d.png)
 
-另外，您还可以通过Grafana进行监控，或者通过安装 Kiali 以及 Jaeger 工具帮助监测服务。参考 [Jaeger](https://www.jaegertracing.io/docs/1.15/) 以及 [Kiali](https://kiali.io/) 了解更多内容。
+另外，您还可以通过[Grafana](https://grafana.com/)进行监控，或者通过安装 Kiali 以及 Jaeger 工具帮助监测服务。参考 [Jaeger](https://www.jaegertracing.io/docs/1.15/) 以及 [Kiali](https://kiali.io/) 了解更多内容。
 
 恭喜您，您已经完成了全部实验的内容。
