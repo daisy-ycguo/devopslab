@@ -376,7 +376,7 @@ curl http://hello-default.$INGRESS
 Hello world, this is BLUE-IBM!!!
 ```
 
-恭喜您，您已经完成了Tekton第一个实验。下面可以开始[实验2](./exercise-2.md)
+恭喜您，您已经完成了Tekton第一个实验。下面可以开始[实验2](./02-exercise-2.md)
 
 ### 参考资料
 
