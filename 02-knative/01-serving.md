@@ -8,16 +8,16 @@ NAME    URL                                                                     
 hello   http://hello-default.capacity-demo.us-south.containers.appdomain.cloud   hello-jhvvz   2m33s   3 OK / 3     True    
 
 $ kn revision list
-NAME          SERVICE   GENERATION   AGE     CONDITIONS   READY   REASON
-hello-jhvvz   hello     2            62s     4 OK / 4     True    
-hello-xfljl   hello     1            2m40s   3 OK / 4     True 
-...
+NAME                    SERVICE         GENERATION   AGE     CONDITIONS   READY   REASON
+hello-6dzrh             hello           3            42s     4 OK / 4     True
+hello-b527t             hello           2            9m10s   3 OK / 4     True
+hello-95kvq             hello           1            26m     3 OK / 4     True
 ```
 
 ## 2. 给两个revision版本添加tag
 把下面命令中的hello-jhvvz替换为您的GENERATION为2的revision，给它打上tag`version2`
 ```
-$ kn service update hello --tag hello-jhvvz=version2
+$ kn service update hello --tag hello-b527t=version2
 Updating Servi ce 'hello' in namespace 'default':
 
   0.164s The Route is still working to reflect the latest desired specification.
@@ -25,12 +25,12 @@ Updating Servi ce 'hello' in namespace 'default':
   0.666s Waiting for VirtualService to be ready
   1.918s Ready to serve.
 
-Service 'hello' updated with latest revision 'hello-jhvvz' (unchanged) and URL:
+Service 'hello' updated with latest revision 'hello-b527t' (unchanged) and URL:
 http://hello-default.capacity-demo.us-south.containers.appdomain.cloud
 ```
 把下面命令中的hello-xfljl替换为您的GENERATION为1的revision，给它打上tag`version1`
 ```
-$ kn service update hello --tag hello-xfljl=version1
+$ kn service update hello --tag hello-95kvq=version1
 Updating Service 'hello' in namespace 'default':
 
   0.090s The Route is still working to reflect the latest desired specification.
@@ -38,7 +38,7 @@ Updating Service 'hello' in namespace 'default':
   0.709s Waiting for VirtualService to be ready
   1.804s Ready to serve.
 
-Service 'hello' updated with latest revision 'hello-jhvvz' (unchanged) and URL:
+Service 'hello' updated with latest revision 'hello-95kvq' (unchanged) and URL:
 http://hello-default.capacity-demo.us-south.containers.appdomain.cloud
 ```
 ## 2.让两个版本各分50%的流量
@@ -59,23 +59,20 @@ http://hello-default.capacity-demo.us-south.containers.appdomain.cloud
 ## 4.验证流量管控
 访问应用两个版本各处理50%的请求。
 ```
-$ for i in {1..50}; do curl http://hello-default.$INGRESS; done
-Hello world, this is BLUE-update2.0!!!
-Hello world, this is BLUE-IBM!!!
-Hello world, this is BLUE-IBM!!!
-Hello world, this is BLUE-IBM!!!
-Hello world, this is BLUE-update2.0!!!
-Hello world, this is BLUE-update2.0!!!
+$ for i in {1..50}; do curl http://hello-default.$INGRESS; doneHello world, this is BLUE-IBM!!!
 Hello world, this is BLUE-IBM!!!
 Hello world, this is BLUE-IBM!!!
 Hello world, this is BLUE-IBM!!!
 Hello world, this is BLUE-IBM!!!
+Hello world, this is GREEN-IBM!!!
 Hello world, this is BLUE-IBM!!!
-Hello world, this is BLUE-IBM!!!
-Hello world, this is BLUE-update2.0!!!
-Hello world, this is BLUE-update2.0!!!
-Hello world, this is BLUE-update2.0!!!
-Hello world, this is BLUE-update2.0!!!
+Hello world, this is GREEN-IBM!!!
+Hello world, this is GREEN-IBM!!!
+Hello world, this is GREEN-IBM!!!
+Hello world, this is GREEN-IBM!!!
+Hello world, this is GREEN-IBM!!!
+Hello world, this is GREEN-IBM!!!
+
 ...
 ```
 Route中显示了traffic的分布。
