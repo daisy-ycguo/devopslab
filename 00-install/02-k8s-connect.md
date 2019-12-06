@@ -119,8 +119,8 @@ Resource Group Name:            default
 九，记录环境变量。
 
 通过浏览器，打开您github代码库下面的文件：[src/setenv.sh](../src/setenv.sh)，直接点击编辑按钮。   
-把您的KUBECONFIG所在的路径填写到`export KUBECONFIG=`后面。   
-把第四步命令输出中的Ingress Subdomain内容填写在`INGRESS=`后面。   
+- 把您的KUBECONFIG所在的路径填写到`export KUBECONFIG=`后面。   
+- 把第四步命令输出中的Ingress Subdomain内容填写在`INGRESS=`后面。   
 然后commit。至此，您已经完成了所有环境变量的配置。   
 
 ```
