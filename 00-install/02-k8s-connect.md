@@ -4,7 +4,7 @@ Knative Lab使用了IBM公有云上的Kubernetes集群，以及一个云上的�
 
 ## 前提
 
-* 拥有一个IBM Cloud账号，也被称为IBM ID。如果没有注册，请到[http://cloud.ibm.com](http://cloud.ibm.com)上注册。
+* 拥有一个IBM Cloud账号，也被称为IBM ID。如果没有注册，请到[http://cloud.ibm.com](https://ibm.biz/BdzNaN)上注册。
 * 准备一个可以联网的浏览器，推荐Chrome，Firefox，和Safari。
 
 ## 第一步：分配Kuberntes集群
@@ -25,7 +25,7 @@ export EMAIL=<your_email>
 
 ## 第二步：准备CloudShell &  连接到IBM Account下的Kubernetes集群
 
-一，在CloudShell页面中，点击右上角切换账户，在弹出的下拉框里面，选择*IBM*。 
+一，在[CloudShell](https://workshop.shell.cloud.ibm.com)页面中，点击右上角切换账户，在弹出的下拉框里面，选择*IBM*。 
 
 ![](https://github.com/daisy-ycguo/knativelab/raw/master/images/cloudshell-account.png)
 
