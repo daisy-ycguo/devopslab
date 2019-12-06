@@ -4,10 +4,8 @@ metadata:
   name: hello
   namespace: default
 spec:
-  runLatest:
-    configuration:
-      revisionTemplate:
-        spec:
-          serviceAccountName: pipeline-account
-          container:
-            image: __IMAGE__
+  template:
+    spec:
+      serviceAccountName: pipeline-account
+      containers:
+      - image: __IMAGE__
