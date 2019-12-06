@@ -89,7 +89,9 @@ OK
 
    输入`ctrl+c`结束观察。
 
-恭喜您已经完成了Knative的安装！可以进行下面的实验了。
+恭喜您已经完成了Knative的安装！
+
+请继续[安装Tekton](https://github.com/daisy-ycguo/devopslab/blob/master/00-install/03-tekton-install.md)
 
 ## 参考资料
 
