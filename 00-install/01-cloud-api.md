@@ -17,7 +17,7 @@
 
 ![](https://github.com/daisy-ycguo/knativelab/raw/master/images/cloudshell-passw.png)
 
-三，在CloudShell页面中，点击右上角您的用户名，会弹出一个下拉框，选择`您的个人账户`。 
+三，在CloudShell页面中，点击右上角您的用户名，会弹出一个下拉框，选择`您的个人账户`(非IBM账户)。 
 
 四，点击上图中右上角账户信息左侧的*命令行窗口图标*，页面会开始刷新。首次使用需要等待1-5分钟（等待时间与网速有关），一个云上的命令行窗口就创建好了。
 
@@ -31,10 +31,11 @@ OK
 
 六，列出您的`namespace`   
 `ibmcloud cr namespaces`   
+（如果列出很多namesapce,可能您使用了错误的账户，请务必使用`您的个人账户`(非IBM账户)，参考第三步）
 
-七, 创建一个叫做 `tektondevops-<your_name>` 的 namespace（如果收到提示 *The requested namespace is already in use*，请修改 namespace 名称再重复操作）
+七, 创建一个namespace，推荐使用您的CLUSTERID，以免与其他人冲突。 （如果收到提示 *The requested namespace is already in use*，请修改 namespace 名称再重复操作）
 
-`ibmcloud cr namespace-add tektondevops-<your_name>`
+`ibmcloud cr namespace-add $CLUSTERID`
 
 八，继续修改环境变量，您应该已经在浏览器中打开了 github 代码库下面的文件：[src/setenv.sh](../src/setenv.sh)，将在上面步骤中获得的 registry 以及 namespace 信息填入，接下来将获取其余的环境变量，请继续保留这个页面。
 
