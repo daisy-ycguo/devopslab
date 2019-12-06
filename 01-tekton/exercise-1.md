@@ -24,12 +24,29 @@
 ### 3. [准备Kubernetes集群环境](https://github.com/daisy-ycguo/devopslab/blob/master/00-install/01-k8s-connect.md)
 
 ## 实验步骤
-### 1. clone代码到本地
+### 第一步. clone代码到本地
 1. 在您的github代码库页面，点击"Clone or download"，获取URL。
 2. 将代码库clone到本地，在CloudShell窗口运行这个命令：    
 `git clone https://github.com/<your-git-account>/devopslab.git`
+3. 运行setenv.sh配置环境变量。在CloudShell中执行：
+```
+source devopslab/src/setenv.sh
+```
+4. 配置Cloud API Key。
+打开您本地保存的aipkey.json，拷贝apikey，在CloudShell中执行：
+```
+export APIKEY=<your_api_key>
+```
+例如，您的apikey.json中有：
+```
+"apikey": "abcedef123434"
+```
+则执行
+```
+export APIKEY=abcedef123434
+```
 
-### 2. 创建一个Task， 用于build一个image并push到您的container registry。 
+### 第二步. 创建一个Task， 用于build一个image并push到您的container registry。 
 请执行命令：
 `kubectl apply -f devopslab/src/tekton/basic/tekton/tasks/source-to-image.yaml`
 
@@ -76,7 +93,7 @@ spec:
 - 后面我们会看到task是如何获得认证来puhs image到repository的。  
 
 
-### 3. 创建另一个Task来将image部署到Kubernetes cluster。  
+### 第三步. 创建另一个Task来将image部署到Kubernetes cluster。  
 请执行命令：
 `kubectl apply -f devopslab/src/tekton/basic/tekton/tasks/deploy-using-kubectl.yaml`
 
@@ -108,7 +125,7 @@ steps:
 ```
 
 
-### 4. 创建一个Pipeline来组合以上两个Task。   
+### 第四步. 创建一个Pipeline来组合以上两个Task。   
 
 请执行命令：    
 `kubectl apply -f devopslab/src/tekton/basic/tekton/pipeline/build-and-deploy-pipeline.yaml`
@@ -174,7 +191,7 @@ spec:
 - Task之间的顺序用runAfter关键字来定义。在这个例子中，deploy-using-kubectl task需要在source-to-image task之后执行。    
 
 
-### 5. 创建PipelineRun和PipelineResources，并执行Pipeline  
+### 第五步. 创建PipelineRun和PipelineResources，并执行Pipeline  
 
 以上Task, Pipeline定义均为统一的模板文件，下面我们创建一个PipelineRun来指定input resource和parameters，用于真正执行这个pipeline。 
 
@@ -216,7 +233,7 @@ Service account让pipeline可以访问被保护的资源-您私人的IBM contain
 kubectl create secret docker-registry ibm-cr-push-secret --docker-server=$REGISTRY --docker-username=iamapikey --docker-password=$APIKEY --docker-email=$EMAIL
 ``` 
 
-其中$REGISTRY, $APIKEY, $EMAIL的值，在[Install相关的实验步骤](00-install/01-k8s-connect.md)已经设置过
+其中$REGISTRY, $APIKEY, $EMAIL的值在环境变量中配置过。
 
 * 创建service account。
 
@@ -345,7 +362,12 @@ curl http://hello-default.$INGRESS
 Hello world, this is BLUE-IBM!!!
 ```
 
-### 问题诊断
+恭喜您，您已经完成了Tekton第一个实验。下面可以开始[实验2](./exercise-2.md)
+
+### 参考资料
+
+#### 问题诊断
+
 如果以上步骤遇到问题，尝试下面的方法进行诊断：   
 1. 检查task run的状态。   
 ```
@@ -385,7 +407,8 @@ kubectl get ksvc
 $ kubectl describe ksvc hello
 ```
 
-6. 清理环境
+#### 清理环境
+
 如果以上步骤无法找到问题并解决，可以尝试清掉以上实验所创建的资源，重新开始。
 清理脚本：
 ```
@@ -397,6 +420,8 @@ kubectl delete secret ibm-cr-push-secret
 kubectl delete pipelinerun --all
 kubectl delete ksvc hello
 ```
+
+#### 备忘单
 
 所有实验步骤脚本：(确保需要更新的文件已经更新好）
 ```

@@ -176,6 +176,8 @@ hello   http://hello-default.capacity-demo.us-south.containers.appdomain.cloud  
 Hello world, this is BLUE-yourname!!!
 ```
 
+恭喜您，您已经完成了Tekton全部实验。下面继续阅读，或者进行下一步[使用Knative Eventing监控新服务](../02-knative/00-eventing.md)
+
 ## 了解发生了什么
 一个PipelineRun被创建出来，这个PipelineRun执行了上个实验中我们创建好的pipeline 'build-and-deploy-pipeline'。
 ```
@@ -249,6 +251,7 @@ Spec:
 Events:     <none>
 ```
 ## 问题诊断
+
 ### Webhook Recent Deliveries response 501
 查看ingress HOSTS是否可以被访问
 ### Webhook Recent Deliveries response 200但是没有pipeline run生成
@@ -258,4 +261,5 @@ $ kubectl get pod | grep el-my-listener
 $ kubectl logs el-my-listener-99b595cc6-4vqq6
 2019/12/04 10:19:59 Error getting TriggerBinding my-pipeline-binding: triggerbindings.tekton.dev "my-pipeline-binding" not found
 ```
-### 有pipeline run生成但是pipeline run失败，参考[tekton exercise-1](https://github.com/daisy-ycguo/devopslab/blob/master/01-tekton/exercise-1.md)的问题诊断
+### 有pipeline run生成但是pipeline run失败
+参考[tekton exercise-1](./exercise-1.md)的问题诊断
