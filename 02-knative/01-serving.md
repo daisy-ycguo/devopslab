@@ -2,12 +2,24 @@
 
 ## 1.检查service和revision
 完成了[01-tekton/exercise-1](../01-tekton/01-exercise-1.md),[01-tekton/02-exercise-2.md](../01-tekton/exercise-2.md)和[02-knative/00-eventing](./00-eventing.md)后， 我们已经有三个service revision版本。在本实验中我们只关心前两个版本, GENERATION 1 和 2。
+
+在CloudShell中输入命令：
 ```
-$ kn service list
+kn service list
+```
+
+期待输出：
+```
 NAME    URL                                                                      LATEST        AGE     CONDITIONS   READY   REASON
 hello   http://hello-default.capacity-demo.us-south.containers.appdomain.cloud   hello-jhvvz   2m33s   3 OK / 3     True    
+```
 
-$ kn revision list
+在CloudShell中输入命令：
+```
+kn revision list
+```
+期待输出：
+```
 NAME                    SERVICE         GENERATION   AGE     CONDITIONS   READY   REASON
 hello-6dzrh             hello           3            42s     4 OK / 4     True
 hello-b527t             hello           2            9m10s   3 OK / 4     True
@@ -15,7 +27,7 @@ hello-95kvq             hello           1            26m     3 OK / 4     True
 ```
 
 ## 2. 给两个revision版本添加tag
-把下面命令中的`hello-b527t`替换为您的GENERATION为2的revision，给它打上tag`version2`
+把下面命令中的`hello-b527t`替换为您的GENERATION为2的revision，给它打上tag`version2`。在CloudShell中输入命令：
 ```
 kn service update hello --tag hello-b527t=version2
 ```
@@ -33,7 +45,7 @@ Service 'hello' updated with latest revision 'hello-b527t' (unchanged) and URL:
 http://hello-default.capacity-demo.us-south.containers.appdomain.cloud
 ```
 
-把下面命令中的hello-95kvq替换为您的GENERATION为1的revision，给它打上tag`version1`
+把下面命令中的hello-95kvq替换为您的GENERATION为1的revision，给它打上tag`version1`。在CloudShell中输入命令：
 ```
 kn service update hello --tag hello-95kvq=version1
 ```
@@ -51,7 +63,7 @@ Service 'hello' updated with latest revision 'hello-95kvq' (unchanged) and URL:
 http://hello-default.capacity-demo.us-south.containers.appdomain.cloud
 ```
 ## 2.让两个版本各分50%的流量
-
+在CloudShell中输入命令：
 ```
 kn service update hello --traffic version1=50 --traffic version2=50
 ```
@@ -70,7 +82,7 @@ http://hello-default.capacity-demo.us-south.containers.appdomain.cloud
 ```
 
 ## 4.验证流量管控
-访问应用两个版本各处理50%的请求。
+访问应用两个版本各处理50%的请求。在CloudShell中输入命令：
 ```
 for i in {1..50}; do curl http://hello-default.$INGRESS; done
 ```
@@ -177,14 +189,15 @@ for i in {1..50}; do curl http://hello-default.$INGRESS; done
 ```
 期待输出：
 ```
-Hello world, this is BLUE-IBM!!!
-Hello world, this is BLUE-IBM!!!
-Hello world, this is BLUE-IBM!!!
-Hello world, this is BLUE-IBM!!!
-Hello world, this is BLUE-IBM!!!
-Hello world, this is BLUE-IBM!!!
-Hello world, this is BLUE-IBM!!!
-Hello world, this is BLUE-IBM!!!
+Hello world, this is GREEN-IBM!!!
+Hello world, this is GREEN-IBM!!!
+Hello world, this is GREEN-IBM!!!
+Hello world, this is GREEN-IBM!!!
+Hello world, this is GREEN-IBM!!!
+Hello world, this is GREEN-IBM!!!
+Hello world, this is GREEN-IBM!!!
+Hello world, this is GREEN-IBM!!!
 ```
+使用`ctrl + c`结束进程。
 
 恭喜您，您已经完成了Knative Serving的实验。下面进行[监控服务](./02-monitoring.md)
