@@ -1,4 +1,4 @@
-# 创建Tekton pipeline并手动运行 
+# 练习一：创建Tekton pipeline并手动运行 
 
 ## 实验目标
 - 了解Tekton pipeline的基本概念

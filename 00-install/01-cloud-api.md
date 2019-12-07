@@ -1,4 +1,4 @@
-# 准备您的镜像库和获取IBM Cloud API Key
+# 准备镜像库和获取IBM Cloud API Key
 
 本次实验的容器镜像将存储在IBM Cloud上的镜像库中，这里将准备镜像库并且获取IBM Cloud API Key。
 

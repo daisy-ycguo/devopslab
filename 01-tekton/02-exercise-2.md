@@ -1,4 +1,4 @@
-# exercise-2 Tekton Trigger
+# 练习二：Tekton Trigger
 
 ## 实验目标
 
