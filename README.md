@@ -5,6 +5,7 @@ Tekton + Knative hands on lab
 2. [Tekton实验](./01-tekton)
 3. [Knative实验](./02-knative)
 
-# Lab target
-![image](https://github.com/daisy-ycguo/devopslab/blob/master/images/target.png)
+## 实验目标
+
+![](./images/target.png)
 
