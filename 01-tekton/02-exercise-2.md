@@ -248,7 +248,7 @@ NAME    URL                                                                     
 hello   http://hello-default.capacity-demo.us-south.containers.appdomain.cloud   hello-ldtj8     hello-ldtj8   True  
 
  curl http://hello-default.capacity-demo.us-south.containers.appdomain.cloud
-Hello world, this is BLUE-yourname!!!
+Hello world, this is GREEN-IBM!!!
 ```
 
 ## 9 清理已完成的pipelinerun
