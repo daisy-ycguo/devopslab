@@ -15,9 +15,13 @@ hello-95kvq             hello           1            26m     3 OK / 4     True
 ```
 
 ## 2. 给两个revision版本添加tag
-把下面命令中的hello-jhvvz替换为您的GENERATION为2的revision，给它打上tag`version2`
+把下面命令中的`hello-b527t`替换为您的GENERATION为2的revision，给它打上tag`version2`
 ```
-$ kn service update hello --tag hello-b527t=version2
+kn service update hello --tag hello-b527t=version2
+```
+
+期待输出：
+```
 Updating Servi ce 'hello' in namespace 'default':
 
   0.164s The Route is still working to reflect the latest desired specification.
@@ -28,9 +32,14 @@ Updating Servi ce 'hello' in namespace 'default':
 Service 'hello' updated with latest revision 'hello-b527t' (unchanged) and URL:
 http://hello-default.capacity-demo.us-south.containers.appdomain.cloud
 ```
-把下面命令中的hello-xfljl替换为您的GENERATION为1的revision，给它打上tag`version1`
+
+把下面命令中的hello-95kvq替换为您的GENERATION为1的revision，给它打上tag`version1`
 ```
-$ kn service update hello --tag hello-95kvq=version1
+kn service update hello --tag hello-95kvq=version1
+```
+
+期待输出：
+```
 Updating Service 'hello' in namespace 'default':
 
   0.090s The Route is still working to reflect the latest desired specification.
@@ -44,7 +53,11 @@ http://hello-default.capacity-demo.us-south.containers.appdomain.cloud
 ## 2.让两个版本各分50%的流量
 
 ```
-$ kn service update hello --traffic version1=50 --traffic version2=50
+kn service update hello --traffic version1=50 --traffic version2=50
+```
+
+期待输出：
+```
 Updating Service 'hello' in namespace 'default':
 
   0.088s The Route is still working to reflect the latest desired specification.
@@ -59,29 +72,46 @@ http://hello-default.capacity-demo.us-south.containers.appdomain.cloud
 ## 4.验证流量管控
 访问应用两个版本各处理50%的请求。
 ```
-$ for i in {1..50}; do curl http://hello-default.$INGRESS; doneHello world, this is BLUE-IBM!!!
-Hello world, this is BLUE-IBM!!!
-Hello world, this is BLUE-IBM!!!
-Hello world, this is BLUE-IBM!!!
-Hello world, this is BLUE-IBM!!!
-Hello world, this is GREEN-IBM!!!
-Hello world, this is BLUE-IBM!!!
-Hello world, this is GREEN-IBM!!!
-Hello world, this is GREEN-IBM!!!
-Hello world, this is GREEN-IBM!!!
-Hello world, this is GREEN-IBM!!!
-Hello world, this is GREEN-IBM!!!
-Hello world, this is GREEN-IBM!!!
+for i in {1..50}; do curl http://hello-default.$INGRESS; done
+```
 
+期待输出：
+```
+Hello world, this is BLUE-IBM!!!
+Hello world, this is BLUE-IBM!!!
+Hello world, this is BLUE-IBM!!!
+Hello world, this is BLUE-IBM!!!
+Hello world, this is BLUE-IBM!!!
+Hello world, this is GREEN-IBM!!!
+Hello world, this is BLUE-IBM!!!
+Hello world, this is GREEN-IBM!!!
+Hello world, this is GREEN-IBM!!!
+Hello world, this is GREEN-IBM!!!
+Hello world, this is GREEN-IBM!!!
+Hello world, this is GREEN-IBM!!!
+Hello world, this is GREEN-IBM!!!
 ...
 ```
-Route中显示了traffic的分布。
+使用`ctrl + c`结束进程。
+
+Route中显示了traffic的分布。在CloudShell中输入命令：
 ```
-$ kn route list
+kn route list hello
+```
+
+期待输出：
+```
 NAME    URL                                                                      READY
 hello   http://hello-default.capacity-demo.us-south.containers.appdomain.cloud   True
+```
 
-$ kn route describe hello
+在CloudShell中输入命令：
+```
+kn route describe hello
+```
+
+期待输出：
+```
 ...
   traffic:
   - latestRevision: false
@@ -98,8 +128,13 @@ $ kn route describe hello
 ```
 
 ## 5.把100%的请求路由到版本2.0
+在CloudShell中输入命令：
 ```
-$ kn service update hello --traffic version2=100
+kn service update hello --traffic version2=100
+```
+
+期待输出：
+```
 Updating Service 'hello' in namespace 'default':
 
   0.046s The Route is still working to reflect the latest desired specification.
@@ -109,8 +144,13 @@ Updating Service 'hello' in namespace 'default':
 
 Service 'hello' updated with latest revision 'hello-jhvvz' (unchanged) and URL:
 http://hello-default.capacity-demo.us-south.containers.appdomain.cloud
-
-$ kn service describe hello
+```
+在CloudShell中输入命令：
+```
+kn service describe hello
+```
+期待输出：
+```
 Name:       hello
 Namespace:  default
 Age:        17m
@@ -131,8 +171,12 @@ Conditions:
 ```
 
 ## 6.验证所有流量都被路由到版本2.0
+在CloudShell中输入命令：
 ```
-$ for i in {1..50}; do curl http://hello-default.$INGRESS; done
+for i in {1..50}; do curl http://hello-default.$INGRESS; done
+```
+期待输出：
+```
 Hello world, this is BLUE-IBM!!!
 Hello world, this is BLUE-IBM!!!
 Hello world, this is BLUE-IBM!!!
