@@ -1,4 +1,4 @@
-# 流量管控
+# 使用 Knative Serving 流量管控
 
 ## 1.检查service和revision
 完成了[01-tekton/exercise-1](../01-tekton/01-exercise-1.md),[01-tekton/02-exercise-2.md](../01-tekton/exercise-2.md)和[02-knative/00-eventing](./00-eventing.md)后， 我们已经有三个service revision版本。在本实验中我们只关心前两个版本, GENERATION 1 和 2。
